@@ -74,7 +74,7 @@ app.get("/validate", passport.authenticate('jwt', { session: false }), function(
     res.json({message:'User is valid'})
   }
   else {
-    res.json({ message:'Error .... invalid user '})
+    res.json({ message:'Invalid user '})
   }
 
 });

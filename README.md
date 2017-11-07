@@ -43,3 +43,5 @@ To install Git, follow the download and install instructions at [Set Up Git](htt
     ```
     npm start
     ```
+    
+    Localhost will run at port 3000
