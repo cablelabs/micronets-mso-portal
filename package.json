@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "license": "",
   "main": "server/server.js",
-  "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
