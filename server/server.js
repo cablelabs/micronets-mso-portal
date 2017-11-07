@@ -69,7 +69,7 @@ app.get("/validate", passport.authenticate('jwt', { session: false }), function(
   const token = req.header('Authorization').split(" ")[1];
   var claims = jwt.decode( token , process.env.SECRET );
 
-  // TODO : Remove fake logic.Add check user token logic
+  // TODO : Remove fake logic.
   if( claims.clientId != undefined ) {
     res.json({message:'User is valid'})
   }
