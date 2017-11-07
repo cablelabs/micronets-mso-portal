@@ -1,5 +1,5 @@
 # mso-portal-backend
-MSO Portal API's
+MSO Portal API's for micronets  
 
 
 ## Installing MSO Portal Backend Locally
