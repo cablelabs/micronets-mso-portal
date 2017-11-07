@@ -1,8 +1,8 @@
-# mso-portal-backend
-MSO Portal API's for micronets  
+# MSO-Portal
+MSO Portal backend API's for micronets  
 
 
-## Installing MSO Portal Backend Locally
+## Installing MSO Portal Locally
 
 ### Requirements
 1.  Node and NPM
@@ -28,13 +28,13 @@ To install Git, follow the download and install instructions at [Set Up Git](htt
 
 1. Clone the repository
     ```
-    git clone https://github.com/cablelabs/mso-portal-backend.git
+    git clone https://github.com/cablelabs/msoportal.git
     ```
 
 2. Install your dependencies
 
     ```
-    cd mso-portal-backend
+    cd msoportal
     npm install
     ```
 
