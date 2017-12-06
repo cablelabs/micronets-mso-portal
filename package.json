@@ -1,7 +1,7 @@
 {
   "name": "mso-portal",
   "description": "MSO Portal backend API's",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "homepage": "",
   "main": "src",
   "keywords": [
