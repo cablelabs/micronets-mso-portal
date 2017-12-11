@@ -23,20 +23,15 @@ const { authenticate } = authentication.hooks
           // modifying params.payload.
           hook => {
             // make sure params.payload exists
-            const { data , params } = hook
-            console.log('\n data  : ' + JSON.stringify(data))
-            console.log('\n params : ' + JSON.stringify(params))
-            console.log('\n BEFORE hook.params.payload : ' + JSON.stringify(hook.params.payload))
-            hook.params.payload = hook.params.payload || {}
-            console.log('\n AFTER hook.params.payload : ' + JSON.stringify(hook.params.payload))
+            //hook.params.payload = hook.params.payload || {}
             // merge in a custom properties
-            Object.assign(hook.params.payload,data)
+            Object.assign(hook.data)
           }
 
-        ],
-        remove: [
-          authenticate('jwt')
         ]
+        // remove: [
+        //   authenticate('jwt')
+        // ]
       }
     })
 

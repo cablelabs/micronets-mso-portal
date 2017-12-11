@@ -13,21 +13,23 @@
       "jwt"
     ],
     "path": "/authentication",
+    "header": "Authorization",
     "service": "users",
+    "entity": "user",
     "session": false,
     "cookie": {
       "enabled": false,
       "name": "feathers-jwt",
-      "httpOnly": true,
+      "httpOnly": false,
       "secure": true
     },
     "jwt": {
       "header": {
         "type": "access"
       },
-      "audience": "https://yourdomain.com",
+      "audience": "https://micronets.com",
       "subject": "Initiate registration to on-board device",
-      "issuer": "https://mso.micronets.com",
+      "issuer": "https://mso-portal.micronets.com",
       "algorithm": "HS256",
       "expiresIn": "1d"
     }
