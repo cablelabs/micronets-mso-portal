@@ -18,9 +18,6 @@ const { authenticate } = authentication.hooks
     app.service('authentication').hooks({
       before: {
         create: [
-          //authentication.hooks.authenticate(config.strategies),
-          // This hook adds the `test` attribute to the JWT payload by
-          // modifying params.payload.
           hook => {
 
             hook.params.payload = hook.params.payload || {}
@@ -29,9 +26,6 @@ const { authenticate } = authentication.hooks
           }
 
         ]
-        // remove: [
-        //   authenticate('jwt')
-        // ]
       }
     })
 
