@@ -2,6 +2,7 @@
   "host": "localhost",
   "port": 3030,
   "public": "../public/",
+  "src": "../src/",
   "paginate": {
     "default": 10,
     "max": 50
@@ -15,19 +16,19 @@
     "path": "/authentication",
     "header": "Authorization",
     "service": "users",
-    "entity": "user",
+    "entity": "users",
     "session": false,
     "cookie": {
       "enabled": false,
       "name": "feathers-jwt",
-      "httpOnly": false,
+      "httpOnly": true,
       "secure": true
     },
     "jwt": {
       "header": {
         "type": "access"
       },
-      "audience": "https://micronets.com",
+      "audience": "micronets.com",
       "subject": "Initiate registration to on-board device",
       "issuer": "https://mso-portal.micronets.com",
       "algorithm": "HS256",

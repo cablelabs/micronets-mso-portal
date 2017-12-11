@@ -1,8 +1,6 @@
 const authentication = require('feathers-authentication')
 const errors = require('feathers-errors');
 const jwt = require('feathers-authentication-jwt');
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-const moment = require('moment');
 const { authenticate } = authentication.hooks
   module.exports = function () {
     const app = this;
