@@ -19,12 +19,10 @@ const { authenticate } = authentication.hooks
       before: {
         create: [
           hook => {
-
             hook.params.payload = hook.params.payload || {}
             // merge in a custom properties
             Object.assign(hook.params.payload, hook.data)
           }
-
         ]
       }
     })
