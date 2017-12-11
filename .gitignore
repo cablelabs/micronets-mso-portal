@@ -112,3 +112,5 @@ lib/
 data/
 
 .idea/workspace.xml
+
+package-lock.json
