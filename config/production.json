@@ -1,0 +1,31 @@
+{
+  "host": "mso-portal.cablelabs.com",
+  "port": "PORT",
+  "protocol": "https",
+  "public": "../public/",
+  "src": "../src/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "mongodb": "MONGO_URL",
+  "authentication": {
+    "secret": "df7097453f4f83eaeaa7dd5a78ff3b94441504a8fae8fa2aef7996c002e8087b217a064f21b36a1db02d6da7a703aa190ea735b7dcfb20b3a6e732a86d12e2a2f9422e37a2ddcc0d434c6db375cc1bb0332084e9070b29bca89559f03fa2f85dbcba3df0958bd324f7e829f60738ee42827a79cd98dafb877199e16bea6f655635b469da34b8381442067eeb5fdb5c5e2de06afdb5d2d35d228b23ed51935c691b0c221d409ce7e8c0d9c0c6ebaba727e94dd47a1753871d8bdd0fc8a3c684123c89aa0a49b5f4a22af128ea4878d0f3cfbbf54676e2e063bde20628a797435a05b9ef4b8c7223fb93e5202c320283a74fdaf4922eb08baed064e795a7878b67",
+    "strategies": [
+      "jwt"
+    ],
+    "path": "/authentication",
+    "header": "Authorization",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "type": "access"
+      },
+      "audience": "https://mso-portal.cablelabs.com",
+      "subject": "Initiate registration to on-board device",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    }
+  }
+}
