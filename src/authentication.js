@@ -22,10 +22,10 @@ const { authenticate } = authentication.hooks
           // This hook adds the `test` attribute to the JWT payload by
           // modifying params.payload.
           hook => {
-            // make sure params.payload exists
-            //hook.params.payload = hook.params.payload || {}
+
+            hook.params.payload = hook.params.payload || {}
             // merge in a custom properties
-            Object.assign(hook.data)
+            Object.assign(hook.params.payload, hook.data)
           }
 
         ]
