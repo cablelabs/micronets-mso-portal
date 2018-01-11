@@ -21,9 +21,9 @@ module.exports = function () {
           const { data  } = hook;
           if(!data.clientID || !data.deviceID || !data.macAddress) {
             throw new errors.BadRequest('Missing request parameters', {
-              clientID: '34534534',
-              deviceID: '2323423',
-              macAddress: '00-14-22-01-23-45'
+              clientID: 'www.happy-clinic.com',
+              deviceID: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+              macAddress: '08:00:69:02:01:FC'
             });
           }
           hook.params.payload = hook.params.payload || {};
@@ -31,6 +31,13 @@ module.exports = function () {
           Object.assign(hook.params.payload, hook.data);
         }
       ]
+    },
+    after:{
+      create: [
+        hook => {
+          const { data ,params  } = hook;
+        }
+      ],
     }
   });
 };
