@@ -6,9 +6,11 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const certificates = new Schema({
-    subscriber: { type: Object, required: true },
-    wifiCert: { type: Object, required: true },
-    caCert: { type: Object, required: true }
+    wifiCert: { type: String, required: true },
+    caCert: { type: String, required: true },
+    subscriber: { type: Object, required: false },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
   }, {
     timestamps: true
   });
