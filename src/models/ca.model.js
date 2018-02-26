@@ -6,8 +6,10 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const ca = new Schema({
-    csrTemplate: { type: String, required: true },
-    debug:{ type:Object , required:false }
+      csrTemplate: { type: Object, required: true },
+      debug:{ type:Object , required:false },
+      createdAt: { type: Date, default: Date.now },
+      updatedAt: { type: Date, default: Date.now }
   }, {
     timestamps: true
   });

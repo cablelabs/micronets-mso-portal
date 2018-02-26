@@ -37,17 +37,21 @@
   },
   "registrationServer": {
    "clinics" : [
-     "https://happyClinic.org",
-     "https://stanfordhealthcare.org/",
-     "https://healthy.kaiserpermanente.org"
+     { "url": "https://happyClinic.org" },
+     { "url": "https://stanfordhealthcare.org/" },
+     { "url": "https://healthy.kaiserpermanente.org" }
    ],
-    "host": {
-      "url":"http://127.0.0.1:3010/registration.com",
-      "key":"AIzaSyCyznwPgro36udOLIoYcDUKW6d5i5plq5M"
-    }
+    "hosts": [
+      {
+        "url":"localhost:3032",
+        "key":"AIzaSyCyznwPgro36udOLIoYcDUKW6d5i5plq5M"
+      }
+    ]
   },
   "identityServer": {
      "host":"http://127.0.0.1",
-     "port":"3030"
+     "port":"3030",
+     "csrt":"/csrt",
+     "certificates":"/certificates"
   }
 }
