@@ -13,7 +13,6 @@ module.exports = {
         const identityServer = hook.app.get ( 'identityServer' )
         const csrtUri = identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.csrt )
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
-        const omitSubscriberMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const certs = await axios.post ( csrtUri , data , axiosConfig );
         const subscriber = await hook.app.service ( 'subscribers' ).find ( { query : { id : hook.data.id } } );
