@@ -14,7 +14,9 @@ module.exports = function (app) {
     verifyExpires: { type: Date },
     verifyChanges: { type: Object },
     resetToken: { type: String },
-    resetExpires: { type: Date }
+    resetExpires: { type: Date },
+    clientID: { type: String , required: true  },
+    deviceID: { type: String , required: true }
   }, {
     timestamps: true
   });
