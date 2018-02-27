@@ -13,9 +13,9 @@
     "strategies": [
       "jwt"
     ],
-    "path": "/authentication",
+    "path": "/portal/registration/token",
     "header": "Authorization",
-    "service": "users",
+    "service": "/portal/users",
     "entity": "users",
     "session": false,
     "cookie": {

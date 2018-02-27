@@ -15,7 +15,7 @@ module.exports = {
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const certs = await axios.post ( csrtUri , data , axiosConfig );
-        const subscriber = await hook.app.service ( 'subscribers' ).find ( { query : { id : hook.data.id } } );
+        const subscriber = await hook.app.service ( '/portal/subscribers' ).find ( { query : { id : hook.data.id } } );
         hook.data = Object.assign ( {} ,
           { csrTemplate : certs.data.csrTemplate,
             debug: {

@@ -14,7 +14,7 @@ module.exports = function () {
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
-  app.service('authentication').hooks({
+  app.service('/portal/registration/token').hooks({
     before: {
       create: [
         hook => {
