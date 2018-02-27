@@ -6,7 +6,7 @@ module.exports = {
     find: [],
     get: [
       hook => {
-        return hook.app.service('subscribers').find({ query: { id: hook.id } })
+        return hook.app.service('portal/subscribers').find({ query: { id: hook.id } })
           .then( ({ data }) => { hook.result = data; });
       }
     ],

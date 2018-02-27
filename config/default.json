@@ -13,7 +13,7 @@
     "strategies": [
       "jwt"
     ],
-    "path": "/portal/registration-token",
+    "path": "/portal/registration/token",
     "header": "Authorization",
     "service": "/portal/users",
     "entity": "users",

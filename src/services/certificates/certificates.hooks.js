@@ -16,7 +16,7 @@ module.exports = {
         // console.log('\n csrPem : ' + (csrPem))
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         // Since hook.app.service('subscribers').get returns a promise we can `await` it
-        const subscriber = await hook.app.service('subscribers').find ( { query : { id : hook.data.id } } );
+        const subscriber = await hook.app.service('/portal/subscribers').find ( { query : { id : hook.data.id } } );
         const identityServer = hook.app.get('identityServer')
         const certificatesUri = identityServer.host.concat(':').concat(identityServer.port).concat(identityServer.certificates)
         const certs = await axios.post ( certificatesUri , data , axiosConfig );
