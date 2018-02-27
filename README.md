@@ -133,8 +133,8 @@ The response is ultimately returned to the device.
 
 The required subscriber information is returned. For now, all we really need is the SSID but we return Subscriber Name for display purposes.
 
-#### url: GET `/portal/subscribers/<subscriberID>`
-- subscriberID:  Unique identifier for subscriber (obtained by the registration server when subscriber is authenticated)
+#### url: GET `/portal/subscribers/<id>`
+- id:  Unique identifier for subscriber (obtained by the registration server when subscriber is authenticated)
 
 Header Fields:
 
