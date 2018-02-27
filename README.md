@@ -67,10 +67,10 @@ Header Fields:
 POST data:
 
     {
-      "subscriberID": "<subscriberID>"
+      "id": "<subscriberID>"
     }
 
-The `subscriberID` identifies a subscriber account. The Registration Server obtains this when the subscriber authenticates using the clinic browser (eg. scanning QR Code)
+The `id` identifies a subscriber account. The Registration Server obtains this when the subscriber authenticates using the clinic browser (eg. scanning QR Code)
 
 #### response:
 (optional debug: contents of the registration context)
