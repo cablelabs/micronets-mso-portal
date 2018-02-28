@@ -149,21 +149,6 @@ Header Fields:
         "ssid": "Grandma's WiFi"
       }
 
-**NOTE:** The CSR, wifiCert and caCert are base64 encoded to preserve line endings. **REQUIRED!**
-
-#### response:
-The response is ultimately returned to the device.
-
-    {
-	  "subscriber": {
-		"id": 1,
-		"name": "Grandma",
-		"ssid": "Grandma's WiFi"
-	  },
-	  "wifiCert": "<base64 encoded WiFi Certificate>",
-	  "caCert": "<base64 encoded CA Certificate>"
-    }
-
 
 ## Getting Started
 
