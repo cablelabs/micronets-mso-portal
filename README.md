@@ -109,6 +109,8 @@ Header Fields:
 POST data:
 
     {
+
+      "id": "<subscriberID>",
       "csr": "<base64 encoded CSR>"
     }
 
