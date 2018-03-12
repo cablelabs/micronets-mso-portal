@@ -54,5 +54,5 @@
      "csrt":"/csrt",
      "certificates":"/certificates"
   },
-  "identity_server_url":"http://127.0.0.1/3230"
+  "identity_server_url":"https://mycable.co/rootca"
 }
