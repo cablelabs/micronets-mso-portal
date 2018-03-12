@@ -1,11 +1,11 @@
-// subscribers-model.js - A mongoose model
+// subscriber-model.js - A mongoose model
 // 
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
-  const subscribers = new Schema({
+  const subscriber = new Schema({
     id: { type: String , required: true },
     ssid: { type: String, required: true },
     name: { type: String, required: true }
@@ -13,5 +13,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('subscribers', subscribers);
+  return mongooseClient.model('subscriber', subscriber);
 };

@@ -10,12 +10,15 @@ module.exports = {
     create : [
       async function ( hook ) {
         const { params , data , payload } = hook;
-        const identityServer = hook.app.get ( 'identityServer' )
-        const csrtUri = identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.csrt )
+        const identityServer = hook.app.get ( 'identityServer' );
+        const identityServerUrl = hook.app.get ( 'identity_server_url' )
+       // const csrtUri = identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.csrt )
+        const csrtUri = identityServerUrl.concat ( identityServer.csrt )
+        console.log('\n CA csrtUri : ' + JSON.stringify(csrtUri))
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const certs = await axios.post ( csrtUri , data , axiosConfig );
-        const subscriber = await hook.app.service ( '/portal/subscribers' ).find ( { query : { id : hook.data.id } } );
+        const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.id } } );
         hook.data = Object.assign ( {} ,
           { csrTemplate : certs.data.csrTemplate,
             debug: {
