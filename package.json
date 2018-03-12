@@ -28,7 +28,7 @@
     "start": "node src/",
     "mocha": "mocha test/ --recursive --exit",
     "docker-build": "docker build -t code.cablelabs.com:4567/micronets/mso-portal .",
-    "docker-compose": "docker-compose build",
+    "docker-compose": "docker-compose up --build",
     "docker-publish": "docker login code.cablelabs.com:4567; docker push code.cablelabs.com:4567/micronets/mso-portal"
   },
   "dependencies": {
