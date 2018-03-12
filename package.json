@@ -28,6 +28,7 @@
     "start": "node src/",
     "mocha": "mocha test/ --recursive --exit",
     "docker-build": "docker build -t code.cablelabs.com:4567/micronets/mso-portal .",
+    "docker-compose": "docker-compose build",
     "docker-publish": "docker login code.cablelabs.com:4567; docker push code.cablelabs.com:4567/micronets/mso-portal"
   },
   "dependencies": {
@@ -47,15 +48,15 @@
     "feathers-mongoose": "^5.1.2",
     "feathers-rest": "^1.8.1",
     "feathers-socketio": "^2.0.1",
-    "helmet": "^3.11.0",
+    "helmet": "^3.12.0",
     "minimal-request-promise": "^1.5.0",
-    "moment": "^2.20.1",
+    "moment": "^2.21.0",
     "mongodb": "^2.2.35",
     "mongoose": "^4.13.11",
     "nodemon": "^1.17.1",
     "ramda": "^0.25.0",
     "serve-favicon": "^2.4.5",
-    "winston": "^2.4.0"
+    "winston": "^2.4.1"
   },
   "devDependencies": {
     "eslint": "^4.15.0",
