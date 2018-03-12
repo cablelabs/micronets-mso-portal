@@ -1,0 +1,15 @@
+version: "2"
+services:
+  micronets:
+    image: code.cablelabs.com:4567/micronets/mso-portal
+    build: .
+    ports:
+      - "3210:3210"
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    volumes:
+      - /data/mongodb/db:/data/db
+    ports:
+      - "27017:27017"

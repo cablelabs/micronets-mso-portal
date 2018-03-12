@@ -1,6 +1,6 @@
 {
   "host": "localhost",
-  "port": 3032,
+  "port": 3210,
   "public": "../public/",
   "src": "../src/",
   "paginate": {
@@ -43,7 +43,7 @@
    ],
     "hosts": [
       {
-        "url":"localhost:3032",
+        "url":"localhost:3210",
         "key":"AIzaSyCyznwPgro36udOLIoYcDUKW6d5i5plq5M"
       }
     ]
@@ -53,5 +53,6 @@
      "port":"3030",
      "csrt":"/csrt",
      "certificates":"/certificates"
-  }
+  },
+  "identity_server_url":"http://127.0.0.1/3230"
 }
