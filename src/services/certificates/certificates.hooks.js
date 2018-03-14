@@ -22,9 +22,13 @@ module.exports = {
         //const certificatesUri = identityServer.host.concat(':').concat(identityServer.port).concat(identityServer.certificates)
         const certificatesUri = identityServerUrl.concat(identityServer.certificates)
         console.log('\n Certificates certificatesUri : '+ JSON.stringify(certificatesUri))
+        console.log('\n Certificates hook before create subscriber : ' + JSON.stringify(subscriber))
         const certs = await axios.post ( certificatesUri , data , axiosConfig );
+        const finalSubscriber = Object.assign({},subscriber.data.length > 0 ? omitMeta(subscriber.data[0]) : { info:'No subscriber found' } );
+        console.log('\n finalSubscriber : ' + JSON.stringify(finalSubscriber))
         hook.data = Object.assign({},
           { wifiCert:certs.data.wifiCert , caCert:certs.data.caCert , subscriber: Object.assign({},subscriber.data.length > 0 ? omitMeta(subscriber.data[0]) : { info:'No subscriber found' } )})
+        console.log('\n Certificates before hook hook.data : ' + JSON.stringify(hook.data))
       }
     ] ,
     update : [] ,
@@ -39,6 +43,7 @@ module.exports = {
     create : [
       hook => {
         hook.result = omitMeta(hook.data)
+        console.log('\n Certificates after create hook hook.result :' + JSON.stringify(hook.result))
         return hook;
       }
     ] ,
