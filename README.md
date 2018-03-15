@@ -110,7 +110,6 @@ POST data:
 
     {
 
-      "id": "<subscriberID>",
       "csr": "<base64 encoded CSR>"
     }
 
@@ -131,17 +130,16 @@ The response is ultimately returned to the device.
 
 ## Private REST Interface
 
-### 4. Subscribers
+### 4. Subscriber
 
 The required subscriber information is returned. For now, all we really need is the SSID but we return Subscriber Name for display purposes.
 
-#### url: GET `/portal/subscribers/<id>`
+#### url: GET `/internal/subscriber/<id>`
 - id:  Unique identifier for subscriber (obtained by the registration server when subscriber is authenticated)
 
 Header Fields:
 
     content-type: "application/json"
-    Authorization: "Bearer <JWT token>"
 
 #### response:
 
