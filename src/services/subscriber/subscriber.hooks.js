@@ -7,7 +7,7 @@ module.exports = {
     find: [],
     get: [
       hook => {
-        return hook.app.service('internal/subscriber').find({ query: { id: hook.id } })
+        return hook.app.service('/internal/subscriber').find({ query: { id: hook.id } })
           .then( ({ data }) => {
             console.log('\n Subscriber found  raw : ' + JSON.stringify(data));
             hook.result = omitMeta(data[0]);

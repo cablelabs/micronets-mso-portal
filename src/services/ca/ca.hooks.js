@@ -10,6 +10,7 @@ module.exports = {
     create : [
       async function ( hook ) {
         const { params , data , payload } = hook;
+        console.log('\n CA hook DATA : ' + JSON.stringify(data) + '\t\t PARAMS : ' + JSON.stringify(params))
         const identityServer = hook.app.get ( 'identityServer' );
         const identityServerUrl = hook.app.get ( 'identity_server_url' )
         //const csrtUri = identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.csrt )
@@ -18,7 +19,7 @@ module.exports = {
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const certs = await axios.post ( csrtUri , data , axiosConfig );
-        const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.id } } );
+        const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.subscriberID } } );
         console.log('\n CA HOOK BEFORE CREATE SUBSCRIBER :' + JSON.stringify(subscriber))
         hook.data = Object.assign ( {} ,
           { csrTemplate : certs.data.csrTemplate,
@@ -44,9 +45,16 @@ module.exports = {
     find : [] ,
     get : [] ,
     create : [
-      hook => {
+      async function ( hook ) {
+        const { params , data , payload } = hook
         hook.result = omitMeta(hook.data)
-        console.log('\n CA HOOK BEFORE CREATE  hook.result :' + JSON.stringify( hook.result))
+        console.log('\n CA HOOK AFTER CREATE  hook.result :' + JSON.stringify( hook.result))
+        console.log('\n CA HOOK AFTER CREATE  hook.result.SUBSCRIBER : ' + JSON.stringify( hook.result.debug.context.subscriber))
+        const session = await hook.app.service ( '/portal/session' ).create({token:hook.result.debug.context.token, subscriberId:hook.result.debug.context.subscriber.id})
+        console.log('\n session : ' + JSON.stringify(session));
+        //console.log('\n CA HOOK params.headers.authorization : ' + JSON.stringify(params.headers.authorization.split(' ')[1]))
+        //const sessionRetrieved = await hook.app.service('/portal/session').find ( { query : { token : params.headers.authorization } } );
+        //console.log('\n Retrieved session in CA : ' + JSON.stringify(sessionRetrieved))
         return hook;
       }
     ] ,
