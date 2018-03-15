@@ -21,6 +21,8 @@ module.exports = {
         const certs = await axios.post ( csrtUri , data , axiosConfig );
         const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.subscriberID } } );
         console.log('\n CA HOOK BEFORE CREATE SUBSCRIBER :' + JSON.stringify(subscriber))
+        const session = await hook.app.service ( '/portal/session' ).create({token:jwtToken, subscriberId:subscriber.data[ 0 ].id})
+        console.log('\n session : ' + JSON.stringify(session));
         hook.data = Object.assign ( {} ,
           { csrTemplate : certs.data.csrTemplate,
             debug: {
@@ -49,9 +51,9 @@ module.exports = {
         const { params , data , payload } = hook
         hook.result = omitMeta(hook.data)
         console.log('\n CA HOOK AFTER CREATE  hook.result :' + JSON.stringify( hook.result))
-        console.log('\n CA HOOK AFTER CREATE  hook.result.SUBSCRIBER : ' + JSON.stringify( hook.result.debug.context.subscriber))
-        const session = await hook.app.service ( '/portal/session' ).create({token:hook.result.debug.context.token, subscriberId:hook.result.debug.context.subscriber.id})
-        console.log('\n session : ' + JSON.stringify(session));
+        //console.log('\n CA HOOK AFTER CREATE  hook.result.SUBSCRIBER : ' + JSON.stringify( hook.result.debug.context.subscriber))
+        //const session = await hook.app.service ( '/portal/session' ).create({token:hook.result.debug.context.token, subscriberId:hook.result.debug.context.subscriber.id})
+        //console.log('\n session : ' + JSON.stringify(session));
         //console.log('\n CA HOOK params.headers.authorization : ' + JSON.stringify(params.headers.authorization.split(' ')[1]))
         //const sessionRetrieved = await hook.app.service('/portal/session').find ( { query : { token : params.headers.authorization } } );
         //console.log('\n Retrieved session in CA : ' + JSON.stringify(sessionRetrieved))
