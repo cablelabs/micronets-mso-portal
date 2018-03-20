@@ -15,20 +15,21 @@ module.exports = {
         var csrPem = fs.readFileSync ( path.join ( __dirname , "../../../sandbox/" , "micronet.csr" ) );
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         // Since hook.app.service('subscribers').get returns a promise we can `await` it
-        const session = await hook.app.service ( '/portal/session' ).find ( { query : { token : params.headers.authorization } } );
-        const subscriberId = session.data[ 0 ].subscriberId;
+        const session = await hook.app.service ( '/portal/session' ).find ( { query : { deviceId : params.payload.deviceID } } );
+       // const subscriberId = session.data[ 0 ].subscriberId;
+        // console.log('\n Certificates hook retreived session : ' + JSON.stringify(session))
         const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : session.data[ 0 ].subscriberId } } );
         const identityServer = hook.app.get ( 'identityServer' )
         const identityServerUrl = hook.app.get ( 'identity_server_url' )
-        //const certificatesUri = identityServer.host.concat(':').concat(identityServer.port).concat(identityServer.certificates)
-        const certificatesUri = identityServerUrl.concat ( identityServer.certificates )
-        console.log ( '\n Certificates certificatesUri : ' + JSON.stringify ( certificatesUri ) )
+        const certificatesUri = identityServer.host.concat(':').concat(identityServer.port).concat(identityServer.certificates)
+        //const certificatesUri = identityServerUrl.concat ( identityServer.certificates )
         const certs = await axios.post ( certificatesUri , data , axiosConfig );
         const finalSubscriber = Object.assign ( {} , subscriber.data.length > 0 ? omitMeta ( subscriber.data[ 0 ] ) : { info : 'No subscriber found' } );
         hook.data = Object.assign ( {} ,
           {
             wifiCert : certs.data.wifiCert ,
             caCert : certs.data.caCert ,
+            macAddress: params.payload.macAddress,
             subscriber : Object.assign ( {} , subscriber.data.length > 0 ? omitMeta ( subscriber.data[ 0 ] ) : { info : 'No subscriber found' } )
           } )
       }
