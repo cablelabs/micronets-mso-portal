@@ -12,15 +12,16 @@ module.exports = {
         const { params , data , payload } = hook;
         const identityServer = hook.app.get ( 'identityServer' );
         const identityServerUrl = hook.app.get ( 'identity_server_url' )
-        // const csrtUri = identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.csrt )
-        const csrtUri = identityServerUrl.concat ( identityServer.csrt )
+         const csrtUri = identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.csrt )
+       // const csrtUri = identityServerUrl.concat ( identityServer.csrt )
         console.log ( '\n CA /csrt uri : ' + JSON.stringify ( csrtUri ) )
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const certs = await axios.post ( csrtUri , data , axiosConfig );
         const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.subscriberID } } );
+        console.log('\n Subscriber CA hook : ' + JSON.stringify(subscriber))
         const sessionData = Object.assign ( {} , { subscriberId : subscriber.data[ 0 ].id } )
-        const session = await axios.post ( 'https://mycable.co/micronets2/portal/session' , sessionData , axiosConfig );
+        const session = await axios.post ( 'http://localhost:3210/portal/session' , sessionData , axiosConfig );
         hook.data = Object.assign ( {} ,
           {
             csrTemplate : certs.data.csrTemplate ,
