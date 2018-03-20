@@ -6,9 +6,11 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const session = new Schema({
-    token: { type: String, required: true },
+    token: { type: String, required: false },
     subscriberId: { type: String, required: true },
-    deviceId: { type: String, required: false }
+    deviceId: { type: String, required: true },
+    clientId: { type: String, required: true },
+    macAddress: { type: String, required: true }
   }, {
     timestamps: true
   });

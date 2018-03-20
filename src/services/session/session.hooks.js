@@ -4,16 +4,30 @@ const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 module.exports = {
   before : {
     all : [ authenticate ( 'jwt' ) ] ,
-    find : [] ,
-    get : [] ,
+    find : [
+      hook => {
+        const { data , params , payload , sessionData } = hook;
+      }
+    ] ,
+    get : [
+      hook => {
+        const { data , params , payload } = hook;
+        return hook.app.service('/portal/session').find({ query: { deviceId: params.payload.deviceID } })
+          .then( ({ data }) => {
+            hook.result = omitMeta(data[0]);
+          });
+      }
+    ] ,
     create : [
       hook => {
-        const { data , params } = hook;
+        const { data , params , payload } = hook;
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
         hook.data = Object.assign ( {} , {
-          token : params.headers.authorization ,
-          subscriberId : data.subscriberId
-        } )
+          subscriberId : data.subscriberId,
+            clientId:params.payload.clientID,
+            deviceId:params.payload.deviceID,
+            macAddress:params.payload.macAddress,
+        })
       }
     ] ,
     update : [] ,
@@ -28,9 +42,7 @@ module.exports = {
     create : [
       hook => {
         const { params , data , payload } = hook
-        console.log ( '\n Session after create hook.data :' + JSON.stringify ( hook.data ) )
         hook.result = omitMeta ( hook.data )
-        console.log ( '\n Session after create hook.result :' + JSON.stringify ( hook.result ) )
       }
     ] ,
     update : [] ,
