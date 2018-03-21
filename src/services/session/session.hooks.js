@@ -4,33 +4,32 @@ const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 module.exports = {
   before : {
     all : [ authenticate ( 'jwt' ) ] ,
-    find : [
-      hook => {
-        const { data , params , payload , sessionData } = hook;
+    find : [] ,
+    get : [] ,
+    create : [
+     (hook) => {
+        const { data , params , payload } = hook;
+          hook.data = Object.assign ( {} , {
+            id : data.subscriberId ,
+            devices : [ Object.assign ( {} , {
+              clientId : params.payload.clientID ,
+              deviceId : params.payload.deviceID ,
+              macAddress : params.payload.macAddress
+            })]
+          })
       }
     ] ,
-    get : [
+    update : [
       hook => {
-        const { data , params , payload } = hook;
-        return hook.app.service('/portal/session').find({ query: { deviceId: params.payload.deviceID } })
+       const {  params , id } = hook;
+        return hook.app.service('/portal/session').find({ query: { id: id } })
           .then( ({ data }) => {
-            hook.result = omitMeta(data[0]);
+            const originalSession = data[0];
+            let updatedSession = Object.assign({} , originalSession , originalSession.devices.push(hook.data));
+            hook.data = Object.assign({}, updatedSession )
           });
       }
     ] ,
-    create : [
-      hook => {
-        const { data , params , payload } = hook;
-        const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
-        hook.data = Object.assign ( {} , {
-          subscriberId : data.subscriberId,
-            clientId:params.payload.clientID,
-            deviceId:params.payload.deviceID,
-            macAddress:params.payload.macAddress,
-        })
-      }
-    ] ,
-    update : [] ,
     patch : [] ,
     remove : []
   } ,

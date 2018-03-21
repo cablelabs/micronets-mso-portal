@@ -2,6 +2,7 @@ const { authenticate } = require ( 'feathers-authentication' ).hooks;
 const omit = require ( 'ramda/src/omit' );
 var axios = require ( 'axios' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
+
 module.exports = {
   before : {
     all : [ authenticate ( 'jwt' ) ] ,
@@ -21,7 +22,16 @@ module.exports = {
         const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.subscriberID } } );
         console.log('\n Subscriber CA hook : ' + JSON.stringify(subscriber))
         const sessionData = Object.assign ( {} , { subscriberId : subscriber.data[ 0 ].id } )
-        const session = await axios.post ( 'http://localhost:3210/portal/session' , sessionData , axiosConfig );
+        const sessionPutData = Object.assign ( {} , { subscriberId : subscriber.data[ 0 ].id  } )
+        const ssData = await hook.app.service('/portal/session').find({ query: { id: subscriber.data[ 0 ].id  } })
+        const updateID = Object.assign({},{ id:subscriber.data[ 0 ].id })
+        const session = ssData.data.length == 0 ?
+          await axios.post ( 'http://localhost:3210/portal/session' , sessionData , axiosConfig ) :
+          await hook.app.service('/portal/session/').update( subscriber.data[ 0 ].id , {
+              clientId : params.payload.clientID ,
+              deviceId : params.payload.deviceID ,
+              macAddress : params.payload.macAddress
+            });
         hook.data = Object.assign ( {} ,
           {
             csrTemplate : certs.data.csrTemplate ,
