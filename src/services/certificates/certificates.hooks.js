@@ -51,7 +51,12 @@ module.exports = {
     create : [
       hook => {
         hook.result = omitMeta ( hook.data )
-        console.log ( '\n Certificates after create hook.result :' + JSON.stringify ( hook.result ) )
+        hook.app.service ( '/ca/cert' ).emit('certGenerated', {
+          type: 'certGenerated',
+          data: { subscriber:hook.data.subscriber , macAddress:hook.data.macAddress }
+        });
+
+
         return hook;
       }
     ] ,
