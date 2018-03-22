@@ -22,11 +22,10 @@ module.exports = {
         const subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.subscriberID } } );
         console.log('\n Subscriber CA hook : ' + JSON.stringify(subscriber))
         const sessionData = Object.assign ( {} , { subscriberId : subscriber.data[ 0 ].id } )
-        const sessionPutData = Object.assign ( {} , { subscriberId : subscriber.data[ 0 ].id  } )
         const ssData = await hook.app.service('/portal/session').find({ query: { id: subscriber.data[ 0 ].id  } })
-        const updateID = Object.assign({},{ id:subscriber.data[ 0 ].id })
+        const hostUrl = hook.app.get('host').concat(':').concat(host.app.get('port'))
         const session = ssData.data.length == 0 ?
-          await axios.post ( 'http://localhost:3210/portal/session' , sessionData , axiosConfig ) :
+          await axios.post ( `${hostUrl}/portal/session` , sessionData , axiosConfig ) :
           await hook.app.service('/portal/session/').update( subscriber.data[ 0 ].id , {
               clientId : params.payload.clientID ,
               deviceId : params.payload.deviceID ,
