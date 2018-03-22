@@ -9,9 +9,10 @@ module.exports = function (app) {
   const session = new Schema({
         id: { type: String, required: true,  unique: true, primaryKey: true },
         devices:[{
-            deviceId: { type: String, required: true },
+            deviceId: { type: String, required: true, unique: true },
             clientId: { type: String, required: true },
-            macAddress: { type: String, required: true }
+            macAddress: { type: String, required: true, unique: true },
+            isRegistered: { type: Boolean , required: true , default: false }
           }]
   }, {
     timestamps: true

@@ -30,7 +30,8 @@ module.exports = {
           await hook.app.service('/portal/session/').update( subscriber.data[ 0 ].id , {
               clientId : params.payload.clientID ,
               deviceId : params.payload.deviceID ,
-              macAddress : params.payload.macAddress
+              macAddress : params.payload.macAddress,
+              isRegistered:false
             });
         hook.data = Object.assign ( {} ,
           {
