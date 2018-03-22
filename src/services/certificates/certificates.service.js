@@ -23,9 +23,7 @@ module.exports = function () {
 
   service.on('created', (service, context) => {});
 
-  service.on('certGenerated', (data)=> {
-   // console.log('\n Certificates hooks event emitter certGenerated detected. Printing data : ' + JSON.stringify(data))
-  })
+  service.on('certGenerated', (data)=> {})
 
   service.hooks(hooks);
 
