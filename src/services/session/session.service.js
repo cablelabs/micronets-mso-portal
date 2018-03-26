@@ -12,7 +12,8 @@ module.exports = function () {
   const options = {
     name: 'session',
     Model,
-    paginate
+    paginate,
+    id:'id'
   };
 
   // Initialize our service with any options it requires

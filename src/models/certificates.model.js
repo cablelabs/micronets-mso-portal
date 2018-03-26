@@ -9,6 +9,7 @@ module.exports = function (app) {
     wifiCert: { type: String, required: true },
     caCert: { type: String, required: true },
     subscriber: { type: Object, required: false },
+    macAddress:{ type: String, required: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
   }, {

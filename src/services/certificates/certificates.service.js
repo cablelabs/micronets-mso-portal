@@ -21,6 +21,10 @@ module.exports = function () {
   // Get our initialized service so that we can register hooks and filters
   const service = app.service('ca/cert');
 
+  service.on('created', (service, context) => {});
+
+  service.on('certGenerated', (data)=> {})
+
   service.hooks(hooks);
 
   if (service.filter) {

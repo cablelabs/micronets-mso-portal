@@ -7,16 +7,29 @@ module.exports = {
     find : [] ,
     get : [] ,
     create : [
-      hook => {
-        const { data , params } = hook;
-        const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
-        hook.data = Object.assign ( {} , {
-          token : params.headers.authorization ,
-          subscriberId : data.subscriberId
-        } )
+     (hook) => {
+        const { data , params , payload } = hook;
+          hook.data = Object.assign ( {} , {
+            id : data.subscriberId ,
+            devices : [ Object.assign ( {} , {
+              clientId : params.payload.clientID ,
+              deviceId : params.payload.deviceID ,
+              macAddress : params.payload.macAddress
+            })]
+          })
       }
     ] ,
-    update : [] ,
+    update : [
+      hook => {
+       const {  params , id } = hook;
+        return hook.app.service('/portal/session').find({ query: { id: id } })
+          .then( ({ data }) => {
+            const originalSession = data[0];
+            let updatedSession = Object.assign({} , originalSession , originalSession.devices.push(hook.data));
+            hook.data = Object.assign({}, updatedSession )
+          });
+      }
+    ] ,
     patch : [] ,
     remove : []
   } ,
@@ -28,9 +41,7 @@ module.exports = {
     create : [
       hook => {
         const { params , data , payload } = hook
-        console.log ( '\n Session after create hook.data :' + JSON.stringify ( hook.data ) )
         hook.result = omitMeta ( hook.data )
-        console.log ( '\n Session after create hook.result :' + JSON.stringify ( hook.result ) )
       }
     ] ,
     update : [] ,
