@@ -27,9 +27,9 @@ module.exports = {
           ssid : subscriber.data[ 0 ].ssid
         } )
         const ssData = await hook.app.service ( '/portal/session' ).find ( { query : { id : subscriber.data[ 0 ].id } } )
-        //const hostUrl = hook.app.get('host').concat(':').concat(host.app.get('port'))
+        const hostUrl = hook.app.get('host').concat(':').concat(hook.app.get('port'))
         const session = ssData.data.length == 0 ?
-          await axios.post ( `http://localhost:3210/portal/session` , sessionData , axiosConfig ) :
+          await axios.post ( `http://${hostUrl}/portal/session` , sessionData , axiosConfig ) :
           await hook.app.service ( '/portal/session/' ).update ( subscriber.data[ 0 ].id , {
             clientId : params.payload.clientID ,
             deviceId : params.payload.deviceID ,
