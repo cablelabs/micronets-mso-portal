@@ -19,6 +19,10 @@ module.exports = {
             macAddress : params.payload.macAddress
           } ) ]
         } );
+        hook.app.service ( '/portal/session' ).emit ( 'sessionCreate' , {
+          type : 'sessionCreate' ,
+          data : { subscriberId : hook.data.id  }
+        } );
       }
     ] ,
     update : [
@@ -27,8 +31,14 @@ module.exports = {
         return hook.app.service ( '/portal/session' ).find ( { query : { id : id } } )
           .then ( ( { data } ) => {
             const originalSession = data[ 0 ];
+            console.log('\n Original Session : ' + JSON.stringify(originalSession))
             let updatedSession = Object.assign ( {} , originalSession , originalSession.devices.push ( hook.data ) );
+            console.log('\n Updated Session : ' + JSON.stringify(updatedSession))
             hook.data = Object.assign ( {} , updatedSession );
+            hook.app.service ( '/portal/session' ).emit ( 'sessionUpdate' , {
+              type : 'sessionUpdate' ,
+              data : { subscriberId : hook.data.id  }
+            } );
           } );
       }
     ] ,

@@ -28,8 +28,10 @@ module.exports = {
         result = result.filter ( ( e ) => { return e } )
         let subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : result[ 0 ].subscriberId } } );
         const identityServer = hook.app.get ( 'identityServer' )
+        // docker deployment url
         const identityServerUrl = hook.app.get ( 'identity_server_url' )
         const certificatesUri = identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.certificates )
+        // docker deployment url
         //const certificatesUri = identityServerUrl.concat ( identityServer.certificates )
         const certs = await axios.post ( certificatesUri , data , axiosConfig );
         // const finalSubscriber = Object.assign ( {} , subscriber.data.length > 0 ? omitMeta ( subscriber.data[ 0 ] ) : { info : 'No subscriber found' } );
