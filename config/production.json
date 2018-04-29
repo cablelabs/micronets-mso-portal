@@ -27,5 +27,24 @@
       "algorithm": "HS256",
       "expiresIn": "1d"
     }
-  }
+  },
+  "registrationServer": {
+    "clinics" : [
+      { "url": "https://happyClinic.org" },
+      { "url": "https://stanfordhealthcare.org/" },
+      { "url": "https://healthy.kaiserpermanente.org" }
+    ],
+    "hosts": [
+      {
+        "url":"REGISTRATION_SERVER_URL",
+        "key":"AIzaSyCyznwPgro36udOLIoYcDUKW6d5i5plq5M"
+      }
+    ]
+  },
+    "identityServer": {
+      "host": "IDENTITY_SERVER_URL",  //"https://mycable.co/rootca",
+      "csrt":"/csrt",
+      "certificates":"/certificates"
+    }
+
 }
