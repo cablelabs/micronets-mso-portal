@@ -24,6 +24,14 @@ module.exports = function () {
 
   service.hooks(hooks);
 
+  service.on('sessionUpdate', ()=> {
+    // console.log('\n Session Update event emitted with DATA : ' + JSON.stringify(data));
+  });
+
+  service.on('sessionCreate', ()=> {
+    // console.log('\n Session Create event emitted with DATA : ' + JSON.stringify(data));
+  });
+
   if (service.filter) {
     service.filter(filters);
   }

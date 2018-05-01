@@ -7,27 +7,39 @@ module.exports = {
     find : [] ,
     get : [] ,
     create : [
-     (hook) => {
-        const { data , params , payload } = hook;
-          hook.data = Object.assign ( {} , {
-            id : data.subscriberId ,
-            devices : [ Object.assign ( {} , {
-              clientId : params.payload.clientID ,
-              deviceId : params.payload.deviceID ,
-              macAddress : params.payload.macAddress
-            })]
-          })
+      ( hook ) => {
+        const { data , params } = hook;
+        hook.data = Object.assign ( {} , {
+          id : data.subscriberId ,
+          name : data.name ,
+          ssid : data.ssid ,
+          devices : [ Object.assign ( {} , {
+            clientId : params.payload.clientID ,
+            deviceId : params.payload.deviceID ,
+            macAddress : params.payload.macAddress
+          } ) ]
+        } );
+        hook.app.service ( '/portal/session' ).emit ( 'sessionCreate' , {
+          type : 'sessionCreate' ,
+          data : { subscriberId : hook.data.id  }
+        } );
       }
     ] ,
     update : [
       hook => {
-       const {  params , id } = hook;
-        return hook.app.service('/portal/session').find({ query: { id: id } })
-          .then( ({ data }) => {
-            const originalSession = data[0];
-            let updatedSession = Object.assign({} , originalSession , originalSession.devices.push(hook.data));
-            hook.data = Object.assign({}, updatedSession )
-          });
+        const { id } = hook;
+        return hook.app.service ( '/portal/session' ).find ( { query : { id : id } } )
+          .then ( ( { data } ) => {
+            const originalSession = data[ 0 ];
+            console.log('\n Original Session : ' + JSON.stringify(originalSession))
+            let updatedSession = Object.assign ( {} , originalSession , originalSession.devices.push ( hook.data ) );
+            console.log('\n Updated Session : ' + JSON.stringify(updatedSession))
+            hook.data = Object.assign ( {} , updatedSession );
+            hook.app.service ( '/portal/session' ).emit ( 'sessionUpdate' , {
+              type : 'sessionUpdate' ,
+              data : { subscriberId : hook.data.id  }
+            } );
+          } );
       }
     ] ,
     patch : [] ,
@@ -40,8 +52,8 @@ module.exports = {
     get : [] ,
     create : [
       hook => {
-        const { params , data , payload } = hook
-        hook.result = omitMeta ( hook.data )
+        const { params , data , payload } = hook;
+        hook.result = omitMeta ( hook.data );
       }
     ] ,
     update : [] ,
