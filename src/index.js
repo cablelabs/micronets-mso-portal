@@ -13,19 +13,15 @@ server.on('listening', () =>
   logger.info('Feathers application started on http://%s:%d for environment %s', app.get('host'), port, JSON.stringify(process.env.NODE_ENV))
 );
 
-io.on('connection' , (() => logger.info('Socket io working in featherjs socket :')))
+io.on('connection' , (() => logger.info('Socket io connection ')))
 
 io.on('connection' , (socket) => {
   app.service('/portal/session').on('sessionCreate' ,(data) => {
-    socket.emit('socketSessionCreate', { data: {
-      type : 'socketSessionCreate' ,
-      subscriberId : data.id
-    }});
+    // console.log('\n FeatherJS event sessionCreate fired with data : ' + JSON.stringify(data))
+    socket.emit('socketSessionCreate', data);
   });
   app.service('/portal/session').on('sessionUpdate' ,(data) => {
-    socket.emit('socketSessionUpdate', { data:{
-      type : 'socketSessionUpdate' ,
-      subscriberId : data.id
-    }});
+    // console.log('\n FeatherJS event sessionUpdate fired with data : ' + JSON.stringify(data))
+    socket.emit('socketSessionUpdate', data);
   });
 });
