@@ -1,5 +1,5 @@
 {
-  "host": "localhost",
+  "host": "http://18.219.20.189",
   "port": 3210,
   "public": "../public/",
   "src": "../src/",
