@@ -28,9 +28,11 @@ module.exports = {
           ssid : subscriber.data[ 0 ].ssid
         } )
         const ssData = await hook.app.service ( '/portal/session' ).find ( { query : { id : subscriber.data[ 0 ].id } } )
-        const hostUrl = hook.app.get('host').concat(':').concat(hook.app.get('port'))
+        let hostUrl = hook.app.get('host').concat(':').concat(hook.app.get('port'))
+        hostUrl = (hostUrl.match(/http/g) || []).length == 1 ? `${hostUrl}/portal/session` : `http://${hostUrl}/portal/session`
+        console.log('\n CA hook hostUrl : ' + JSON.stringify(hostUrl))
         const session = ssData.data.length == 0 ?
-          await axios.post ( `http://${hostUrl}/portal/session` , sessionData , axiosConfig ) :
+          await axios.post ( hostUrl , sessionData , axiosConfig ) :
           await hook.app.service ( '/portal/session/' ).update ( subscriber.data[ 0 ].id , {
             clientId : params.payload.clientID ,
             deviceId : params.payload.deviceID ,

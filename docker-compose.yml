@@ -13,7 +13,4 @@ services:
       - /data/mongodb/db:/data/db
     ports:
       - "27017:27017"
-  environment:
-      - NODE_ENV=production
-      - MONGO_URL=mongodb://mongo:27017/mso-portal
-      - IDENTITY_SERVER_URL=https://mycable.co/rootca
+

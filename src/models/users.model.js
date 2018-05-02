@@ -4,7 +4,7 @@
 // for more of what you can do here.
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
-  const { Schema } = mongooseClient;
+  const { Schema }  = mongooseClient;
   const users = new Schema({
     token: { type: String, required: true },
     lastUpdatedAt: { type: Date, default: Date.now },
