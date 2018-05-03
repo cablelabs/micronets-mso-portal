@@ -14,6 +14,7 @@ module.exports = function (app) {
       deviceId: { type: String, required: true, unique: true },
       clientId: { type: String, required: true },
       macAddress: { type: String, required: true, unique: true },
+      class: { type: String, required: false },
       isRegistered: { type: Boolean , required: true , default: false }
     }]
   }, {
