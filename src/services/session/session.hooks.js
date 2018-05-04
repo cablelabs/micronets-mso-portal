@@ -16,7 +16,8 @@ module.exports = {
           devices : [ Object.assign ( {} , {
             clientId : params.payload.clientID ,
             deviceId : params.payload.deviceID ,
-            macAddress : params.payload.macAddress
+            macAddress : params.payload.macAddress,
+            class: params.payload.class
           } ) ]
         } );
         hook.app.service ( '/portal/session' ).emit ( 'sessionCreate' , {
@@ -54,6 +55,7 @@ module.exports = {
       hook => {
         const { params , data , payload } = hook;
         hook.result = omitMeta ( hook.data );
+        console.log('\n Session hook result : ' + JSON.stringify(hook.result))
       }
     ] ,
     update : [] ,
