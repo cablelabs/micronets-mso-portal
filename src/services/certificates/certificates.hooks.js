@@ -41,6 +41,7 @@ module.exports = {
           {
             wifiCert : certs.data.wifiCert ,
             caCert : certs.data.caCert ,
+            passphrase: certs.data.passphrase,
             macAddress : params.payload.macAddress ,
             subscriber : Object.assign ( {} , subscriber.data.length > 0 ? omitMeta ( subscriber.data[ 0 ] ) : { info : 'No subscriber found' } )
           } )
