@@ -8,6 +8,7 @@ module.exports = function (app) {
   const certificates = new Schema({
     wifiCert: { type: String, required: true },
     caCert: { type: String, required: true },
+    passphrase: { type: String, required: true },
     subscriber: { type: Object, required: false },
     macAddress:{ type: String, required: false },
     createdAt: { type: Date, default: Date.now },
