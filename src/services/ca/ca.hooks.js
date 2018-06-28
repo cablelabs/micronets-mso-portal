@@ -12,48 +12,33 @@ module.exports = {
     create : [
       async function ( hook ) {
         const { params , data , payload } = hook;
-        const identityServer =  process.env.NODE_ENV != PROD_ENV ? hook.app.get ( 'identityServer' ) : hook.app.get ( 'identity_server_url' )
-        const csrtUri = process.env.NODE_ENV != PROD_ENV ? identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.csrt ) : identityServer
-        console.log ( '\n CA Identity server uri : ' + JSON.stringify ( csrtUri ) )
-        const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ];
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
-        const certs = await axios.post ( csrtUri , data , axiosConfig );
-        console.log('\n Certs from Identity server : ' + JSON.stringify(certs.data))
-        let subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : hook.data.subscriberID } } );
-        console.log ( '\n Subscriber found : ' + JSON.stringify ( subscriber ) )
-        const sessionData = Object.assign ( {} , {
-          subscriberId : subscriber.data[ 0 ].id ,
-          name : subscriber.data[ 0 ].name ,
-          ssid : subscriber.data[ 0 ].ssid
-        } )
-        const ssData = await hook.app.service ( '/portal/session' ).find ( { query : { id : subscriber.data[ 0 ].id } } )
-        let hostUrl = hook.app.get('host').concat(':').concat(hook.app.get('port'))
-        hostUrl = (hostUrl.match(/http/g) || []).length == 1 ? `${hostUrl}/portal/session` : `http://${hostUrl}/portal/session`
-        console.log('\n Session Url : ' + JSON.stringify(hostUrl))
-        const session = ssData.data.length == 0 ?
-          await axios.post ( hostUrl , sessionData , axiosConfig ) :
-          await hook.app.service ( '/portal/session/' ).update ( subscriber.data[ 0 ].id , {
-            clientId : params.payload.clientID ,
-            deviceId : params.payload.deviceID ,
-            macAddress : params.payload.macAddress ,
-            class : params.payload.class,
-            isRegistered : false
-          } );
+        console.log('\n CA hook data : ' + JSON.stringify(data))
+        console.log('\n CA hook params : ' + JSON.stringify(params))
+        const registryUrl = hook.app.get ( 'registryServer' )
+        console.log('\n registry server url : ' + JSON.stringify(registryUrl))
+        let registry = await axios.get ( `${registryUrl}/micronets/v1/mm/registry/${hook.data.subscriberId}`, axiosConfig )
+        console.log('\n Registry obtained from server : ' + JSON.stringify(registry.data))
+        let mmApiurl = registry.data.mmUrl
+        console.log('\n CA hook mmApiurl : ' + JSON.stringify(mmApiurl))
+        const mmApiResponse = await axios.post ( `${mmApiurl}/micronets/v1/mm/csrt` , data , axiosConfig );
+        console.log('\n mmApiResponse : ' + JSON.stringify(mmApiResponse.data))
         hook.data = Object.assign ( {} ,
-          {
-            csrTemplate : certs.data.csrTemplate ,
-            debug : {
-              context : {
-                token : jwtToken ,
-                clientID : params.payload.clientID ,
-                deviceID : params.payload.deviceID ,
-                class : params.payload.class,
-                timestamp : params.payload.iat ,
-                subscriber : Object.assign ( {} , subscriber.data.length > 0 ? omitMeta ( subscriber.data[ 0 ] ) : { info : 'No subscriber found' } )
+            {
+              csrTemplate : mmApiResponse.data.csrTemplate ,
+              debug : {
+                context : {
+                  token : mmApiResponse.data.debug.context.token ,
+                  clientID : mmApiResponse.data.debug.context.clientID ,
+                  deviceID : mmApiResponse.data.debug.context.deviceID ,
+                  class : mmApiResponse.data.debug.context.class,
+                  timestamp : mmApiResponse.data.debug.context.timestamp ,
+                  subscriber : Object.assign ( {} ,mmApiResponse.data ? omitMeta ( mmApiResponse.data.debug.context.subscriber ) : { info : 'No subscriber found' } )
+                }
               }
-            }
-          } );
+            } );
       }
+
     ] ,
     update : [] ,
     patch : [] ,

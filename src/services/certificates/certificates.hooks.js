@@ -12,40 +12,28 @@ module.exports = {
     get : [] ,
     create : [
       async function ( hook ) {
-        const { data , params } = hook;
-        console.log('\n\n Certificates hook data : ' + JSON.stringify(data) + '\t\t Params : ' + JSON.stringify(params))
-        //var csrPem = fs.readFileSync ( path.join ( __dirname , "../../../sandbox/" , "micronet.csr" ) );
+        const { params , data , payload } = hook;
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
-        const sessionsList = await hook.app.service ( '/portal/session' ).find ();
-        console.log('\n Certificates all sessions : ' + JSON.stringify(sessionsList))
-        let result = sessionsList.data.map ( ( session , sessionIndex ) => {
-        const deviceIdIndex = findIndex ( propEq ( 'deviceId' , params.payload.deviceID ) ) ( session.devices )
-          if ( deviceIdIndex > -1 ) {
-            return {
-              sessionIndex : sessionIndex ,
-              deviceIdIndex : deviceIdIndex ,
-              subscriberId : sessionsList.data[ sessionIndex ].id
-            }
-          }
-        } )
-        result = result.filter ( ( e ) => { return e } )
-        let subscriber = await hook.app.service ( '/internal/subscriber' ).find ( { query : { id : result[ 0 ].subscriberId } } );
-        const identityServer = process.env.NODE_ENV == PROD_ENV ? hook.app.get ( 'identity_server_url' ) : hook.app.get ( 'identityServer' )
-        const certificatesUri = process.env.NODE_ENV != PROD_ENV ? identityServer.host.concat ( ':' ).concat ( identityServer.port ).concat ( identityServer.certificates ) : identityServer
-        console.log('\n Identity server uri : ' + JSON.stringify(identityServer))
-        console.log('\n Certificates server uri : ' + JSON.stringify(certificatesUri))
-        const certs = await axios.post ( certificatesUri , data , axiosConfig );
-        console.log('\n\n Certificates from identity server : ' + JSON.stringify(certs.data))
-        // const finalSubscriber = Object.assign ( {} , subscriber.data.length > 0 ? omitMeta ( subscriber.data[ 0 ] ) : { info : 'No subscriber found' } );
+        console.log('\n CA hook data : ' + JSON.stringify(data))
+        console.log('\n CA hook params : ' + JSON.stringify(params))
+        const registryUrl = hook.app.get ( 'registryServer' )
+        console.log('\n registry server url : ' + JSON.stringify(registryUrl))
+        let registry = await axios.get ( `${registryUrl}/micronets/v1/mm/registry/${hook.data.subscriberId}`, axiosConfig )
+        console.log('\n Registry obtained from server : ' + JSON.stringify(registry.data))
+        let mmApiurl = registry.data.mmUrl
+        console.log('\n CA hook mmApiurl : ' + JSON.stringify(mmApiurl))
+        const mmApiResponse = await axios.post ( `${mmApiurl}/micronets/v1/mm/certificates` , data , axiosConfig );
+        console.log('\n mmApiResponse : ' + JSON.stringify(mmApiResponse.data))
         hook.data = Object.assign ( {} ,
-          {
-            wifiCert : certs.data.wifiCert ,
-            caCert : certs.data.caCert ,
-            passphrase: certs.data.passphrase,
-            macAddress : params.payload.macAddress ,
-            subscriber : Object.assign ( {} , subscriber.data.length > 0 ? omitMeta ( subscriber.data[ 0 ] ) : { info : 'No subscriber found' } )
-          } )
+            {
+              wifiCert : mmApiResponse.data.wifiCert ,
+              caCert : mmApiResponse.data.caCert ,
+              passphrase: mmApiResponse.data.passphrase,
+              macAddress : mmApiResponse.data.macAddress ,
+              subscriber : Object.assign ( {} ,  mmApiResponse.data ? omitMeta (  mmApiResponse.data.subscriber ) : { info : 'No subscriber found' } )
+            } )
       }
+
     ] ,
     update : [] ,
     patch : [] ,
