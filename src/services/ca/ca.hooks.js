@@ -7,7 +7,24 @@ const PROD_ENV = "production"
 module.exports = {
   before : {
     all : [ authenticate ( 'jwt' ) ] ,
-    find : [] ,
+    find : [
+      // (hook) => {
+      //   const {data, params, payload } = hook
+      //   console.log('\n ca.hook before find data : ' + JSON.stringify(data))
+      //   console.log('\n ca.hook before find params : ' + JSON.stringify(params))
+      //   console.log('\n ca.hook before find payload : ' + JSON.stringify(payload))
+      //   console.log('\n ca.hook before find hook.params.query : ' + JSON.stringify(hook.params.query))
+      //   hook.params.mongoose = {
+      //     runValidators: true,
+      //     setDefaultsOnInsert: true
+      //   }
+      //   const query = hook.params.query
+      //   console.log('\n query in ca.hook find before create : ' + JSON.stringify(query))
+      //   if(query.debug.context.token.$search) {
+      //     query.debug.context.token =  { $regex: new RegExp(query.debug.context.token.$search) }
+      //   }
+      // }
+    ] ,
     get : [] ,
     create : [
       async function ( hook ) {

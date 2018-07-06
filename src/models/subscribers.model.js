@@ -8,7 +8,8 @@ module.exports = function (app) {
   const subscribers = new Schema({
     id: { type: String , required: true, unique: true, primaryKey: true },
     ssid: { type: String, required: true },
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    registry: { type: String, required: true }
   }, {
     timestamps: true
   });
