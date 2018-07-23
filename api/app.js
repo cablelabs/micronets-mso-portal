@@ -14,8 +14,8 @@ const socketio = require('@feathersjs/socketio');
 const handler = require('@feathersjs/express/errors');
 const notFound = require('feathers-errors/not-found');
 
-const middleware = require('./middleware');
-const services = require('./services');
+const middleware = require('./middleware/index');
+const services = require('./services/index');
 const appHooks = require('./app.hooks');
 
 const authentication = require('./authentication');

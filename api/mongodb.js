@@ -1,4 +1,4 @@
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('src/mongodb').MongoClient;
 
 module.exports = function () {
   const app = this;

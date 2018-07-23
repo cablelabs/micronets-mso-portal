@@ -24,8 +24,8 @@
   "scripts": {
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "dev": "nodemon  src/ config/ src/index.js",
-    "start": "node src/",
+    "dev": "nodemon  api/ config/ src/index.js",
+    "start": "node api/",
     "mocha": "mocha test/ --recursive --exit",
     "docker-build": "docker build -t code.cablelabs.com:4567/micronets/mso-portal .",
     "docker-compose": "docker-compose up --build",
