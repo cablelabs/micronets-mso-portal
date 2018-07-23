@@ -39,9 +39,7 @@ module.exports = {
           }
         } )
 
-        result = result.filter ( ( e ) => {
-          return e
-        } )
+        result = result.filter ( ( e ) => { return e } )
         console.log('\n Obtained result : ' + JSON.stringify(result))
 
         let registry = await axios.get ( `${registryUrl}/micronets/v1/mm/registry/${result[0].subscriberId}` , axiosConfig )

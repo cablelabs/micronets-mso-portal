@@ -38,7 +38,9 @@ module.exports = {
         console.log('\n Registry obtained from server : ' + JSON.stringify(registry.data))
         let mmApiurl = registry.data.mmUrl
         console.log('\n CA hook mmApiurl : ' + JSON.stringify(mmApiurl))
-        const mmApiResponse = await axios.post ( `${mmApiurl}/micronets/v1/mm/csrt` , data , axiosConfig );
+        console.log('\n CA hook data : ' + JSON.stringify(data))
+        console.log('\n CA hook registryUrl : ' + JSON.stringify(registryUrl))
+        const mmApiResponse = await axios.post ( `${mmApiurl}/micronets/v1/mm/csrt` , { ...data, registryUrl } , axiosConfig );
         console.log('\n mmApiResponse : ' + JSON.stringify(mmApiResponse.data))
         hook.data = Object.assign ( {} ,
             {
