@@ -2,7 +2,6 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/ca.model');
 const hooks = require('./ca.hooks');
-const filters = require('./ca.filters');
 
 module.exports = function () {
   const app = this;
@@ -21,8 +20,4 @@ module.exports = function () {
   const service = app.service('ca/csrt');
 
   service.hooks(hooks);
-
-  if (service.filter) {
-    service.filter(filters);
-  }
 };

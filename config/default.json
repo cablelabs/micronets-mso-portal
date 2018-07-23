@@ -15,8 +15,7 @@
     ],
     "path": "/portal/registration/token",
     "header": "Authorization",
-    "service": "/portal/users",
-    "entity": "users",
+    "service": "token",
     "session": false,
     "cookie": {
       "enabled": false,

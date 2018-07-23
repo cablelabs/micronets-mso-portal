@@ -2,7 +2,6 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/session.model');
 const hooks = require('./session.hooks');
-const filters = require('./session.filters');
 
 module.exports = function () {
   const app = this;
@@ -31,8 +30,4 @@ module.exports = function () {
   service.on('sessionCreate', ()=> {
     // console.log('\n Session Create event emitted with DATA : ' + JSON.stringify(data));
   });
-
-  if (service.filter) {
-    service.filter(filters);
-  }
 };

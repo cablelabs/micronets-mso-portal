@@ -1,6 +1,6 @@
-const authentication = require('feathers-authentication');
+const authentication = require('@feathersjs/authentication');
 // const errors = require('feathers-errors');
-const jwt = require('feathers-authentication-jwt');
+const jwt = require('@feathersjs/authentication-jwt');
 // const { authenticate } = authentication.hooks;
 // const {find , eqProps } = require('ramda');
 module.exports = function () {

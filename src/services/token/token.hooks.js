@@ -1,15 +1,10 @@
-const { authenticate } = require('feathers-authentication').hooks;
+const { authenticate } = require('@feathersjs/authentication').hooks;
 
 module.exports = {
   before: {
     all: [ authenticate('jwt') ],
     find: [],
-    get: [
-      hook => {
-        return hook.app.service('portal/subscribers').find({ query: { id: hook.id } })
-          .then( ({ data }) => { hook.result = data; });
-      }
-    ],
+    get: [],
     create: [],
     update: [],
     patch: [],

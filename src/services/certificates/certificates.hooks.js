@@ -1,4 +1,4 @@
-const { authenticate } = require ( 'feathers-authentication' ).hooks;
+const { authenticate } = require ( '@feathersjs/authentication' ).hooks;
 const omit = require ( 'ramda/src/omit' );
 const propEq = require ( 'ramda/src/propEq' );
 const findIndex = require ( 'ramda/src/findIndex' );

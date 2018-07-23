@@ -1,4 +1,4 @@
-const { authenticate } = require ( 'feathers-authentication' ).hooks;
+const { authenticate } = require ( '@feathersjs/authentication' ).hooks;
 const omit = require ( 'ramda/src/omit' );
 var axios = require ( 'axios' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );

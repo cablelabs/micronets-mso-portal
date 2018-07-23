@@ -2,7 +2,6 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/certificates.model');
 const hooks = require('./certificates.hooks');
-const filters = require('./certificates.filters');
 
 module.exports = function () {
   const app = this;
@@ -26,8 +25,4 @@ module.exports = function () {
   service.on('certGenerated', (data)=> {})
 
   service.hooks(hooks);
-
-  if (service.filter) {
-    service.filter(filters);
-  }
 };

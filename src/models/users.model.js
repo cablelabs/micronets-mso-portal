@@ -6,17 +6,12 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema }  = mongooseClient;
   const users = new Schema({
-    token: { type: String, required: true },
     lastUpdatedAt: { type: Date, default: Date.now },
     lastUpdatedBy: { type: String },
-    isVerified: { type: Boolean },
-    verifyToken: { type: String },
-    verifyExpires: { type: Date },
-    verifyChanges: { type: Object },
-    resetToken: { type: String },
-    resetExpires: { type: Date },
-    clientID: { type: String , required: true  },
-    deviceID: { type: String , required: true }
+    id: { type: String , required: true, unique: true, primaryKey: true },
+    ssid: { type: String, required: true },
+    name: { type: String, required: true },
+    mmUrl: { type: String, required: true }
   }, {
     timestamps: true
   });
