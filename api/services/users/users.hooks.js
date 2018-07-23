@@ -1,9 +1,10 @@
+const { authenticate } = require ( '@feathersjs/authentication' ).hooks;
 const omit = require ( 'ramda/src/omit' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 
 module.exports = {
   before: {
-    all: [],
+    all : [ authenticate ( 'jwt' ) ] ,
     find: [],
     get: [
       hook => {
@@ -27,7 +28,7 @@ module.exports = {
     create: [
       hook => {
         hook.result = omitMeta(hook.result);
-        console.log('\n Users service hook.result : ' + JSON.stringify(hook.result))
+        console.log('\n Users service hook.result : ' + JSON.stringify(hook.result));
         return hook;
       }
     ],

@@ -1,10 +1,11 @@
+const { authenticate } = require ( '@feathersjs/authentication' ).hooks;
 const omit = require ( 'ramda/src/omit' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const axios = require ( 'axios' );
 
 module.exports = {
   before: {
-    all: [],
+    all : [ authenticate ( 'jwt' ) ] ,
     find: [],
     get: [
       hook => {
