@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:latest
 
 
 # set working directory
@@ -25,6 +25,6 @@ COPY app/package.json app/package-lock.json ./
 # RUN node build/build.js
 
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD [ "npm", "run", "client" ]
