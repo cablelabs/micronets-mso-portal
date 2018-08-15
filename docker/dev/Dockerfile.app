@@ -2,13 +2,12 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
+RUN npm install
+
 # Install app dependencies
 COPY app/package.json .
-COPY app/package.json app/package-lock.json ./
 
 ENV MONGO_URL=
-
-RUN npm install
 
 # Bundle app source
 COPY app .
