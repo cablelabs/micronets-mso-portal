@@ -42,12 +42,12 @@ module.exports = {
         console.log('\n All Headers : ' + JSON.stringify(allHeaders))
         console.log('\n After create hook for subscriber Params : ' + JSON.stringify(params) + '\t\t\t Payload : ' + JSON.stringify(payload))
         console.log('\n After create hook for subscriber hook.data : ' + JSON.stringify(hook.data) + '\t\t\t hook.result : ' + JSON.stringify(hook.result));
-        console.log('\n Registry get url : ' + JSON.stringify(`${hook.result.registry}/micronets/v1/mm/registry/${hook.result.id}`))
+        console.log('\n Registry get url : ' + JSON.stringify(`${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`))
        // let registry = await axios.get ( `${hook.result.registry}/micronets/v1/mm/registry/${hook.result.id}`, allHeaders )
          axios({
           ...allHeaders,
           method: 'get',
-          url: `${hook.result.registry}/micronets/v1/mm/registry/${hook.result.id}`
+          url: `${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`
         }).then((response) => {
            console.log('\n Registry url response : ' + JSON.stringify(response.data))
           const user = Object.assign({},{

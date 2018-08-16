@@ -42,11 +42,11 @@ module.exports = {
         result = result.filter ( ( e ) => { return e } )
         console.log('\n Obtained result : ' + JSON.stringify(result))
 
-        let registry = await axios.get ( `${registryUrl}/micronets/v1/mm/registry/${result[0].subscriberId}` , axiosConfig )
+        let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${result[0].subscriberId}` , axiosConfig )
         console.log ( '\n Registry obtained from server : ' + JSON.stringify ( registry.data ) )
         let mmApiurl = registry.data.mmUrl
         console.log ( '\n CA hook mmApiurl : ' + JSON.stringify ( mmApiurl ) )
-        const mmApiResponse = await axios.post ( `${mmApiurl}/micronets/v1/mm/certificates` , {data, subscriberId:result[0].subscriberId} , axiosConfig );
+        const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/certificates` , {data, subscriberId:result[0].subscriberId} , axiosConfig );
         console.log ( '\n mmApiResponse : ' + JSON.stringify ( mmApiResponse.data ) )
         hook.data = Object.assign ( {} ,
           {
