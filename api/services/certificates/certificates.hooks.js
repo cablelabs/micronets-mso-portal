@@ -69,16 +69,16 @@ module.exports = {
     find : [] ,
     get : [] ,
     create : [
-      // hook => {
-      //   hook.result = omitMeta ( hook.data )
-      //   console.log('\n\n Certificates hook result : ' + JSON.stringify(hook.result))
-      //   hook.app.service ( '/ca/cert' ).emit ( 'certGenerated' , {
-      //     type : 'certGenerated' ,
-      //     data : { subscriber : hook.data.subscriber , macAddress : hook.data.macAddress }
-      //   } );
-      //
-      //   return hook;
-      // }
+      hook => {
+        hook.result = omitMeta ( hook.data )
+        console.log('\n\n Certificates hook result : ' + JSON.stringify(hook.result))
+        hook.app.service ( '/ca/cert' ).emit ( 'certGenerated' , {
+          type : 'certGenerated' ,
+          data : { subscriber : hook.data.subscriber , macAddress : hook.data.macAddress }
+        } );
+
+        return hook;
+      }
     ] ,
     update : [] ,
     patch : [] ,
