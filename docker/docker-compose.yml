@@ -1,5 +1,11 @@
 version: '3'
 services:
+  mongo:
+    image: mongo
+      volumes:
+         - /tmp/mongodb:/data/db
+      ports:
+         - "27017:27017"
   api:
     build:
       context: ./../
@@ -15,7 +21,6 @@ services:
       - ./../../api:/usr/src/api
     ports:
       - '3210:3210'
-
   app:
     build:
       context: ./../
@@ -31,12 +36,12 @@ services:
     ports:
       - '8081:8081'
 
-  mongo:
-     image: mongo
-     volumes:
-       - /data/mongodb/db:/data/db
-     ports:
-       - "27017:27017"
+#  mongo:
+#     image: mongo
+#     volumes:
+#       - /data/mongodb/db:/data/db
+#     ports:
+#       - "27017:27017"
 
 
 

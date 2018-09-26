@@ -1,5 +1,11 @@
 version: '3'
 services:
+  mongo:
+    image: mongo
+      volumes:
+        - /tmp/mongodb:/data/db
+    ports:
+        - "27017:27017"
   api:
     build:
       context: ./../..
@@ -26,18 +32,10 @@ services:
       - PORT=8081
       - MONGO_URL=mongodb://mongo:27017/micronets
     links:
+      - mongo
       - api
     volumes:
       - ./../../app:/usr/src/app
     ports:
       - '8081:8081'
-
-  mongo:
-     image: mongo
-     volumes:
-       - ~/Users/akadam/data/mongodb:/data/db
-     ports:
-       - "27017:27017"
-
-
 
