@@ -2,16 +2,15 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
-RUN npm install
-
-# Install app dependencies
-COPY app/package.json .
+# Bundle app source
+COPY app .
+RUN ls -a
 
 ENV MONGO_URL=
 
-# Bundle app source
-COPY app .
+# Install app dependencies
+RUN npm install
 
 EXPOSE 8081
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "client"]
