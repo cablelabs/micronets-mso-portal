@@ -115,3 +115,17 @@ data/
 .idea/workspace.xml
 
 package-lock.json
+
+*.bson
+
+*.bson
+
+docker/dev/WiredTiger
+
+docker/dev/WiredTiger.lock
+
+*.turtle
+
+*.wt
+
+*.wt
