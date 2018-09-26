@@ -4,8 +4,8 @@
   "public": "../public/",
   "src": "../src/",
   "paginate": {
-    "default": 10,
-    "max": 50
+    "default": 500,
+    "max": 5000
   },
   "mongodb": "mongodb://localhost:27017/mso-portal",
   "authentication": {
