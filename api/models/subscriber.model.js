@@ -9,6 +9,7 @@ module.exports = function (app) {
     id: { type: String , required: true, unique: true, primaryKey: true },
     ssid: { type: String, required: true },
     name: { type: String, required: true },
+    gatewayId : {type: String, required: false },
     registry: { type: String, required: true }
   }, {
     timestamps: true
