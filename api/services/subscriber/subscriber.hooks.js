@@ -2,6 +2,7 @@ const { authenticate } = require ( '@feathersjs/authentication' ).hooks;
 const omit = require ( 'ramda/src/omit' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const axios = require ( 'axios' );
+const mongoose = require('mongoose');
 
 module.exports = {
   before: {
@@ -22,8 +23,60 @@ module.exports = {
         console.log('\n Before create hook for subscriber');
       }
     ],
-    update: [],
-    patch: [],
+    update: [
+      hook => {
+        const { params  , payload, data, id } = hook;
+        hook.params.mongoose = {
+          runValidators: true,
+          setDefaultsOnInsert: true,
+          upsert: true
+        }
+        console.log('\n PUT REQUEST FOR SUBSCRIBER WITH DATA : ' + JSON.stringify(data) + '\t\t PARAMS : ' + JSON.stringify(params) + '\t\t ID : ' + JSON.stringify(id))
+        // return hook.app.service ( 'internal/subscriber' ).find ( { query : { id : id } } )
+        return hook.app.service ( 'internal/subscriber' ).find ( { query : { id : id }, mongoose: { upsert: true}} )
+          .then ( ( { data } ) => {
+              console.log('\n Subscriber found  raw : ' + JSON.stringify(data));
+              if(data[0].id && !mongoose.Types.ObjectId.isValid(data[0].id))
+              {
+                const originalSubscriber = data[ 0 ];
+                console.log('\n Original Subscriber : ' + JSON.stringify(originalSubscriber))
+                let updatedSubscriber = Object.assign ( {} , originalSubscriber , hook.data);
+                console.log('\n Updated Subscriber : ' + JSON.stringify(updatedSubscriber))
+                hook.data =  Object.assign ( {} , updatedSubscriber );
+                console.log('\n Hook.data : ' + JSON.stringify(hook.data))
+              }
+            }
+          )
+
+      }
+    ],
+    patch: [
+      hook => {
+        const { params  , payload, data, id } = hook;
+        hook.params.mongoose = {
+          runValidators: true,
+          setDefaultsOnInsert: true,
+          upsert: true
+        }
+        console.log('\n PATCH REQUEST FOR SUBSCRIBER WITH DATA : ' + JSON.stringify(data) + '\t\t PARAMS : ' + JSON.stringify(params) + '\t\t ID : ' + JSON.stringify(id))
+        // return hook.app.service ( 'internal/subscriber' ).find ( { query : { id : id } } )
+        // return hook.app.service ( 'internal/subscriber' ).find ( { query : { id : id }, mongoose: { upsert: true}} )
+        //   .then ( ( { data } ) => {
+        //       console.log('\n Subscriber found  raw : ' + JSON.stringify(data));
+        //       if(data[0].id && !mongoose.Types.ObjectId.isValid(data[0].id))
+        //       {
+        //         const originalSubscriber = data[ 0 ];
+        //         console.log('\n Original Subscriber : ' + JSON.stringify(originalSubscriber))
+        //         let updatedSubscriber = Object.assign ( {} , originalSubscriber , hook.data);
+        //         console.log('\n Updated Subscriber : ' + JSON.stringify(updatedSubscriber))
+        //         hook.data =  Object.assign ( {} , updatedSubscriber );
+        //         console.log('\n Hook.data : ' + JSON.stringify(hook.data))
+        //       }
+        //     }
+        //   )
+
+      }
+    ],
     remove: []
   },
 

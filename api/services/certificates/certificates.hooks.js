@@ -23,9 +23,9 @@ module.exports = {
         console.log ( '\n registry server url : ' + JSON.stringify ( registryUrl ) )
         // hook.app.service('ca/csrt').find({ query : { debug :{ context : { token: params.headers.authorization.split(' ')[1] } } }})
         const certList = await hook.app.service ( 'ca/csrt' ).find ()
-        // console.log ( '\n CertList from ca/csrt : ' + JSON.stringify ( certList.data ) )
+        console.log ( '\n CertList from ca/csrt : ' + JSON.stringify ( certList.data )  + '\t\t CertList Data Length : ' + JSON.stringify(certList.data.length))
         let result = certList.data.map ( ( cert, index ) => {
-          console.log('\n Current cert : ' + JSON.stringify(cert))
+          console.log('\n Current cert : ' + JSON.stringify(cert) + '\t\t At Index ')
           const tokenIndex = findIndex ( propEq ( 'token' , jwtToken ) ) ( cert )
           const getToken = path(['debug', 'context', 'token'])
           console.log('\n getToken from path : ' + JSON.stringify(getToken(cert)))
