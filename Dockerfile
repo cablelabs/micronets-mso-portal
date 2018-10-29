@@ -4,11 +4,11 @@ FROM node:8
 RUN apt-get update;
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/api
 
 # Install app dependencies
 COPY package.json .
-COPY package.json package-lock.json ./
+
 
 RUN npm install
 

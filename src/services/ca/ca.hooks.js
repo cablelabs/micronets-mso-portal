@@ -32,13 +32,27 @@ module.exports = {
         console.log('\n Session Url : ' + JSON.stringify(hostUrl))
         const session = ssData.data.length == 0 ?
           await axios.post ( hostUrl , sessionData , axiosConfig ) :
-          await hook.app.service ( '/portal/session/' ).update ( subscriber.data[ 0 ].id , {
+          await hook.app.service ( '/portal/session/' ).patch ( null, {
             clientId : params.payload.clientID ,
             deviceId : params.payload.deviceID ,
             macAddress : params.payload.macAddress ,
             class : params.payload.class,
             isRegistered : false
-          } );
+          }, { query : { id : subscriber.data[ 0 ].id }, mongoose: { upsert: true}} );
+
+        // const session = ssData.data.length == 0 ?
+        //   await axios.post ( hostUrl , sessionData , axiosConfig ) :
+        //   hook.app.authenticate('jwt').then((response)=> {
+        //     console.log('\n response from app jwt authentication : ' + JSON.stringify(response));
+        //     hook.app.service ( '/portal/session/' ).patch ( null, {
+        //       clientId : params.payload.clientID ,
+        //       deviceId : params.payload.deviceID ,
+        //       macAddress : params.payload.macAddress ,
+        //       class : params.payload.class,
+        //       isRegistered : false
+        //     }, { query : { id : subscriber.data[ 0 ].id }, mongoose: { upsert: true}} );
+        //   })
+
         hook.data = Object.assign ( {} ,
           {
             csrTemplate : certs.data.csrTemplate ,

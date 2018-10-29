@@ -1,0 +1,41 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+      volumes:
+        - /tmp/mongodb:/data/db
+    ports:
+        - "27017:27017"
+  api:
+    build:
+      context: ./../..
+      dockerfile: docker/dev/Dockerfile.api
+    image: mso-portal-api-dev
+    environment:
+      - NODE_ENV=development
+      - PORT=3210
+      - MONGO_URL=mongodb://mongo:27017/mso-portal
+    links:
+      - mongo
+    volumes:
+      - ./../../api:/usr/src/api
+    ports:
+      - '3210:3210'
+
+  app:
+    build:
+      context: ./../..
+      dockerfile: docker/dev/Dockerfile.app
+    image: mso-portal-client-dev
+    environment:
+      - NODE_ENV=development
+      - PORT=8081
+      - MONGO_URL=mongodb://mongo:27017/micronets
+    links:
+      - mongo
+      - api
+    volumes:
+      - ./../../app:/usr/src/app
+    ports:
+      - '8081:8081'
+
