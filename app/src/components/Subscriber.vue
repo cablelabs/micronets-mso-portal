@@ -34,7 +34,7 @@
     methods: {
       showMicronets () {
         console.log('\n showMicronets this.mmUrl : ' + JSON.stringify(this.mmUrl))
-        window.location.href = `${this.mmUrl}`
+        window.location.href = `${this.mmUrl}/${this.subscriberId}`
       }
     },
     props: {
