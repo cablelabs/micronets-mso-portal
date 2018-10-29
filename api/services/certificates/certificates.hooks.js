@@ -25,7 +25,7 @@ module.exports = {
         const certList = await hook.app.service ( 'ca/csrt' ).find ()
         console.log ( '\n CertList from ca/csrt : ' + JSON.stringify ( certList.data )  + '\t\t CertList Data Length : ' + JSON.stringify(certList.data.length))
         let result = certList.data.map ( ( cert, index ) => {
-          console.log('\n Current cert : ' + JSON.stringify(cert) + '\t\t At Index ')
+          console.log('\n Current cert : ' + JSON.stringify(cert) + '\t\t At Index ' + JSON.stringify(index))
           const tokenIndex = findIndex ( propEq ( 'token' , jwtToken ) ) ( cert )
           const getToken = path(['debug', 'context', 'token'])
           console.log('\n getToken from path : ' + JSON.stringify(getToken(cert)))

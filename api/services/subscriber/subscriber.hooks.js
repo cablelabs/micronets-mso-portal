@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 
 module.exports = {
   before: {
-    all : [ authenticate ( 'jwt' ) ] ,
+    all : [ //authenticate ( 'jwt' )
+       ] ,
     find: [],
     get: [
       hook => {
@@ -56,11 +57,12 @@ module.exports = {
     create: [
       async (hook) => {
         const { params  , payload } = hook;
-        const { headers: { authorization }} = params
-        const jwtToken = authorization.split(' ')[1]
-        console.log('\n params.headers.authorization : ' + JSON.stringify(params.headers.authorization))
-        console.log('\n JWT Token : ' + JSON.stringify(jwtToken))
-        let allHeaders = { crossDomain: true, headers : { 'Authorization' : params.headers.authorization  , 'Content-type': 'application/json' } };
+        // const { headers: { authorization }} = params
+        // const jwtToken = authorization.split(' ')[1]
+        // console.log('\n params.headers.authorization : ' + JSON.stringify(params.headers.authorization))
+        // console.log('\n JWT Token : ' + JSON.stringify(jwtToken))
+        // let allHeaders = { crossDomain: true, headers : { 'Authorization' : params.headers.authorization  , 'Content-type': 'application/json' } };
+        let allHeaders = { crossDomain: true, headers : {  'Content-type': 'application/json' } };
         console.log('\n All Headers : ' + JSON.stringify(allHeaders))
         console.log('\n After create hook for subscriber Params : ' + JSON.stringify(params) + '\t\t\t Payload : ' + JSON.stringify(payload))
         console.log('\n After create hook for subscriber hook.data : ' + JSON.stringify(hook.data) + '\t\t\t hook.result : ' + JSON.stringify(hook.result));

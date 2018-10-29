@@ -4,7 +4,8 @@ const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 
 module.exports = {
   before: {
-    all : [ authenticate ( 'jwt' ) ] ,
+    all : [ //authenticate ( 'jwt' )
+       ] ,
     find: [],
     get: [
       hook => {
