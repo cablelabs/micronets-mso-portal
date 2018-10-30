@@ -52,7 +52,7 @@
     "moment": "^2.21.0",
     "mongodb": "^2.2.35",
     "mongoose": "^4.13.11",
-    "nodemon": "^1.17.1",
+    "nodemon": "^1.18.5",
     "ramda": "^0.25.0",
     "serve-favicon": "^2.4.5",
     "socket.io": "^2.1.0",
