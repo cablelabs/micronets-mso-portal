@@ -1,5 +1,5 @@
 {
-  "host": "10.142.10.46",
+  "host": "198.58.114.200",
   "port": 3210,
   "public": "../public/",
   "src": "../src/",
@@ -54,5 +54,5 @@
      "certificates":"/certificates"
   },
   "identity_server_url":"https://mycable.co/rootca",
-   "registryServer" : "http://127.0.0.1:3030"
+   "registryServer" : "http://198.58.114.200:3030"
 }
