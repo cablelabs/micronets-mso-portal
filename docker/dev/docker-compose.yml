@@ -2,10 +2,10 @@ version: '3'
 services:
   mongo:
     image: mongo
-      volumes:
-        - /tmp/mongodb:/data/db
+    volumes:
+      - /tmp/mongodb:/data/db
     ports:
-        - "27017:27017"
+      - "27017:27017"
   api:
     build:
       context: ./../..
@@ -17,8 +17,8 @@ services:
       - MONGO_URL=mongodb://mongo:27017/mso-portal
     links:
       - mongo
-    volumes:
-      - ./../../api:/usr/src/api
+#    volumes:
+#      - ./../../api:/usr/src/api
     ports:
       - '3210:3210'
 
@@ -34,8 +34,8 @@ services:
     links:
       - mongo
       - api
-    volumes:
-      - ./../../app:/usr/src/app
+#    volumes:
+#      - ./../../app:/usr/src/app
     ports:
       - '8081:8081'
 

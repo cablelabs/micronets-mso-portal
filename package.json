@@ -14,7 +14,7 @@
   "contributors": [],
   "bugs": {},
   "directories": {
-    "lib": "src",
+    "lib": "api",
     "test": "test/"
   },
   "engines": {
@@ -34,13 +34,18 @@
   "dependencies": {
     "@feathersjs/authentication": "^2.1.7",
     "@feathersjs/authentication-jwt": "^2.0.1",
+    "@feathersjs/authentication-local": "^1.2.7",
     "@feathersjs/configuration": "^1.0.2",
-    "@feathersjs/errors": "^3.3.0",
+    "@feathersjs/errors": "^3.3.4",
     "@feathersjs/express": "^1.2.3",
     "@feathersjs/feathers": "^3.1.7",
     "@feathersjs/socketio": "^3.2.2",
     "axios": "^0.18.0",
+    "basic-auth": "^2.0.1",
+    "bcrypt": "^3.0.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
+    "chalk": "^2.4.1",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
     "feathers-authentication-management": "^1.0.3",
@@ -51,14 +56,14 @@
     "minimal-request-promise": "^1.5.0",
     "moment": "^2.21.0",
     "mongodb": "^2.2.35",
+    "mongodb-core": "^3.1.8",
     "mongoose": "^4.13.11",
     "nodemon": "^1.18.5",
     "ramda": "^0.25.0",
+    "semver": "^5.5.0",
     "serve-favicon": "^2.4.5",
     "socket.io": "^2.1.0",
-    "winston": "^2.4.1",
-    "chalk": "^2.4.1",
-    "semver": "^5.5.0"
+    "winston": "^2.4.1"
   },
   "devDependencies": {
     "eslint": "^4.15.0",
