@@ -48,11 +48,11 @@
     ]
   },
   "identityServer": {
-     "host":"http://198.58.114.200",
-     "port":"3230",
+     "host":"http://nccoe-ca.micronets.in",
+     "port":"",
      "csrt":"/csrt",
      "certificates":"/certificates"
   },
-  "identity_server_url":"https://mycable.co/rootca",
-   "registryServer" : "http://127.0.0.1:3030"
+  "identity_server_url":"http://nccoe-ca.micronets.in",
+   "registryServer" : "http://nccoe-mm-api.micronets.in"
 }
