@@ -15,7 +15,9 @@ module.exports = {
         const subscriberId = hook.data.subscriberID
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const registryUrl = hook.app.get ( 'registryServer' )
+        console.log('\n\n registry server : '  + JSON.stringify(registryUrl))
         let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${subscriberId}`, axiosConfig )
+        console.log('\n\n registry obtained : '  + JSON.stringify(registry.data))
         let mmApiurl = registry.data.mmUrl
         const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/csrt` , { "subscriberId":subscriberId, registryUrl } , axiosConfig );
         hook.data = Object.assign ( {} ,
