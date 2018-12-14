@@ -14,9 +14,9 @@ module.exports = {
     create : [
       async( hook ) => {
         const { params , data , payload } = hook;
-        console.log('\n CSRT Hook data : ' + JSON.stringify(data) + '\t\t params : ' + JSON.stringify(params))
+        console.log('\n Certificates Hook data : ' + JSON.stringify(data) + '\t\t params : ' + JSON.stringify(params))
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ]
-        console.log('\n CSRT Token : ' + JSON.stringify(jwtToken) )
+        console.log('\n Certificates Token : ' + JSON.stringify(jwtToken) )
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const registryUrl = hook.app.get ( 'registryServer' )
         // hook.app.service('ca/csrt').find({ query : { debug :{ context : { token: params.headers.authorization.split(' ')[1] } } }})

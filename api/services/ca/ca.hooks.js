@@ -10,11 +10,13 @@ module.exports = {
     find : [] ,
     get : [] ,
     create : [
-      async function ( hook ) {
+      async ( hook ) => {
         const { params , data , payload } = hook;
-        console.log('\n CSRT hook data : ' + JSON.stringify(data))
+        console.log('\n CSRT hook data : ' + JSON.stringify(data) + '\t\t Params : ' + JSON.stringify(params))
         const subscriberId = hook.data.subscriberID
+        console.log('\n CSRT subscriberId : ' + JSON.stringify(subscriberId))
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
+        console.log('\n CSRT axiosConfig : ' + JSON.stringify(axiosConfig))
         const registryUrl = hook.app.get ( 'registryServer' )
         console.log('\n\n registry server : '  + JSON.stringify(registryUrl) + '\t\t subscriberId : ' + JSON.stringify(subscriberId))
         let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${subscriberId}`, axiosConfig )
@@ -49,7 +51,7 @@ module.exports = {
     find : [] ,
     get : [] ,
     create : [
-      async function ( hook ) {
+      async ( hook ) => {
         const { params , data , payload } = hook
         hook.result = omitMeta ( hook.data )
         console.log ( '\n CSRT Template :' + JSON.stringify ( hook.result ) )
