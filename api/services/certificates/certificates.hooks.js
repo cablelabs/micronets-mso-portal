@@ -14,9 +14,7 @@ module.exports = {
     create : [
       async( hook ) => {
         const { params , data , payload } = hook;
-        console.log('\n Certificates Hook data : ' + JSON.stringify(data) + '\t\t params : ' + JSON.stringify(params))
         const jwtToken = params.headers.authorization.split ( ' ' )[ 1 ]
-        console.log('\n Certificates Token : ' + JSON.stringify(jwtToken) )
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const registryUrl = hook.app.get ( 'registryServer' )
         // hook.app.service('ca/csrt').find({ query : { debug :{ context : { token: params.headers.authorization.split(' ')[1] } } }})
@@ -34,9 +32,7 @@ module.exports = {
         result = result.filter ( ( e ) => { return e } )
         let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${result[0].subscriberId}` , axiosConfig )
         let mmApiurl = registry.data.mmUrl
-        console.log('\n Registry from mm : ' + JSON.stringify(registry.data))
         const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/certificates` , {data, subscriberId:result[0].subscriberId} , axiosConfig );
-        console.log('\n Certificates from mm  : ' + JSON.stringify(mmApiResponse.data))
         hook.data = Object.assign ( {} ,
           {
             wifiCert : mmApiResponse.data.wifiCert ,
