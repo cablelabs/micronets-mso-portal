@@ -4,6 +4,7 @@ services:
     image: mongo
     volumes:
       - /tmp/mongodb:/data/db
+    network_mode: "host"
     ports:
       - "27017:27017"
   api:
