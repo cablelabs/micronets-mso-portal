@@ -10,13 +10,13 @@ services:
     build:
       context: ./../..
       dockerfile: docker/dev/Dockerfile.api
-      network: host
     image: mso-portal-api-dev
+    network_mode: "host"
     environment:
       - NODE_ENV=development
       - PORT=3210
       - MONGO_URL=mongodb://mongo:27017/mso-portal
-    links:
+    depends_on:
       - mongo
 #    volumes:
 #      - ./../../api:/usr/src/api
@@ -27,13 +27,13 @@ services:
     build:
       context: ./../..
       dockerfile: docker/dev/Dockerfile.app
-      network: host
     image: mso-portal-client-dev
+    network_mode: "host"
     environment:
       - NODE_ENV=development
       - PORT=8081
       - MONGO_URL=mongodb://mongo:27017/micronets
-    links:
+    depends_on:
       - mongo
       - api
 #    volumes:
