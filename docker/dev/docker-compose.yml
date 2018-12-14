@@ -15,7 +15,7 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3210
-      - MONGO_URL=mongodb://mongo:27017/mso-portal
+      - MONGO_URL=mongodb://127.0.0.1:27017/mso-portal
     depends_on:
       - mongo
 #    volumes:
@@ -32,7 +32,7 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=8081
-      - MONGO_URL=mongodb://mongo:27017/micronets
+      - MONGO_URL=mongodb://127.0.0.1:27017/micronets
     depends_on:
       - mongo
       - api
