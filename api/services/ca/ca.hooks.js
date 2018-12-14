@@ -12,14 +12,16 @@ module.exports = {
     create : [
       async function ( hook ) {
         const { params , data , payload } = hook;
+        console.log('\n CSRT hook data : ' + JSON.stringify(data))
         const subscriberId = hook.data.subscriberID
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const registryUrl = hook.app.get ( 'registryServer' )
-        console.log('\n\n registry server : '  + JSON.stringify(registryUrl))
+        console.log('\n\n registry server : '  + JSON.stringify(registryUrl) + '\t\t subscriberId : ' + JSON.stringify(subscriberId))
         let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${subscriberId}`, axiosConfig )
         console.log('\n\n registry obtained : '  + JSON.stringify(registry.data))
         let mmApiurl = registry.data.mmUrl
         const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/csrt` , { "subscriberId":subscriberId, registryUrl } , axiosConfig );
+        console.log('\n mmApiResponse data :  ' + JSON.stringify(mmApiResponse.data) )
         hook.data = Object.assign ( {} ,
             {
               csrTemplate : mmApiResponse.data.csrTemplate ,
