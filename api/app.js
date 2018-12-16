@@ -19,7 +19,6 @@ const services = require('./services/index');
 const appHooks = require('./app.hooks');
 
 const authentication = require('./authentication');
-// const mongodb = require('./mongodb');
 const mongoose = require('./mongoose');
 
 const app = express(feathers());

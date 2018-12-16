@@ -3,6 +3,7 @@ const omit = require ( 'ramda/src/omit' );
 var axios = require ( 'axios' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const PROD_ENV = "production"
+const errors = require('@feathersjs/errors');
 
 module.exports = {
   before : {
@@ -13,12 +14,18 @@ module.exports = {
       async ( hook ) => {
         const { params , data , payload } = hook;
         const subscriberId = data.subscriberID
-        let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
-        const registryUrl = hook.app.get ( 'registryServer' )
-        let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${subscriberId}`, axiosConfig )
-        let mmApiurl = registry.data.mmUrl
-        const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/csrt` , { "subscriberId":subscriberId, registryUrl } , axiosConfig );
-        hook.data = Object.assign ( {} ,
+        if(!subscriberId) {
+          return Promise.reject(new errors.BadRequest('Invalid Post Request', {
+            subscriberID:'Missing subscriber ID'
+          }))
+        }
+        else {
+          let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
+          const registryUrl = hook.app.get ( 'registryServer' )
+          let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${subscriberId}`, axiosConfig )
+          let mmApiurl = registry.data.mmUrl
+          const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/csrt` , { "subscriberId":subscriberId, registryUrl } , axiosConfig );
+          hook.data = Object.assign ( {} ,
             {
               csrTemplate : mmApiResponse.data.csrTemplate ,
               debug : {
@@ -32,8 +39,8 @@ module.exports = {
                 }
               }
             } );
-      }
-
+        }
+        }
     ] ,
     update : [] ,
     patch : [] ,

@@ -22,7 +22,7 @@ services:
 #    volumes:
 #      - ./../../api:/usr/src/api
     ports:
-      - '3030:3030'
+      - '3210:3210'
 
   app:
     build:
