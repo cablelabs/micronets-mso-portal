@@ -12,6 +12,14 @@ JWT_TOKEN="Bearer ${TOKEN}"
 
 echo ' JWT Token : ' $JWT_TOKEN
 
+#! DELETE EXISTING SUBSCRIBERS CURL
+
+echo ' Deleting existing subscribers on ' $MSO_PORTAL_HOSTNAME
+
+SUBSCRIBERS=$(curl -s -X DELETE -H 'Accept: application/json' -H 'Content-Type: application/json'  http://${MSO_PORTAL_HOSTNAME}/internal/subscriber )
+
+echo ' Existing Subscribers : ' ${SUBSCRIBERS}
+
 #! POST SUBSCRIBER CURL
 
 echo ' Populating subscriber on ' $MSO_PORTAL_HOSTNAME
