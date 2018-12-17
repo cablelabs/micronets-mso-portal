@@ -16,6 +16,6 @@ echo ' JWT Token : ' $JWT_TOKEN
 
 echo ' Populating subscriber on ' $MSO_PORTAL_HOSTNAME
 
-SUBSCRIBER=$(curl -s -X POST -H "Authorization: ${JWT_TOKEN}" -H 'Accept: application/json' -H 'Content-Type: application/json' --data-binary @./data/subscriberPost.json http://${MSO_PORTAL_HOSTNAME}/internal/subscriber )
+SUBSCRIBER=$(curl -s -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' --data-binary @./data/subscriberPost.json http://${MSO_PORTAL_HOSTNAME}/internal/subscriber )
 
 echo ' Subscriber : ' ${SUBSCRIBER}
