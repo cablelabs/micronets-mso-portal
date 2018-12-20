@@ -2,8 +2,8 @@ const { authenticate } = require ( '@feathersjs/authentication' ).hooks;
 const omit = require ( 'ramda/src/omit' );
 var axios = require ( 'axios' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
-const PROD_ENV = "production"
 const errors = require('@feathersjs/errors');
+const logger = require ( './../../logger' );
 
 module.exports = {
   before : {
@@ -19,12 +19,16 @@ module.exports = {
             subscriberID:'Missing subscriber ID'
           }))
         }
+        logger.debug( '\n subscriberId :' + JSON.stringify ( subscriberId ) )
         else {
           let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
           const registryUrl = hook.app.get ( 'registryServer' )
+          logger.debug( '\n registryUrl :' + JSON.stringify ( registryUrl ) )
           let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${subscriberId}`, axiosConfig )
           let mmApiurl = registry.data.mmUrl
+          logger.debug( '\n Registry from MM :' + JSON.stringify ( registry.data ) )
           const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/csrt` , { "subscriberId":subscriberId, registryUrl } , axiosConfig );
+          logger.debug( '\n MMApiResponse CSRT :' + JSON.stringify ( mmApiResponse.data ) )
           hook.data = Object.assign ( {} ,
             {
               csrTemplate : mmApiResponse.data.csrTemplate ,
@@ -55,7 +59,7 @@ module.exports = {
       async ( hook ) => {
         const { params , data , payload } = hook
         hook.result = omitMeta ( hook.data )
-        console.log ( '\n CSRT Template :' + JSON.stringify ( hook.result ) )
+        logger.debug( '\n CSRT Template :' + JSON.stringify ( hook.result ) )
         return hook;
       }
     ] ,

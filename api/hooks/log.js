@@ -2,6 +2,7 @@
 // See https://github.com/winstonjs/winston for documentation
 // about the logger.
 const logger = require('../logger');
+//const logger = require('winston')
 const util = require('util');
 
 // To see more detailed messages, uncomment the following line:
@@ -11,14 +12,20 @@ module.exports = function () {
   return context => {
     // This debugs the service call and a stringified version of the hook context
     // You can customize the message (and logger) to your needs
-    logger.info(`${context.type} app.service('${context.path}').${context.method}()`);
-    
+    let message = `Hook Type: ${context.type}  Path: ${context.path}  Method: ${context.method}`;
+    logger.info(message);
+
     if(typeof context.toJSON === 'function' && logger.level === 'debug') {
-      logger.info('Hook Context', util.inspect(context, {colors: false}));
+      logger.debug('Hook Context : ' + util.inspect(JSON.stringify(context), {colors: false}));
+      logger.debug('Hook.data : ' + JSON.stringify(context.data));
+      logger.debug('Hook.params: ' + JSON.stringify(context.params));
     }
-    
+    if (context.result) {
+      logger.info('Hook.result.data : ' + JSON.stringify(context.result.data));
+    }
+
     if (context.error) {
-      logger.error(context.error.message);
+      logger.error(context.error.stack);
     }
   };
 };
