@@ -1,6 +1,6 @@
 {
   "host": "127.0.0.1",
-  "port": 3030,
+  "port": 3210,
   "public": "../public/",
   "src": "../src/",
   "paginate": {
@@ -48,11 +48,11 @@
     ]
   },
   "identityServer": {
-     "host":"http://nccoe-ca.micronets.in",
-     "port":"",
+     "host":"http://198.58.114.200",
+     "port":"3230",
      "csrt":"/csrt",
      "certificates":"/certificates"
   },
-  "identity_server_url":"http://nccoe-ca.micronets.in",
-   "registryServer" : "http://nccoe-mm-api.micronets.in"
+  "identity_server_url":"http://198.58.114.200:3230",
+   "registryServer" : "http://127.0.0.1:3030"
 }

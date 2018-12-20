@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const logger = require('winston');
+const logger = require('./logger');
 const app = require('./app');
 const port = app.get('port');
 const server = app.listen(port);
@@ -12,7 +12,7 @@ process.on('unhandledRejection', (reason, p) =>
 
 server.on('listening', () =>
   // logger.info('Feathers application started on %s:%d for environment %s', app.get('host'), port, JSON.stringify(process.env.NODE_ENV))
-  logger.info('Feathers application started on %s:%d ', app.get('host'), port)
+  console.log('Feathers application started on http://%s:%d', app.get('host'), port)
 );
 
 
