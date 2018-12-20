@@ -14,12 +14,12 @@ module.exports = {
       async ( hook ) => {
         const { params , data , payload } = hook;
         const subscriberId = data.subscriberID
+        logger.debug( '\n subscriberId :' + JSON.stringify ( subscriberId ) )
         if(!subscriberId) {
           return Promise.reject(new errors.BadRequest('Invalid Post Request', {
             subscriberID:'Missing subscriber ID'
           }))
         }
-        logger.debug( '\n subscriberId :' + JSON.stringify ( subscriberId ) )
         else {
           let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
           const registryUrl = hook.app.get ( 'registryServer' )
