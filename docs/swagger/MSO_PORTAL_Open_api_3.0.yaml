@@ -1,0 +1,244 @@
+openapi: 3.0.0
+info:
+  title: MSO Portal API's.
+  description: MSO Portal API's.
+  version: 0.1.1
+
+servers:
+   - url: https://mso-portal-api.micronets.in/
+     description: Main (production) server
+
+paths:
+  /portal/registration/token:
+    post:
+      tags:
+        - token
+      summary: Generate a JWT Access token to associate the device with device registration process.
+      description: ''
+      operationId: addAccessToken
+      requestBody:
+       $ref: '#/components/requestBodies/TokenBody'
+      responses:
+        '201':
+          description: 'A JWT token to store the registration context for on-boarding a device'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+  /ca/csrt:
+    post:
+      tags:
+        - csrt
+      security:
+        - bearerAuth: []    
+      summary: Request a CSR Template that the client needs for generating a CSR
+      description: ''
+      operationId: createCSR
+      requestBody:
+        $ref: '#/components/requestBodies/SubscriberBody'
+      responses:
+        '201':
+          description: 'The CSR "template" is metadata that the client (device) needs when generating a CSR.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Csrt'
+        '400':
+          description: Invalid Cert Request
+  /ca/cert:
+    post:
+      tags:
+        - cert
+      security:
+        - bearerAuth: []    
+      summary: Generates certificates associated with CSR
+      description: A wifi certificate and ca certificate is created and signed along with subscriber information.
+      operationId: createCertificate
+      requestBody:
+         $ref: '#/components/requestBodies/CertBody'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cert'
+            
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:            
+   Token:
+    type: object
+    properties:
+      acessToken:
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+   Csrt:
+    type: object
+    description: 'A JSON object containing metadata required for generating a CSR'
+    required:
+      - csrTemplate
+    properties:
+      csrTemplate:
+        type: object
+        properties:
+          keyType:
+            type: string
+            example: 'RSA:2048'
+      debug:
+        type: object
+        properties:
+          context:
+            type: object
+            properties:
+              token:
+                type: string
+                example: EXPZF
+              clientID:
+                type: string
+                example: www.happyclinic.com
+              deviceID:
+                type: string
+                example: 730c8aa0a2e535c8caa3e1398c6fdbb476223088551d45315fc4c9941cf55f9e
+              timestamp:
+                type: string
+                example: '1510077436128'
+              subscriber:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: '1'
+                  name:
+                    type: string
+                    example: Grandma
+                  ssid:
+                    type: string
+                    example: Grandma's WiFi
+        xml:
+          name: ''
+          wrapped: true
+        items:
+          type: string
+    xml:
+      name: ''
+   Cert:
+    type: object
+    description: 'A JSON object containing generated and signed certificates associated with CSR.'
+    required:
+      - wifiCert
+      - caCert
+      - passphrase
+      - macAddress
+      - subscriber
+    properties:
+      wifiCert:
+        type: string
+      caCert:
+        type: string
+        xml:
+          name: ''
+          wrapped: true
+        items:
+          type: string
+      passphrase:
+        type: string
+      macAddress:
+        type: string
+        example: 52:b0:2a:41:69:10
+      subscriber:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: '1'
+          name:
+            type: string
+            example: Grandma
+          ssid:
+            type: string
+            example: Grandma's WiFi  
+    xml:
+      name: ''
+  requestBodies:
+   CertBody:
+    description: 'A JSON object containing CSR to generate certificates.'
+    required: true
+    content:
+        application/json:
+          schema:
+           type: object
+           properties:
+            csr:
+             type: string
+             description: 'A base64 encoded CSR'
+   SubscriberBody:
+    description: 'A JSON object identifying the subscriber account.'
+    required: true
+    content:
+        application/json:
+          schema:
+           type: object
+           properties:
+            subscriberID:
+             type: string
+             description: 'The subscriberID identifies a subscriber account.'
+             example: 7C2B-CQ43-13117X      
+   TokenBody:
+    required: true
+    description: 'A JSON object used to manage a registration context (session information).'
+    content:
+        application/json:
+          schema:
+            type: object
+            properties:
+             clientID:
+              type: string
+              description: 'Unique identifier for the registration server.'
+              example: www.stanford.org
+             deviceID:
+              type: string
+              description: 'Unique identifier for the device.'
+              example: d4d0d54d12dd3d454dtdt4y8296cs91427q41q4649c934ba495991b6852b531
+             vendor:
+              type: string
+              description: 'Device manufacturer/vendor.'
+              example: Stanford
+             type:
+               type: string
+               description: 'Device type - friendly name, eg. "Heartrate Monitor"'
+               example: Medical
+             model:
+              type: string
+              description: 'Device model - eg. "Accu-Pulse"'
+              example: Medical
+             serial:
+              type: string
+              description: 'Device serial (manufacturers serial, NOT deviceID)'
+              example: Medical
+             macAddress:
+              type: string
+              description: 'Device MAC address'
+              example: '52:b0:2a:41:69:10'
+             class:
+              type: string
+              description: 'Name of micronet to add device to'
+              example: Medical
+             deviceName:
+               type: string
+               description: 'Associated name of device to add to micronet'
+               example: Baby Monitor
+               default: Test Device
+             deviceConnection:
+              type: string
+              description: 'Device connection identifes if device is to added to wired or wifi network.'
+              example: wifi
+              default: wired
+           
+    
+   
+
