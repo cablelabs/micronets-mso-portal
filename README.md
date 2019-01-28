@@ -166,15 +166,6 @@ Header Fields:
     npm start
     ```
 
-## Testing
-
-Simply run `npm test` and all your tests in the `test/` directory will be run.
-
-
-## Help
-
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
-
 #### 1.2 Running the MSO Portal using Docker
 
 The MSO Portal distro includes a Dockerfile that can be used to construct Docker images.
@@ -186,7 +177,14 @@ To build the Docker images for api and start the container :
     docker-compose up --build
    ```
 
+## Testing
 
+Simply run `npm test` and all your tests in the `test/` directory will be run.
+
+
+## Help
+
+For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
 
 ## Changelog
 
