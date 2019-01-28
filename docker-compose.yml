@@ -1,18 +1,3 @@
-#version: "2"
-#services:
-#  micronets:
-#    image: code.cablelabs.com:4567/micronets/mso-portal
-#    ports:
-#      - "3210:3210"
-#    links:
-#      - mongo
-#  mongo:
-#    image: mongo
-#    volumes:
-#      - /data/mongodb/db:/data/db
-#    ports:
-#      - "27017:27017"
-
 version: '3'
 services:
   api:
@@ -33,8 +18,6 @@ services:
 
   mongo:
      image: mongo
- #    volumes: // Commented to make it run locally
- #      - /data/mongodb/db:/data/db
      ports:
        - "27017:27017"
 

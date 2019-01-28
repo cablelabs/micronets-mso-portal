@@ -3,6 +3,7 @@ FROM node:latest
 
 # set working directory
 WORKDIR /app
+
 # copy project file
 COPY app/package.json .
 

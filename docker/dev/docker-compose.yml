@@ -19,8 +19,6 @@ services:
       - MONGO_URL=mongodb://127.0.0.1:27017/mso-portal
     depends_on:
       - mongo
-#    volumes:
-#      - ./../../api:/usr/src/api
     ports:
       - '3210:3210'
 
@@ -37,8 +35,6 @@ services:
     depends_on:
       - mongo
       - api
-#    volumes:
-#      - ./../../app:/usr/src/app
     ports:
       - '8081:8081'
 

@@ -151,7 +151,7 @@ Header Fields:
 
 ## Getting Started
 
-Getting up and running is as easy as 1, 2, 3.
+#### 1.1 Running the Micronets Manager manually
 
 1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
 2. Install your dependencies
@@ -170,22 +170,23 @@ Getting up and running is as easy as 1, 2, 3.
 
 Simply run `npm test` and all your tests in the `test/` directory will be run.
 
-## Scaffolding
-
-Feathers has a powerful command line interface. Here are a few things it can do:
-
-```
-$ npm install -g feathers-cli             # Install Feathers CLI
-
-$ feathers generate service               # Generate a new Service
-$ feathers generate hook                  # Generate a new Hook
-$ feathers generate model                 # Generate a new Model
-$ feathers help                           # Show all commands
-```
 
 ## Help
 
 For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+
+#### 1.2 Running the MSO Portal using Docker
+
+The MSO Portal distro includes a Dockerfile that can be used to construct Docker images.
+
+To build the Docker images for api and start the container :
+
+   ```
+    cd mso-portal/docker/dev
+    docker-compose up --build
+   ```
+
+
 
 ## Changelog
 
