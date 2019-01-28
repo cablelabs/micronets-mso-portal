@@ -28,7 +28,6 @@
     "start": "npm install && node api/  config/ src/index.js",
     "mocha": "mocha test/ --recursive --exit",
     "docker-build": "docker build -t community.cablelabs.com:4567/micronets-docker/micronets-mso-portal:latest .",
-    "docker-compose-build": "docker-compose up --build",
     "docker-publish": "docker login community.cablelabs.com:4567; docker push community.cablelabs.com:4567/micronets-docker/micronets-mso-portal:latest"
   },
   "dependencies": {
