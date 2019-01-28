@@ -151,7 +151,7 @@ Header Fields:
 
 ## Getting Started
 
-#### 1.1 Running the Micronets Manager manually
+#### 1.1 Running the MSO Portal manually
 
 1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
 2. Install your dependencies
