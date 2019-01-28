@@ -189,7 +189,7 @@ Both can be accomplished by running:
 Note that the destination repository and path is configured in the `Makefile` and that Docker will request 
 credentials in order to perform the push.
 
-#### 1.5 Retrieving the latest docker image from Artifactory
+#### 1.4 Retrieving the latest docker image from Artifactory
 
 The commands to retrieve the latest Docker image(s) for the MSO Portal are also contained in the included Makefile. 
 
