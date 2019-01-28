@@ -200,6 +200,19 @@ To pull the latest Docker(s) run:
 Note that the source repository and path is configured in the `Makefile`.
 No credential should be required to pull the Docker image.
 
+#### 1.5 Running the MSO Portal  
+
+The MSO Portal distro includes database population scripts that can be used for the initial setup.
+
+The scripts/data folder contain examples to populate the subscriber database and generate registration tokens.
+
+To populate the database please run the following command :
+
+ ```make populate_db```
+
+Note the json files in scripts/data used to populate the database are samples.Please changed according.Having a valid subscriber database is mandatory.
+
+
 ## Testing
 
 Simply run `npm test` and all your tests in the `test/` directory will be run.
