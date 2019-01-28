@@ -1,23 +1,23 @@
 version: '3'
 services:
+  mongo:
+      image: mongo
+      volumes:
+        - /tmp/mongodb:/data/db
+      network_mode: "host"
+      ports:
+        - "27017:27017"
   api:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: code.cablelabs.com:4567/micronets/mso-portal
+    image: community.cablelabs.com:4567/micronets-docker/mso-portal
+    network_mode: "host"
     environment:
       - NODE_ENV=development
       - PORT=3210
       - MONGO_URL=mongodb://mongo:27017/micronets
-    links:
-      - mongo
-    volumes:
-      - ./src:/usr/src/api
+    depends_on:
+          - mongo
     ports:
-      - '3210:3210'
-
-  mongo:
-     image: mongo
-     ports:
-       - "27017:27017"
-
+          - '3210:3210'

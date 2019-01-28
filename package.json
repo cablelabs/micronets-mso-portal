@@ -27,9 +27,9 @@
     "dev": "npm install && nodemon  api/ config/ src/index.js",
     "start": "npm install && node api/  config/ src/index.js",
     "mocha": "mocha test/ --recursive --exit",
-    "docker-build": "docker build -t code.cablelabs.com:4567/micronets/mso-portal .",
-    "docker-compose": "docker-compose up --build",
-    "docker-publish": "docker login code.cablelabs.com:4567; docker push code.cablelabs.com:4567/micronets/mso-portal"
+    "docker-build": "docker build -t community.cablelabs.com:4567/micronets-docker/micronets-mso-portal:latest .",
+    "docker-compose-build": "docker-compose up --build",
+    "docker-publish": "docker login community.cablelabs.com:4567; docker push community.cablelabs.com:4567/micronets-docker/micronets-mso-portal:latest"
   },
   "dependencies": {
     "@feathersjs/authentication": "^2.1.7",

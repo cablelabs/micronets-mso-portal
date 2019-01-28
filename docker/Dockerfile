@@ -18,9 +18,7 @@ COPY api .
 
 # Install app dependencies
 COPY package.json .
-COPY package.json package-lock.json ./
 COPY app/package.json .
-COPY app/package.json app/package-lock.json ./
 
 # build the client
 # RUN node build/build.js

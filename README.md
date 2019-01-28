@@ -177,6 +177,29 @@ To build the Docker images for api and start the container :
     docker-compose up --build
    ```
 
+
+#### 1.3 Deploying a Docker image to Artifactory
+
+A `Makefile` is provided to generate the Docker image and upload it to the configured artifact repository. 
+
+Both can be accomplished by running:
+
+```make docker-push```
+
+Note that the destination repository and path is configured in the `Makefile` and that Docker will request 
+credentials in order to perform the push.
+
+#### 1.5 Retrieving the latest docker image from Artifactory
+
+The commands to retrieve the latest Docker image(s) for the MSO Portal are also contained in the included Makefile. 
+
+To pull the latest Docker(s) run:
+
+```make docker-pull```
+
+Note that the source repository and path is configured in the `Makefile`.
+No credential should be required to pull the Docker image.
+
 ## Testing
 
 Simply run `npm test` and all your tests in the `test/` directory will be run.
