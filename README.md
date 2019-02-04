@@ -21,6 +21,8 @@ This project uses [Feathers](http://feathersjs.com). An open source web framewor
 
  1. MongoDB - https://www.mongodb.com/
  2. Mongoose - http://mongoosejs.com/
+ 
+This project uses MongoDB, a NoSQL document store, for persisting data. In order to run this application locally, you'll need to have MongoDb installed and running on your local development machine.
 
 ## API
 
