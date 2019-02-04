@@ -5,12 +5,6 @@
     "description": "MSO Portal API's.",
     "version": "0.1.1"
   },
-  "servers": [
-    {
-      "url": "https://mso-portal-api.micronets.in/",
-      "description": "Main (production) server"
-    }
-  ],
   "paths": {
     "/portal/registration/token": {
       "post": {
