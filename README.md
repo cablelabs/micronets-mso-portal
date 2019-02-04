@@ -153,18 +153,25 @@ Header Fields:
 
 #### 1.1 Running the MSO Portal manually
 
-1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
+1. Make sure you have [NodeJS](https://nodejs.org/) , [npm](https://www.npmjs.com/) and [mongoDB](https://www.mongodb.com/) installed and running.
+
 2. Install your dependencies
 
     ```
     cd path/to/mso-portal; npm install
     ```
 
-3. Start your app
+3. Start your api/server
 
     ```
-    npm start
+    npm run start
     ```
+4. Start your api/server in  dev mode
+
+    ```
+    npm run dev
+    ```    
+######## Note : MSO Portal runs on port 3210 and mongoDB runs on port 27017.The same configuration can be found in default.json in config directory.
 
 #### 1.2 Running the MSO Portal using Docker
 
@@ -210,13 +217,16 @@ To populate the database please run the following command :
 
  ```make populate_db```
 
-Note the json files in scripts/data used to populate the database are samples.Please changed according.Having a valid subscriber database is mandatory.
-
+######## Note : The json files in scripts/data used to populate the database are samples.Please change accordingly.Having a valid subscriber database is mandatory.
+######## Note : The MSO_PORTAL_HOSTNAME and MM_HOSTNAME in populate_db.sh script are samples.Please change to point to respective instances.
+######## Note : Before consuming MSO Portal API's it is mandatory to have respective Micronets Manager and Identity server for the associated subscriber running.
+######## Note : Detailed instructions to run the Micronets Manager can be found [here](https://github.com/cablelabs/micronets-manager#getting-started).
+######## Note : Detailed instructions to run the Identity server can be found [here](https://github.com/cablelabs/identity-service#getting-started).
 
 ## Testing
 
 Simply run `npm test` and all your tests in the `test/` directory will be run.
-
+######## Note : Before consuming MSO Portal API's it is mandatory to have respective Micronets Manager and Identity server for the associated subscriber running.
 
 ## Help
 
