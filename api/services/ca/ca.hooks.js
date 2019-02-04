@@ -13,7 +13,7 @@ module.exports = {
     create : [
       async ( hook ) => {
         const { params , data , payload } = hook;
-        const subscriberId = data.subscriberID
+        const subscriberId = data.subscriberID || data.subscriberId
         logger.debug( '\n subscriberId :' + JSON.stringify ( subscriberId ) )
         if(!subscriberId) {
           return Promise.reject(new errors.BadRequest('Invalid Post Request', {

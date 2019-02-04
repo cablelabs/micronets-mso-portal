@@ -47,12 +47,5 @@
       }
     ]
   },
-  "identityServer": {
-     "host":"http://198.58.114.200",
-     "port":"3230",
-     "csrt":"/csrt",
-     "certificates":"/certificates"
-  },
-  "identity_server_url":"http://198.58.114.200:3230",
-   "registryServer" : "https://mm-api.micronets.in"
+   "registryServer" : "http://127.0.0.1:3030"
 }
