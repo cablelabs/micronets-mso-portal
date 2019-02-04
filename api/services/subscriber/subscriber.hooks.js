@@ -49,22 +49,22 @@ module.exports = {
         // const { headers: { authorization }} = params
         // const jwtToken = authorization.split(' ')[1]
         // let allHeaders = { crossDomain: true, headers : { 'Authorization' : params.headers.authorization  , 'Content-type': 'application/json' } };
-        let allHeaders = { crossDomain: true, headers : {  'Content-type': 'application/json' } };
-        // let registry = await axios.get ( `${hook.result.registry}/micronets/v1/mm/registry/${hook.result.id}`, allHeaders )
-        axios({
-          ...allHeaders,
-          method: 'get',
-          url: `${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`
-        }).then((response) => {
-          const user = Object.assign({},{
-            id: hook.result.id,
-            ssid: hook.result.ssid,
-            name: hook.result.name,
-            mmUrl: response.data.mmClientUrl
-          })
-          return hook.app.service ( '/portal/users').create(user , allHeaders )
-        })
-        return hook;
+        // let allHeaders = { crossDomain: true, headers : {  'Content-type': 'application/json' } };
+        // // let registry = await axios.get ( `${hook.result.registry}/micronets/v1/mm/registry/${hook.result.id}`, allHeaders )
+        // axios({
+        //   ...allHeaders,
+        //   method: 'get',
+        //   url: `${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`
+        // }).then((response) => {
+        //   const user = Object.assign({},{
+        //     id: hook.result.id,
+        //     ssid: hook.result.ssid,
+        //     name: hook.result.name,
+        //     mmUrl: response.data.mmClientUrl
+        //   })
+        //   return hook.app.service ( '/portal/users').create(user , allHeaders )
+        // })
+        // return hook;
       }
     ],
     update: [],

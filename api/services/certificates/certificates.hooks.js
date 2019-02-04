@@ -35,7 +35,7 @@ module.exports = {
         let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${result[0].subscriberId}` , axiosConfig )
         let mmApiurl = registry.data.mmUrl
         logger.debug( '\n Registry from MM :' + JSON.stringify ( registry.data ) )
-        const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/certificates` , {data, subscriberId:result[0].subscriberId} , axiosConfig );
+        const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/certificates` , {...data, subscriberId:result[0].subscriberId} , axiosConfig );
         logger.debug( '\n MM API Response Certs  :' + JSON.stringify ( mmApiResponse.data ) )
         hook.data = Object.assign ( {} ,
           {
