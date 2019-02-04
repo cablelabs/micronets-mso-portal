@@ -215,8 +215,17 @@ The scripts/data folder contain examples to populate the subscriber database and
 
 To populate the database please run the following command :
 
- ```make populate_db```
+ ```./populate_db.sh```
+ 
+   OR
+   
+  ```sh populate_db.sh```
+  
+   OR
+     
+   ```bash populate_db.sh```
 
+######## Note : Before you run the scripts to populate database make sure the MSO Portal server is up and running at port 3210.
 ######## Note : The json files in scripts/data used to populate the database are samples.Please change accordingly.Having a valid subscriber database is mandatory.
 ######## Note : The MSO_PORTAL_HOSTNAME and MM_HOSTNAME in populate_db.sh script are samples.Please change to point to respective instances.
 ######## Note : Before consuming MSO Portal API's it is mandatory to have respective Micronets Manager and Identity server for the associated subscriber running.

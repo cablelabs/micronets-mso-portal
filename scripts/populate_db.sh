@@ -2,8 +2,8 @@
 
 #!/usr/bin/env bash
 
-MSO_PORTAL_HOSTNAME='http://127.0.0.1:3210'
-MM_HOSTNAME='http://127.0.0.1:3030'
+MSO_PORTAL_HOSTNAME='127.0.0.1:3210'
+MM_HOSTNAME='127.0.0.1:3030'
 
 echo 'Getting Authorization token from ' $MSO_PORTAL_HOSTNAME
 
