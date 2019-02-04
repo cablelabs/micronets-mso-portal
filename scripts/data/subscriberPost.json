@@ -1,6 +1,6 @@
 {
   "id" : "7B2A-BE88-08817Z",
-  "ssid" : "nccoe-gw",
+  "ssid" : "micronets-gw-0001",
   "name" : "Grandma’s LINKSYS 1900",
-  "registry": "http://nccoe-mm-api.micronets.in"
+  "registry":"http://127.0.0.1:3030"
 }
