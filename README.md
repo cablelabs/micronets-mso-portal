@@ -215,6 +215,11 @@ The MSO Portal distro includes database population scripts that can be used for 
 
 The scripts/data folder contain examples to populate the subscriber database and generate registration tokens.
 
+To change permissions of the scripts directory please run the following command :
+
+```chmod -R +x .```
+
+
 To populate the database please run the following command :
 
  ```./populate_db.sh```
