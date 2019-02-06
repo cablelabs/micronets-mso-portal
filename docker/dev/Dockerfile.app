@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY app .
 RUN ls -a
 
-ENV MONGO_URL=
+ENV MONGO_URL=mongodb://mongo:27017/mso-portal
 
 # Install app dependencies
 RUN npm install

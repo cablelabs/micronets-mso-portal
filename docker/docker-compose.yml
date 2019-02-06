@@ -29,6 +29,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=8081
+      - MONGO_URL=mongodb://mongo:27017/mso-portal
     links:
       - api
     volumes:
