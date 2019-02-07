@@ -13,6 +13,7 @@ services:
     image: mso-portal-api-dev
     environment:
       - NODE_ENV=development
+      - NETWORK_MODE=false
       - PORT=3210
       - MONGO_URL=mongodb://mongo:27017/mso-portal
     depends_on:
@@ -29,6 +30,7 @@ services:
     image: mso-portal-client-dev
     environment:
       - NODE_ENV=development
+      - NETWORK_MODE=false
       - PORT=8081
       - MONGO_URL=mongodb://mongo:27017/mso-portal
     depends_on:

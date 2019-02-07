@@ -24,7 +24,7 @@
   "scripts": {
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
-    "dev": "npm install && nodemon  api/ config/ src/index.js",
+    "dev": "NODE_ENV=development && npm install && nodemon  api/ config/ src/index.js",
     "start": "npm install && node api/  config/ src/index.js",
     "mocha": "mocha test/ --recursive --exit",
     "docker-build": "docker build -t community.cablelabs.com:4567/micronets-docker/micronets-mso-portal:latest .",
@@ -47,6 +47,7 @@
     "chalk": "^2.4.1",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
+    "dotenv": "^6.2.0",
     "feathers-authentication-management": "^1.0.3",
     "feathers-hooks-common": "^3.10.0",
     "feathers-mongodb": "^2.9.1",

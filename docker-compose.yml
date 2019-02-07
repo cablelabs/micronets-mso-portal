@@ -14,9 +14,10 @@ services:
     image: community.cablelabs.com:4567/micronets-docker/mso-portal:latest
     network_mode: "host"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+      - NETWORK_MODE=true
       - PORT=3210
-      - MONGO_URL=mongodb://mongo:27017/micronets
+      - MONGO_URL=mongodb://127.0.0.1:27017/micronets
     depends_on:
           - mongo
     ports:

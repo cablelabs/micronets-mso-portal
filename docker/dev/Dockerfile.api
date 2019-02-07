@@ -10,7 +10,7 @@ WORKDIR /usr/src/mso-portal
 COPY . .
 RUN ls -a
 
-ENV MONGO_URL=mongodb://mongo:27017/mso-portal
+ENV MONGO_URL=
 
 RUN npm install
 
