@@ -31,9 +31,9 @@
     "docker-publish": "docker login community.cablelabs.com:4567; docker push community.cablelabs.com:4567/micronets-docker/micronets-mso-portal:latest"
   },
   "dependencies": {
-    "@feathersjs/authentication": "^2.1.7",
-    "@feathersjs/authentication-jwt": "^2.0.1",
-    "@feathersjs/authentication-local": "^1.2.7",
+    "@feathersjs/authentication": "^2.1.16",
+    "@feathersjs/authentication-jwt": "^2.0.10",
+    "@feathersjs/authentication-local": "^1.2.9",
     "@feathersjs/configuration": "^1.0.2",
     "@feathersjs/errors": "^3.3.5",
     "@feathersjs/express": "^1.2.3",
@@ -42,7 +42,6 @@
     "axios": "^0.18.0",
     "basic-auth": "^2.0.1",
     "bcrypt": "^3.0.2",
-    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "chalk": "^2.4.1",
     "compression": "^1.7.2",
