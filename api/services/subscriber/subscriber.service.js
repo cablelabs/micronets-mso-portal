@@ -9,7 +9,7 @@ module.exports = function () {
   const paginate = app.get('paginate');
 
   const options = {
-    name: 'subscriber',
+    id:'id',
     Model,
     paginate
   };
