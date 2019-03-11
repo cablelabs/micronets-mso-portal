@@ -31,10 +31,9 @@ module.exports = {
     create: [
       async (hook) => {
         const { params  , payload } = hook;
-        console.log('\n\n Create after hook result : ' + JSON.stringify(hook.result))
-        console.log( 'IP Address : '  + JSON.stringify(ip.address()));
-        let mmBaseUrl = hook.result.registry.split(':')
-        mmBaseUrl = mmBaseUrl[1].replace('//','')
+
+        // Create Registry for subscriber
+        let mmBaseUrl = hook.result.registry.split(':')[1].replace('//','')
         const postRegistry = Object.assign({},{
           subscriberId: hook.result.id,
           mmUrl: hook.result.registry,
@@ -42,9 +41,9 @@ module.exports = {
           msoPortalUrl: `http://${ip.address()}:3210`,
           gatewayId: hook.result.gatewayId
         })
-        console.log('\n Post data for registry : ' + JSON.stringify(postRegistry))
         const registryRes = await axios.post ( `${hook.result.registry}/mm/v1/micronets/registry` , {...postRegistry} , allHeaders );
-        console.log('\n registryRes : ' + JSON.stringify(registryRes.data))
+
+        // Create User for associated subscriber
           const user = Object.assign({},{
             id: hook.result.id,
             ssid: hook.result.ssid,
@@ -58,9 +57,8 @@ module.exports = {
     update: [
       async(hook) => {
         const { params  , payload } = hook;
-        console.log('\n\n Update after hook result : ' + JSON.stringify(hook.result))
-        let mmBaseUrl = hook.result.registry.split(':')
-        mmBaseUrl = mmBaseUrl[1].replace('//','')
+        // Updated associated Registry
+        let mmBaseUrl = hook.result.registry.split(':')[1].replace('//','')
         const putRegistry = Object.assign({},{
           subscriberId: hook.result.id,
           mmUrl: hook.result.registry,
@@ -74,9 +72,8 @@ module.exports = {
     patch: [
       async(hook) => {
         const { params  , payload } = hook;
-        console.log('\n\n Patch after hook result : ' + JSON.stringify(hook.result))
-        let mmBaseUrl = hook.result.registry.split(':')
-        mmBaseUrl = mmBaseUrl[1].replace('//','')
+        // Updated associated Registry
+        let mmBaseUrl = hook.result.registry.split(':')[1].replace('//','')
         const patchRegistry = Object.assign({},{
           subscriberId: hook.result.id,
           mmUrl: hook.result.registry,
