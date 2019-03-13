@@ -6,7 +6,7 @@ module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const subscriber = new Schema({
-    id: { type: String , required: true, unique: true, primaryKey: true, sparse: true },
+    id: { type: String , required: true,  primaryKey: true, unique:true, sparse: true },
     ssid: { type: String, required: true },
     name: { type: String, required: true },
     gatewayId : {type: String, required: true },
@@ -14,6 +14,6 @@ module.exports = function (app) {
   }, {
     timestamps: true
   });
-
   return mongooseClient.model('subscriber', subscriber);
+
 };
