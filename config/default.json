@@ -48,5 +48,6 @@
       }
     ]
   },
+  "webSocketBaseUrl":"wss://127.0.0.1:5050/micronets/v1/ws-proxy",
    "registryServer" : "http://127.0.0.1:3030"
 }

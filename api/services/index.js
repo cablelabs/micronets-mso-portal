@@ -7,6 +7,8 @@ const session = require('./session/session.service.js');
 const token = require('./token/token.service.js');
 const authorize = require('./authorize/authorize.service.js');
 
+const socket = require('./socket/socket.service.js');
+
 module.exports = function () {
   const app = this; // eslint-disable-line no-unused-vars
   app.configure(token);
@@ -17,4 +19,5 @@ module.exports = function () {
   app.configure(subscriber);
   app.configure(session);
   app.configure(authorize);
+  app.configure(socket);
 };
