@@ -11,8 +11,7 @@ const errors = require('@feathersjs/errors');
 
 module.exports = {
   before: {
-    all : [ //authenticate ( 'jwt' )
-       ] ,
+    all : [] ,
     find: [],
     get: [
       hook => {
@@ -150,7 +149,17 @@ module.exports = {
 
       }
     ],
-    remove: []
+    remove: [
+      async(hook) => {
+        const { data, params, id } = hook
+        if(id) {
+          await hook.app.service('/portal/v1/socket').remove(hook.result.gatewayId,allHeaders)
+        }
+        else {
+          await hook.app.service('/portal/v1/socket').remove(null,allHeaders)
+        }
+      }
+    ]
   },
 
   error: {
