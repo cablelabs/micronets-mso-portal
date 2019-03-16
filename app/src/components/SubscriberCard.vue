@@ -13,7 +13,7 @@
                             <md-button class="md-fab md-plain" @click="editing = true">
                                 <md-icon>edit</md-icon>
                             </md-button>
-                            <md-button class="md-fab md-plain">
+                            <md-button class="md-fab md-plain" @click="deleteUser">
                                 <md-icon>delete</md-icon>
                             </md-button>
                         </md-card-actions>
@@ -165,13 +165,65 @@
                                     <md-button type="submit" class="md-primary" :disabled="sending">Update</md-button>
                                 </md-card-actions>
                             </md-card>
-                            <md-snackbar :md-active.sync="subscriberSaved">The subscriber {{ lastSubscriber }} was saved with success!</md-snackbar>
+                            <md-snackbar :md-active.sync="subscriberSaved">
+                                <span>The subscriber {{ lastSubscriber }} was saved with success!</span>
+                                <md-button class="md-primary" @click="subscriberSaved = false">Close</md-button>
+                            </md-snackbar>
                         </form>
                     </div>
                 </md-card>
             </v-flex>
           </v-layout>
         </v-container>
+        <div class="text-xs-center">
+            <v-dialog
+                    v-model="dialog"
+                    width="500"
+            >
+                <template v-slot:activator="{ on }">
+                    <v-btn
+                            color="red lighten-2"
+                            dark
+                            v-on="on"
+                    >
+                        Click Me
+                    </v-btn>
+                </template>
+
+                <v-card>
+                    <v-card-title
+                            class="headline grey lighten-2"
+                            primary-title
+                    >
+                        Delete Subscriber
+                    </v-card-title>
+
+                    <v-card-text>
+                       Are you sure you want to delete the subscriber
+                    </v-card-text>
+
+                    <!--<v-divider></v-divider>-->
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="dialog = false"
+                        >
+                            Yes
+                        </v-btn>
+                        <v-btn
+                                color="primary"
+                                flat
+                                @click="dialog = false"
+                        >
+                            No
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
     </v-flex>
   </v-layout>
 </template>
@@ -193,6 +245,7 @@
     data: () => ({
       editing: false,
       delete: false,
+      dialog: false,
       form: {
         id: '',
         ssid: '',
@@ -243,6 +296,10 @@
         this.form.gatewayId = null
         this.form.name = null
         this.form.registry = null
+      },
+      deleteUser () {
+        this.delete = true
+        this.dialog = true
       },
       saveUser () {
         this.sending = true
