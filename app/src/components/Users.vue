@@ -26,7 +26,7 @@
   import Layout from '../components/Layout'
 
   export default {
-    name: 'Subscriber',
+    name: 'Users',
     components: {Layout},
     data () {
       return {}

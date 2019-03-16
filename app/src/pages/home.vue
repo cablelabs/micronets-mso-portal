@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <template v-for="(user, index) in users">
-         <Subscriber :subscriberId=user.id  :subscriberName="user.name" :ssId="user.ssid"  :mmUrl="user.mmUrl" :index="index"/>
+         <Users :subscriberId=user.id  :subscriberName="user.name" :ssId="user.ssid"  :mmUrl="user.mmUrl" :index="index"/>
     </template>
     <template v-if="users.length == 0">
       <v-card>
@@ -15,11 +15,11 @@
 
 <script>
   import Layout from '../components/Layout'
-  import Subscriber from '../components/Subscriber'
+  import Users from '../components/Users'
   import { mapState, mapActions, mapMutations } from 'vuex'
 
   export default {
-    components: { Layout, Subscriber },
+    components: { Layout, Users },
     name: 'home',
     computed: {
       ...mapState(['users'])

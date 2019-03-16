@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { getField, updateField } from 'vuex-map-fields'
 
 const setState = prop => (state, value) => { state[prop] = value }
-const usersUrl = `http://127.0.0.1:3210/portal/users`
+const usersUrl = `http://127.0.0.1:3210/internal/subscriber`
 const apiInit = {crossDomain: true, headers: {'Content-type': 'application/json'}}
 const msoPortalAuthPostConfig = {
   'clientID': 'https://coloradohealthcare.org/',
@@ -13,22 +14,25 @@ const msoPortalAuthPostConfig = {
   'macAddress': '03:30:93:39:03:3B'
 }
 const authTokenUri = `http://127.0.0.1:3210/portal/registration/token`
+
 export const initialState = {
   users: [],
   toast: {
     show: false,
     value: ''
-  }
+  },
+  subscribers: []
 }
 
-export const getters = {}
+export const getters = { getField }
 
 export const mutations = {
   setUsers: setState('users'),
   setToast (state, {show, value}) {
     const formattedValue = value.charAt(0).toUpperCase() + value.slice(1)
     state.toast = {show, value: formattedValue}
-  }
+  },
+  updateField
 }
 
 export const actions = {
