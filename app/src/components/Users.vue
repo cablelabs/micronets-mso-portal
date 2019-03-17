@@ -7,8 +7,8 @@
             <v-flex xs12 md6>
             <v-card-title primary-title>
               <div>
-                <h4 class="headline mb-0">{{this.subscriberName}}</h4>
-                <h1 class="headline mb-0">{{this.ssId}}</h1>
+                <h4 class="headline mb-0">{{this.user.name}}</h4>
+                <h1 class="headline mb-0">{{this.user.ssid}}</h1>
               </div>
             </v-card-title>
             <v-card-actions>
@@ -33,16 +33,14 @@
     },
     methods: {
       showMicronets () {
-        console.log('\n showMicronets this.mmUrl : ' + JSON.stringify(this.mmUrl))
-        window.location.href = `${this.mmUrl}/${this.subscriberId}`
+        let mmUrlHost = this.user.registry.split('://')[1].split(':')[0]
+        let mmUrl = `http://${mmUrlHost}:8080`
+        console.log('\n mmUrl : ' + JSON.stringify(mmUrl))
+        window.location.href = `${mmUrl}/${this.user.id}`
       }
     },
     props: {
-      subscriberId: String,
-      subscriberName: String,
-      id: String,
-      ssId: String,
-      mmUrl: String
+      user: Object
     }
   }
 </script>

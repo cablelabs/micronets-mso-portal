@@ -1,7 +1,8 @@
 <template>
   <Layout>
     <template v-for="(user, index) in users">
-         <Users :subscriberId=user.id  :subscriberName="user.name" :ssId="user.ssid"  :mmUrl="user.mmUrl" :index="index"/>
+      <p>{{user}}</p>
+         <Users :user=user :index="index"/>
     </template>
     <template v-if="users.length == 0">
       <v-card>
