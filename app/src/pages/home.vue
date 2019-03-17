@@ -1,7 +1,6 @@
 <template>
   <Layout>
     <template v-for="(user, index) in users">
-      <p>{{user}}</p>
          <Users :user=user :index="index"/>
     </template>
     <template v-if="users.length == 0">

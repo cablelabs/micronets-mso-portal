@@ -1,23 +1,19 @@
 <template>
   <v-layout>
     <v-flex>
-        <v-container fluid grid-list-md>
-          <v-layout row wrap>
-            <v-flex xs12 md6>
-                <md-card class="md-primary" md-theme="orange-card">
-                    <md-card-header>
-                        <md-card-header-text>
-                            <div class="md-title">Subscriber</div>
-                        </md-card-header-text>
-                        <md-card-actions>
-                            <md-button class="md-fab md-plain" @click="editing = true">
-                                <md-icon>edit</md-icon>
-                            </md-button>
-                            <md-button class="md-fab md-plain" @click="deleteUser">
-                                <md-icon>delete</md-icon>
-                            </md-button>
-                        </md-card-actions>
-                    </md-card-header>
+        <v-container grid-list-xs>
+          <v-layout v-bind="binding">
+            <v-flex>
+                <md-card class="md-primary">
+                    <md-toolbar class="md-accent" md-elevation="1">
+                        <h3 class="md-title" style="flex: 1">Subscriber</h3>
+                        <md-button class="md-fab md-plain" @click="editing = true">
+                            <md-icon>edit</md-icon>
+                        </md-button>
+                        <md-button class="md-fab md-plain" @click="deleteUser">
+                            <md-icon>delete</md-icon>
+                        </md-button>
+                    </md-toolbar>
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
@@ -106,23 +102,23 @@
                     </md-card-content>
                     <div>
                         <form novalidate class="md-layout" @submit.prevent="validateSubscriber" v-if="editing">
-                            <md-card class="md-layout-item md-size-50 md-small-size-100">
+                            <md-card class="md-layout-item md-size-300 md-small-size-100">
                                 <md-card-header>
                                     <div class="md-title">Update Subscriber</div>
                                 </md-card-header>
 
                                 <md-card-content>
                                     <div class="md-layout md-gutter">
-                                        <div class="md-layout-item md-small-size-100">
+                                        <div class="md-layout-item md-size-300 md-small-size-100">
                                             <md-field :class="getValidationClass('id')">
-                                                <label for="id">ID</label>
+                                                <label for="id">ID (Read Only)</label>
                                                 <md-input name="" id="id" autocomplete="given-name" v-model="form.id" :disabled="sending" />
                                                 <span class="md-error" v-if="!$v.form.id.required">The id is required</span>
                                                 <span class="md-error" v-else-if="!$v.form.id.minlength">Invalid ID</span>
                                             </md-field>
                                         </div>
 
-                                        <div class="md-layout-item md-small-size-100">
+                                        <div class="md-layout-item md-size-300 md-small-size-100">
                                             <md-field :class="getValidationClass('ssid')">
                                                 <label for="ssid">SSID</label>
                                                 <md-input name="ssid" id="ssid" autocomplete="ssid" v-model="form.ssid" :disabled="sending" />
@@ -133,7 +129,7 @@
                                     </div>
 
                                     <div class="md-layout md-gutter">
-                                        <div class="md-layout-item md-small-size-100">
+                                        <div class="md-layout-item md-size-300 md-small-size-100">
                                             <md-field :class="getValidationClass('name')">
                                                 <label for="name">Name</label>
                                                 <md-input name="name" id="name" v-model="form.name" md-dense :disabled="sending" />
@@ -141,7 +137,7 @@
                                             </md-field>
                                         </div>
 
-                                        <div class="md-layout-item md-small-size-100">
+                                        <div class="md-layout-item md-size-300 md-small-size-100">
                                             <md-field :class="getValidationClass('gatewayId')">
                                                 <label for="gatewayId">Gateway ID</label>
                                                 <md-input  id="gatewayId" name="gatewayId" autocomplete="gatewayId" v-model="form.gatewayId" :disabled="sending" />
@@ -150,19 +146,21 @@
                                             </md-field>
                                         </div>
                                     </div>
-
+                                    <div class="md-layout-item md-size-300 md-small-size-100">
                                     <md-field :class="getValidationClass('registry')">
                                         <label for="registry">Registry</label>
                                         <md-input type="registry" name="registry" id="registry" autocomplete="registry" v-model="form.registry" :disabled="sending" />
                                         <span class="md-error" v-if="!$v.form.registry.required">The registry is required</span>
                                         <span class="md-error" v-else-if="!$v.form.registry.email">Invalid registry</span>
                                     </md-field>
+                                    </div>
                                 </md-card-content>
 
                                 <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
                                 <md-card-actions>
                                     <md-button type="submit" class="md-primary" :disabled="sending">Update</md-button>
+                                    <md-button type="submit" class="md-primary" :disabled="sending" @click="editing = false">Cancel</md-button>
                                 </md-card-actions>
                             </md-card>
                             <md-snackbar :md-active.sync="subscriberSaved">
@@ -302,6 +300,7 @@
         this.dialog = true
       },
       saveUser () {
+        console.log('\n saveUser called ...')
         this.sending = true
         // Instead of this timeout, here you can call your API
         window.setTimeout(() => {
@@ -309,7 +308,7 @@
           this.subscriberSaved = true
           this.sending = false
           this.clearForm()
-        }, 1500)
+        }, 150)
         // Update subscribers call.After the snackbar comes  do editing = false
         this.editing = false
         // Get subscribers call
@@ -320,6 +319,13 @@
         if (!this.$v.$invalid) {
           this.saveUser()
         }
+      }
+    },
+    computed: {
+      binding () {
+        const binding = {}
+        if (this.$vuetify.breakpoint.mdAndUp) binding.column = true
+        return binding
       }
     },
     props: {
@@ -375,9 +381,12 @@
     ));
     @import "../../node_modules/vue-material/src/base/theme";
     @import "../../node_modules/vue-material/src/components/MdCard/theme";
+    @import "../../node_modules/vue-material/src/components/MdField/theme";
+    @import "../../node_modules/vue-material/src/components/MdProgress/theme";
+    @import "../../node_modules/vue-material/src/components/MdToolbar/theme";
     .md-card {
-        width: 520px;
-        margin: 4px;
+        width: 820px;
+        margin: 4px 80px 20px 80px;
         display: inline-block;
         vertical-align: top;
     }
