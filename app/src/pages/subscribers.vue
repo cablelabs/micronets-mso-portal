@@ -61,7 +61,8 @@
   import Subscriber from '../components/SubscriberCard'
   import { mapState, mapActions, mapMutations } from 'vuex'
   import { required, minLength } from 'vuelidate/lib/validators'
-
+  import EventBus from './../event-bus'
+ // import { mapFields } from 'vuex-map-fields'
   export default {
     components: { Layout, Subscriber },
     name: 'Subscribers',
@@ -94,24 +95,40 @@
 
     methods: {
       ...mapMutations(['setUsers']),
-      ...mapActions(['fetchUsers']),
+      ...mapActions(['fetchUsers', 'upsertUsers']),
       submit () {
         this.$v.form.$touch()
         if (this.$v.form.$error) return
         // to form submit after this
-        alert('Form submitted')
+        const method = 'POST'
+        const upsertData = this.form
+        this.upsertUsers({method, upsertData}).then(() => {
+          this.dialog = false
+          this.loadUsers()
+        })
       },
       close () {
         this.dialog = false
+      },
+      loadUsers () {
+        this.fetchUsers().then((data) => {
+          this.users = data.data
+        })
       }
     },
     mounted () {
-      this.fetchUsers().then((data) => {
-        console.log('\n\n  Subscribers.vue page Users : ' + JSON.stringify(data))
-        this.users = data.data
+      this.loadUsers()
+      EventBus.$on('upsertUser', (payLoad) => {
+        console.log('\n upsertUser Event caught with payload : ' + JSON.stringify(payLoad))
+        this.loadUsers()
+      })
+      EventBus.$on('deleteUser', (payLoad) => {
+        console.log('\n DeleteUser Event caught with payload : ' + JSON.stringify(payLoad))
+        this.loadUsers()
       })
     },
-    created () { }
+    created () {
+    }
   }
 </script>
 

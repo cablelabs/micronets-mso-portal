@@ -16,6 +16,7 @@ const msoPortalAuthPostConfig = {
 const authTokenUri = `http://127.0.0.1:3210/portal/registration/token`
 
 export const initialState = {
+  updatedUser: [],
   users: [],
   toast: {
     show: false,
@@ -27,6 +28,7 @@ export const initialState = {
 export const getters = { getField }
 
 export const mutations = {
+  setUpdatedUser: setState('updatedUser'),
   setUsers: setState('users'),
   setToast (state, {show, value}) {
     const formattedValue = value.charAt(0).toUpperCase() + value.slice(1)
@@ -36,20 +38,7 @@ export const mutations = {
 }
 
 export const actions = {
-  fetchAuthToken ({commit, dispatch}) {
-    return axios({
-      ...apiInit,
-      method: 'post',
-      url: authTokenUri,
-      data: msoPortalAuthPostConfig
-    }).then(({data}) => {
-      return dispatch('initializeMicronets', {token: data.accessToken}).then(() => {
-      })
-    })
-  },
-
   fetchUsers ({state, commit, dispatch}, id) {
-    console.log('\n Store fetchUsers called ')
     return axios({
       ...apiInit,
       method: 'post',
@@ -66,12 +55,67 @@ export const actions = {
           }
         },
         method: 'get',
-        url: usersUrl
+        url: id ? `${usersUrl}/${id}` : usersUrl
       })
         .then(({data}) => {
           console.log('\n Users data : ' + JSON.stringify(data))
-          commit('setUsers', data)
+          id ? commit('setUpdatedUser', data) : commit('setUsers', data)
           return data
+        })
+    })
+  },
+
+  upsertUsers ({state, commit, dispatch}, {method, upsertData}) {
+    console.log('\n Store upsertUsers called with data ' + JSON.stringify(upsertData) + 'for method : ' + JSON.stringify(method))
+    return axios({
+      ...apiInit,
+      method: 'post',
+      url: authTokenUri,
+      data: msoPortalAuthPostConfig
+    }).then(({data}) => {
+      console.log('\n Access Token : ' + JSON.stringify(data.accessToken))
+      return axios({
+        ...{
+          crossDomain: true,
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${data.accessToken}`
+          }
+        },
+        method: method === 'PATCH' ? 'PATCH' : 'POST',
+        url: upsertData && upsertData.hasOwnProperty('id') && method !== 'POST' ? `${usersUrl}/${upsertData.id}` : usersUrl,
+        data: { ...upsertData }
+      })
+        .then(({data}) => {
+          console.log('\n Update users response : ' + JSON.stringify(data))
+          return dispatch('fetchUsers')
+        })
+    })
+  },
+
+  deleteUsers ({state, commit, dispatch}, id) {
+    console.log('\n Store deleteUsers called with ID ' + JSON.stringify(id))
+    return axios({
+      ...apiInit,
+      method: 'post',
+      url: authTokenUri,
+      data: msoPortalAuthPostConfig
+    }).then(({data}) => {
+      console.log('\n Access Token : ' + JSON.stringify(data.accessToken))
+      return axios({
+        ...{
+          crossDomain: true,
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${data.accessToken}`
+          }
+        },
+        method: 'DELETE',
+        url: id ? `${usersUrl}/${id}` : usersUrl
+      })
+        .then(({data}) => {
+          console.log('\n Delete users response : ' + JSON.stringify(data))
+          return dispatch('fetchUsers')
         })
     })
   }

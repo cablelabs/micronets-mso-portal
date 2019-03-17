@@ -7,10 +7,10 @@
                 <md-card class="md-primary">
                     <md-toolbar class="md-accent" md-elevation="1">
                         <h3 class="md-title" style="flex: 1">Subscriber</h3>
-                        <md-button class="md-fab md-plain" @click="editing = true">
+                        <md-button class="md-fab md-plain" @click="updateUser">
                             <md-icon>edit</md-icon>
                         </md-button>
-                        <md-button class="md-fab md-plain" @click="deleteUser">
+                        <md-button class="md-fab md-plain" @click="dialog = true">
                             <md-icon>delete</md-icon>
                         </md-button>
                     </md-toolbar>
@@ -112,7 +112,7 @@
                                         <div class="md-layout-item md-size-300 md-small-size-100">
                                             <md-field :class="getValidationClass('id')">
                                                 <label for="id">ID (Read Only)</label>
-                                                <md-input name="" id="id" autocomplete="given-name" v-model="form.id" :disabled="sending" />
+                                                <md-input name="id" id="id" autocomplete="given-name" v-model="form.id" :disabled="sending" readOnly />
                                                 <span class="md-error" v-if="!$v.form.id.required">The id is required</span>
                                                 <span class="md-error" v-else-if="!$v.form.id.minlength">Invalid ID</span>
                                             </md-field>
@@ -199,15 +199,13 @@
                     <v-card-text>
                        Are you sure you want to delete the subscriber
                     </v-card-text>
-
                     <!--<v-divider></v-divider>-->
-
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
                                 color="primary"
                                 flat
-                                @click="dialog = false"
+                                @click="deleteUser"
                         >
                             Yes
                         </v-btn>
@@ -231,6 +229,8 @@
 <script>
   import Layout from '../components/Layout'
   import { validationMixin } from 'vuelidate'
+  import { mapActions, mapMutations } from 'vuex'
+  import EventBus from './../event-bus'
   import {
     required,
     minLength
@@ -278,9 +278,10 @@
       }
     },
     methods: {
+      ...mapMutations(['setUsers', 'setUser']),
+      ...mapActions(['fetchUsers', 'upsertUsers', 'deleteUsers']),
       getValidationClass (fieldName) {
         const field = this.$v.form[fieldName]
-
         if (field) {
           return {
             'md-invalid': field.$invalid && field.$dirty
@@ -295,32 +296,48 @@
         this.form.name = null
         this.form.registry = null
       },
+      updateUser () {
+        this.editing = true
+        this.form.id = this.user.id
+        this.form.ssid = this.user.ssid
+        this.form.gatewayId = this.user.gatewayId
+        this.form.name = this.user.name
+        this.form.registry = this.user.registry
+      },
       deleteUser () {
         this.delete = true
         this.dialog = true
+        this.deleteUsers(this.user.id).then((data) => {
+          EventBus.$emit('deleteUser', data)
+        })
       },
       saveUser () {
-        console.log('\n saveUser called ...')
         this.sending = true
         // Instead of this timeout, here you can call your API
-        window.setTimeout(() => {
+        const method = 'PATCH'
+        const upsertData = this.form
+        this.upsertUsers({method, upsertData}).then((data) => {
           this.lastSubscriber = `${this.form.id}`
           this.subscriberSaved = true
           this.sending = false
           this.clearForm()
-        }, 150)
-        // Update subscribers call.After the snackbar comes  do editing = false
-        this.editing = false
-        // Get subscribers call
+          this.editing = false
+          EventBus.$emit('upsertUser', data)
+        })
       },
       validateSubscriber () {
         this.$v.$touch()
-
         if (!this.$v.$invalid) {
           this.saveUser()
         }
       }
     },
+    mounted () {
+      this.fetchUsers(this.user.id).then((data) => {
+        this.user = data
+      })
+    },
+    created () { },
     computed: {
       binding () {
         const binding = {}
