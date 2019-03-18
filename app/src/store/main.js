@@ -45,7 +45,6 @@ export const actions = {
       url: authTokenUri,
       data: msoPortalAuthPostConfig
     }).then(({data}) => {
-      console.log('\n Access Token : ' + JSON.stringify(data.accessToken))
       return axios({
         ...{
           crossDomain: true,
@@ -66,7 +65,7 @@ export const actions = {
   },
 
   upsertUsers ({state, commit, dispatch}, {method, upsertData}) {
-    console.log('\n Store upsertUsers called with data ' + JSON.stringify(upsertData) + 'for method : ' + JSON.stringify(method))
+    console.log('\n upsertUsers called with data ' + JSON.stringify(upsertData) + 'for method : ' + JSON.stringify(method))
     return axios({
       ...apiInit,
       method: 'post',
@@ -87,14 +86,14 @@ export const actions = {
         data: { ...upsertData }
       })
         .then(({data}) => {
-          console.log('\n Update users response : ' + JSON.stringify(data))
+          console.log('\n'+ JSON.stringify(method) + ' User response : ' + JSON.stringify(data))
           return dispatch('fetchUsers')
         })
     })
   },
 
   deleteUsers ({state, commit, dispatch}, id) {
-    console.log('\n Store deleteUsers called with ID ' + JSON.stringify(id))
+    console.log('\n deleteUsers called with ID ' + JSON.stringify(id))
     return axios({
       ...apiInit,
       method: 'post',
