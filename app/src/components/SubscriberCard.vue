@@ -333,9 +333,9 @@
       }
     },
     mounted () {
-      this.fetchUsers(this.user.id).then((data) => {
-        this.user = data
-      })
+      // this.fetchUsers(this.user.id).then((data) => {
+      //   this.user = data
+      // })
     },
     created () { },
     computed: {
