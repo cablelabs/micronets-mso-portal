@@ -4,19 +4,45 @@
       fixed
       v-model="drawer"
       disable-resize-watcher
-      right
+      left
       app
     >
+      <v-list class="pa-1">
+        <v-list-tile avatar>
+          <v-list-tile-content>
+            <v-list-tile-title>Menu</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+
+      <v-list class="pt-0" dense>
+        <v-divider></v-divider>
+
+        <v-list-tile
+                v-for="item in items"
+                :key="item.title"
+                @click="showPage(item.url)"
+        >
+          <v-list-tile-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
     </v-navigation-drawer>
     <v-toolbar color="#3A3A3A" dark fixed app>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <header class="text-xs-center">
         <router-link to="/"><img class="logo" src="../assets/cablelabs-logo.png"/></router-link>
       </header>
       <v-toolbar-title class="toolbar-title">MSO Portal Admin</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat icon @click.stop="drawer = !drawer">
-        <img class="logo" src="../assets/console-logo.png"/>
-      </v-btn>
+      <!--<v-btn flat icon @click.stop="drawer = !drawer">-->
+        <!--<img class="logo" src="../assets/console-logo.png"/>-->
+      <!--</v-btn>-->
     </v-toolbar>
     <v-content>
       <v-container fluid>
@@ -40,10 +66,17 @@
     },
     data: () => ({
       drawer: false,
-      offsetTop: 0
+      offsetTop: 0,
+      items: [
+        { title: 'Home', icon: 'dashboard', url: `http://127.0.0.1:8081/#/` },
+        { title: 'Subscribers', icon: 'recent_actors', url: `http://127.0.0.1:8081/#/subscribers` }
+      ]
     }),
     methods: {
-      ...mapActions(['fetchUsers'])
+      ...mapActions(['fetchUsers']),
+      showPage (url) {
+        window.location.href = url
+      }
     },
     created () {
       return this.fetchUsers()
@@ -56,6 +89,7 @@
   .toolbar-title {
     font-size: 20px;
     font-family: "Roboto";
+    margin-left: 30%
   }
   .message-content {
     font-family: "Roboto";

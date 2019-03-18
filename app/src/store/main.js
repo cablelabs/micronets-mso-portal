@@ -86,7 +86,7 @@ export const actions = {
         data: { ...upsertData }
       })
         .then(({data}) => {
-          console.log('\n'+ JSON.stringify(method) + ' User response : ' + JSON.stringify(data))
+          console.log('\n' + JSON.stringify(method) + ' User response : ' + JSON.stringify(data))
           return dispatch('fetchUsers')
         })
     })
