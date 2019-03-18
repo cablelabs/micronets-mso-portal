@@ -1,58 +1,54 @@
 <template>
   <Layout>
-    <template>
     <template v-for="(user, index) in users">
          <Subscriber :user="user" :index="index"/>
     </template>
-      <v-card-text style="height: 400px; position: relative">
-      <v-btn
-              color="green"
-              dark
-              small
-              absolute
-              bottom
-              right
-              fab
-              @click="dialog = !dialog"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
-      </v-card-text>
-      <v-dialog v-model="dialog" max-width="500px">
-        <v-card>
-          <v-card-text>
-            <div class="form pt-6">
-              <div class="summary text-red" v-if="$v.form.$error">
-                Form has errors
-              </div>
+    <v-btn
+            color="green"
+            dark
+            small
+            absolute
+            bottom
+            right
+            fab
+            @click="dialog = !dialog"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-text>
+          <div class="form pt-6">
+            <div class="summary text-red" v-if="$v.form.$error">
+              Form has errors
             </div>
-            <form @submit.prevent="submit">
-              <div :class="{ 'hasError': $v.form.name.$error }">
+          </div>
+          <form @submit.prevent="submit">
+            <div :class="{ 'hasError': $v.form.name.$error }">
               <v-text-field v-model="form.id" label="Subscriber ID" required />
-              </div>
-              <div :class="{ 'hasError': $v.form.name.$error }">
+            </div>
+            <div :class="{ 'hasError': $v.form.name.$error }">
               <v-text-field v-model="form.ssid" label="SSID" required />
-              </div>
-              <div :class="{ 'hasError': $v.form.name.$error }">
+            </div>
+            <div :class="{ 'hasError': $v.form.name.$error }">
               <v-text-field v-model="form.name" label="Name" required />
-              </div>
-              <div :class="{ 'hasError': $v.form.name.$error }">
+            </div>
+            <div :class="{ 'hasError': $v.form.name.$error }">
               <v-text-field v-model="form.gatewayId" label="Gateway ID" required />
-              </div>
-              <div :class="{ 'hasError': $v.form.name.$error }">
+            </div>
+            <div :class="{ 'hasError': $v.form.name.$error }">
               <v-text-field v-model="form.registry" label="Registry" required />
-              </div>
-            </form>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" @click.stop="submit" class="add-subscriber-btn">Add</v-btn>
-            <v-btn color="primary" @click.stop="close">Close</v-btn>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </template>
+            </div>
+          </form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click.stop="submit" class="add-subscriber-btn">Add</v-btn>
+          <v-btn color="primary" @click.stop="close">Close</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </Layout>
 </template>
 

@@ -43,3 +43,13 @@
     }
   }
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="stylus" scoped>
+  .no-subnets {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 2% 40% 2% 40%
+    padding-top: 5%;
+  }
+</style>
