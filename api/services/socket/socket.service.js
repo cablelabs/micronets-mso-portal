@@ -8,7 +8,7 @@ module.exports = function (app) {
   const paginate = app.get('paginate');
 
   const options = {
-    id:'gatewayId',
+    id:'subscriberId',
     Model,
     paginate
   };

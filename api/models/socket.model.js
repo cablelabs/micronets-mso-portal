@@ -7,8 +7,8 @@ module.exports = function (app) {
   const { Schema } = mongooseClient;
   const socket = new Schema({
     socketUrl: { type: String, required: false, unique:true },
-    gatewayId : {type: String, required: true, unique:true, primaryKey: true},
-    subscriberId: { type: String , required: true, unique:true, sparse: true },
+    gatewayId : {type: String, required: true, unique:true, sparse: true},
+    subscriberId: { type: String , required: true, unique:true, sparse: true,  primaryKey: true  },
   }, {
     timestamps: true
   });
