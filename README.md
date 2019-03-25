@@ -128,6 +128,24 @@ The response is ultimately returned to the device.
 	  "wifiCert": "<base64 encoded WiFi Certificate>",
 	  "caCert": "<base64 encoded CA Certificate>"
     }
+    
+### 4. Query for gateway URI:
+
+ Get the associated gateway URI for specific Gateway ID.
+
+#### url: GET `portal/v1/socket?gatewayId=micronets-gw-0001`
+
+Header Fields:
+
+    content-type: "application/json"
+   
+#### response:
+
+    {
+	   "socketUrl": "wss://127.0.0.1:5050/micronets/v1/ws-proxy/7B2A-BE88-08817Z-micronets-gw-0001",
+       "subscriberId": "7B2A-BE88-08817Z",
+       "gatewayId": "micronets-gw-0001"
+    }    
 
 ## Private REST Interface
 
