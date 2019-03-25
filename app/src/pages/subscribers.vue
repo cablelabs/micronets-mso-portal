@@ -1,10 +1,14 @@
 <template>
   <Layout>
+    <template v-for="(user, index) in users">
+         <Subscriber :user="user" :index="index"/>
+    </template>
     <div class="add-btn">
       <v-btn
               color="green"
               dark
               small
+              absolute
               right
               bottom
               fab
@@ -13,10 +17,6 @@
         <v-icon>add</v-icon>
       </v-btn>
     </div>
-    <template v-for="(user, index) in users">
-         <Subscriber :user="user" :index="index"/>
-    </template>
-
     <v-dialog v-model="dialog" max-width="500px">
       <v-toolbar
               color="grey"
@@ -181,8 +181,7 @@
     margin-left 90%
   }
   .add-btn {
-    margin-top: 41%;
-    margin-left: 95%;
+    margin-top: 11%;
   }
   .close-btn {
     margin-left: 15%;
