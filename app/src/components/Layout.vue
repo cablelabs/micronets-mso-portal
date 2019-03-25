@@ -68,14 +68,15 @@
       drawer: false,
       offsetTop: 0,
       items: [
-        { title: 'Home', icon: 'dashboard', url: `http://127.0.0.1:8081/#/` },
-        { title: 'Subscribers', icon: 'recent_actors', url: `http://127.0.0.1:8081/#/subscribers` }
+        { title: 'Home', icon: 'dashboard', url: `/` },
+        { title: 'Subscribers', icon: 'recent_actors', url: `/subscribers` }
       ]
     }),
     methods: {
       ...mapActions(['fetchUsers']),
       showPage (url) {
-        window.location.href = url
+        let urlToNavigate = `http://${window.location.hostname}:${window.location.port}/#${url}`
+        window.location.href = urlToNavigate
       }
     },
     created () {
