@@ -112,7 +112,7 @@
                                         <div class="md-layout-item md-size-300 md-small-size-100">
                                             <md-field :class="getValidationClass('id')">
                                                 <label for="id">ID (Read Only)</label>
-                                                <md-input name="id" id="id" autocomplete="given-name" v-model="form.id" :disabled="sending" readOnly />
+                                                <md-input name="id" id="id" autocomplete="id" v-model="form.id" :disabled="sending" readOnly />
                                                 <span class="md-error" v-if="!$v.form.id.required">The id is required</span>
                                                 <span class="md-error" v-else-if="!$v.form.id.minlength">Invalid ID</span>
                                             </md-field>

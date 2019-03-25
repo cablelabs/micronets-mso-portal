@@ -174,13 +174,15 @@ module.exports = {
     remove: [
       async(hook) => {
         const { data, params, id } = hook
+        console.log('\n After delete hook id : ' + JSON.stringify(id))
+        console.log('\n After delete hook result : ' + JSON.stringify(hook.result))
         if(id) {
           await hook.app.service('/portal/v1/socket').remove(id,allHeaders)
-          await hook.app.service('/portal/v1/users').remove(id,allHeaders)
+          await hook.app.service('/portal/users').remove(id,allHeaders)
         }
         else {
           await hook.app.service('/portal/v1/socket').remove(null,allHeaders)
-          await hook.app.service('/portal/v1/users').remove(null,allHeaders)
+          await hook.app.service('/portal/users').remove(null,allHeaders)
         }
       }
     ]
