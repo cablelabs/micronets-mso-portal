@@ -1,3 +1,6 @@
+const omit = require ( 'ramda/src/omit' );
+const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
+
 module.exports = {
   before: {
     all: [],
@@ -11,7 +14,13 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
+    find: [
+      async(hook) => {
+        const { data, params , result , id} = hook
+        hook.result = hook.result.data.length ==1 ? omitMeta(hook.result.data[0]): hook.result.data.map((data) => { return omitMeta(data)})
+        return Promise.resolve(hook)
+      }
+    ],
     get: [],
     create: [],
     update: [],
