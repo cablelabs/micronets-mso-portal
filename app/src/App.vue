@@ -16,3 +16,6 @@
   @import './style/main.styl'
 </style>
 
+<style lang="scss">
+  @import './style/index.scss';
+</style>

@@ -7,15 +7,13 @@ import 'vuetify/dist/vuetify.css'
 import App from './App'
 import router from './router'
 import store from './store'
-import VueSocketio from 'vue-socket.io'
 import Vuelidate from 'vuelidate'
 import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/vue-material.css'
 
 Vue.config.productionTip = false
 Vue.use(Vuelidate)
 Vue.use(VueMaterial)
-Vue.use(VueSocketio, `${process.env.MSO_PORTAL_BASE_URL}`)
 
 Vue.use(Vuetify, {
   theme: {

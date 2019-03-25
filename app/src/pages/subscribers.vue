@@ -92,6 +92,14 @@
     methods: {
       ...mapMutations(['setUsers']),
       ...mapActions(['fetchUsers', 'upsertUsers']),
+      clearForm () {
+        this.$v.$reset()
+        this.form.id = null
+        this.form.ssid = null
+        this.form.gatewayId = null
+        this.form.name = null
+        this.form.registry = null
+      },
       submit () {
         this.$v.form.$touch()
         if (this.$v.form.$error) return
@@ -100,6 +108,7 @@
         const upsertData = this.form
         this.upsertUsers({method, upsertData}).then(() => {
           this.dialog = false
+          this.clearForm()
           this.loadUsers()
         })
       },

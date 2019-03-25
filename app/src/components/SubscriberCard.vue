@@ -4,7 +4,7 @@
         <v-container grid-list-xs>
           <v-layout v-bind="binding">
             <v-flex>
-                <md-card class="md-primary">
+                <md-card class="md-primary" md-theme="orange-card">
                     <md-toolbar class="md-accent" md-elevation="1">
                         <h3 class="md-title" style="flex: 1">Subscriber</h3>
                         <md-button class="md-fab md-plain" @click="updateUser">
@@ -393,8 +393,9 @@
         left: 0;
     }
     @import "../../node_modules/vue-material/src/theme/engine";
+    @import "../../node_modules/vue-material/dist/theme/all";
     @include md-register-theme("orange-card", (
-            primary: md-get-palette-color(orange, 500)
+            primary: md-get-palette-color(white, 100)
     ));
     @import "../../node_modules/vue-material/src/base/theme";
     @import "../../node_modules/vue-material/src/components/MdCard/theme";
