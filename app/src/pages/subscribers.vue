@@ -3,18 +3,19 @@
     <template v-for="(user, index) in users">
          <Subscriber :user="user" :index="index"/>
     </template>
+    <div class="add-btn">
     <v-btn
             color="green"
             dark
             small
             absolute
-            bottom
             right
             fab
             @click="dialog = !dialog"
     >
       <v-icon>add</v-icon>
     </v-btn>
+    </div>
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-text>
@@ -144,8 +145,8 @@
     background-color white!important
     margin-left 90%
   }
-  .add-subnet-btn {
-    margin-right: 10%;
+  .add-btn {
+    padding-top: 11%;
   }
   .close-btn {
     margin-left: 15%;
