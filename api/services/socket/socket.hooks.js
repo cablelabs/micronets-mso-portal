@@ -21,7 +21,13 @@ module.exports = {
         return Promise.resolve(hook)
       }
     ],
-    get: [],
+    get: [
+      async(hook) => {
+        const { data, params , result , id} = hook
+        hook.result =  omitMeta(hook.result)
+        return Promise.resolve(hook)
+      }
+    ],
     create: [],
     update: [],
     patch: [],
