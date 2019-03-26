@@ -9,7 +9,7 @@ module.exports = {
       hook => {
         const {params, id} = hook
         const query = Object.assign({ id: id ? id : params.id }, hook.params.query);
-        return hook.app.service('/portal/session').find({ query })
+        return hook.app.service('/portal/v1/session').find({ query })
           .then( ({ data }) => {
             hook.result = omitMeta(data[0]);
           });
@@ -29,7 +29,7 @@ module.exports = {
             class: params.payload.class
           } ) ]
         } );
-        app.service ( '/portal/session' ).emit ( 'sessionCreate' , {
+        app.service ( '/portal/v1/session' ).emit ( 'sessionCreate' , {
           type : 'sessionCreate' ,
           data : { subscriberId : hook.data.id , device: Object.assign({}, { deviceId:params.payload.deviceID , class:params.payload.class, macAddress:params.payload.macAddress }) }
         } );
@@ -45,7 +45,7 @@ module.exports = {
         }
         const eventData = Object.assign({},{deviceId:hook.data.deviceId , class:hook.data.class, macAddress:hook.data.macAddress})
         const query = Object.assign({ id: id ? id : hook.params.id }, hook.params.query);
-        return hook.app.service ( '/portal/session' ).find (  {query}  )
+        return hook.app.service ( '/portal/v1/session' ).find (  {query}  )
           .then ( ( { data } ) => {
             const originalSession = data[ 0 ];
             const foundDeviceIndex = originalSession.devices.findIndex( device => device.clientId ==  hook.data.clientId && device.deviceId == hook.data.deviceId && device.macAddress == hook.data.macAddress && device.class == hook.data.class);
@@ -56,7 +56,7 @@ module.exports = {
             if(foundDeviceIndex == -1 ) {
               let updatedSession = Object.assign ( {} , originalSession , originalSession.devices.push ( hook.data ) );
               hook.data = Object.assign ( {} , updatedSession );
-              app.service ( '/portal/session' ).emit ( 'sessionUpdate' , {
+              app.service ( '/portal/v1/session' ).emit ( 'sessionUpdate' , {
                 type : 'sessionUpdate' ,
                 data : { subscriberId : hook.data.id , device : eventData }
               } );

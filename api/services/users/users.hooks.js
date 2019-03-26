@@ -9,7 +9,7 @@ module.exports = {
     find: [],
     get: [
       hook => {
-        return hook.app.service('/portal/users').find({ query: { id: hook.id } })
+        return hook.app.service('/portal/v1/users').find({ query: { id: hook.id } })
           .then( ({ data }) => {
             hook.result = omitMeta(data[0]);
           });

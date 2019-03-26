@@ -16,7 +16,7 @@ server.on('listening', () =>
 );
 
 
-app.service('/portal/session').on('sessionCreate' ,(data) => {
+app.service('/portal/v1/session').on('sessionCreate' ,(data) => {
   console.log('\n FeatherJS event sessionCreate fired with data : ' + JSON.stringify(data));
   io.on('connection' , (socket) => {
     console.log('Socket IO connection ' + JSON.stringify(socket.id));
@@ -31,7 +31,7 @@ app.service('/portal/session').on('sessionCreate' ,(data) => {
   });
 });
 
-app.service('/portal/session').on('sessionUpdate' ,(data) => {
+app.service('/portal/v1/session').on('sessionUpdate' ,(data) => {
   console.log ( '\n FeatherJS event sessionUpdate fired with data : ' + JSON.stringify ( data ) );
   io.on ( 'connection' , ( socket ) => {
     console.log ( 'Socket IO connection ' + JSON.stringify ( socket.id ) );

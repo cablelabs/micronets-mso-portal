@@ -15,10 +15,10 @@ module.exports = function () {
   };
 
   // Initialize our service with any options it requires
-  app.use('/portal/key', createService(options));
+  app.use('portal/v1/portal/key', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('/portal/key');
+  const service = app.service('portal/v1/portal/key');
 
   service.hooks(hooks);
 };
