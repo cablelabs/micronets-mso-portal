@@ -17,7 +17,7 @@ module.exports = {
      async(hook) => {
        const { params , id } = hook
        const user = auth.parse ( params.headers.authorization )
-       let dbUsers = await hook.app.service ( `authorize/subscribers` ).find ( {} )
+       let dbUsers = await hook.app.service ( `portal/v1/authorize/subscribers` ).find ( {} )
        dbUsers = dbUsers.data
        let userIndex = dbUsers.findIndex ( ( dbuser , index ) => dbuser.username == user.name && id == dbuser.username )
        if(userIndex == -1 ){
