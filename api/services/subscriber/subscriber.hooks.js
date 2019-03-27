@@ -23,11 +23,6 @@ module.exports = {
     ],
     create: [
       async(hook) => {
-      hook.params.mongoose = {
-          runValidators: true,
-          setDefaultsOnInsert: true,
-          upsert: true
-        }
         const { data, params}  = hook
         const subscriber = await hook.app.service('/portal/v1/subscriber').get(hook.data.id)
         logger.debug('Obtained subscriber : ' + JSON.stringify(subscriber))
@@ -39,18 +34,14 @@ module.exports = {
     update: [
       async(hook) => {
         const { data, params, id}  = hook
-        console.log('\n Before update hook data : ' + JSON.stringify(data) + '\t\t Params : ' + JSON.stringify(params) + '\t\t id : ' + JSON.stringify(id))
         const oldSubscriber = await hook.app.service('/portal/v1/subscriber').get(hook.id)
-        console.log('\n OLD Subscriber before update : ' + JSON.stringify(oldSubscriber))
         hook.params.oldSubscriber = Object.assign({},oldSubscriber)
     }
     ],
     patch: [
       async(hook) => {
         const { data, params, id}  = hook
-        console.log('\n Before patch hook data : ' + JSON.stringify(data) + '\t\t Params : ' + JSON.stringify(params) + '\t\t id : ' + JSON.stringify(id))
         const oldSubscriber = await hook.app.service('/portal/v1/subscriber').get(hook.id)
-        console.log('\n OLD Subscriber before patch : ' + JSON.stringify(oldSubscriber))
         hook.params.oldSubscriber = Object.assign({},oldSubscriber)
       }
     ],
@@ -97,8 +88,7 @@ module.exports = {
             mmUrl: `http://${mmBaseUrl}:8080`
           })
         await hook.app.service ( '/portal/v1/users').create(user, allHeaders)
-
-
+        hook.result = omitMeta(hook.result)
         return hook;
       }
     ],
@@ -106,8 +96,7 @@ module.exports = {
       async(hook) => {
         const { params  , payload, id } = hook;
         const { oldSubscriber } = params
-        console.log('\n After Update subscriber hook oldSubscriber : ' + JSON.stringify(oldSubscriber))
-        console.log('\n\n After Update subscriber hook params : ' + JSON.stringify(params) + '\t\t Payload : ' + JSON.stringify(payload) + '\t\t ID : ' + JSON.stringify(id))
+
         // Update socket url for associated subscriber
         let webSocketBaseUrl = hook.app.get('webSocketBaseUrl')
         logger.debug('\n Web socket base url from config : ' + JSON.stringify(webSocketBaseUrl))
@@ -143,8 +132,6 @@ module.exports = {
         // Patch socket url for associated subscriber
         let webSocketBaseUrl = hook.app.get('webSocketBaseUrl')
         logger.debug('\n Web socket base url from config : ' + JSON.stringify(webSocketBaseUrl))
-        console.log('\n After patch subscriber hook oldSubscriber : ' + JSON.stringify(oldSubscriber))
-        console.log('\n\n After patch subscriber hook params : ' + JSON.stringify(params) + '\t\t Payload : ' + JSON.stringify(payload) + '\t\t ID : ' + JSON.stringify(id))
 
         const patchSocket = Object.assign({},{
           socketUrl: `${webSocketBaseUrl}/${hook.result.id}-${hook.result.gatewayId}`,
@@ -174,8 +161,6 @@ module.exports = {
     remove: [
       async(hook) => {
         const { data, params, id } = hook
-        console.log('\n After delete hook id : ' + JSON.stringify(id))
-        console.log('\n After delete hook result : ' + JSON.stringify(hook.result))
         if(id) {
           await hook.app.service('/portal/v1/socket').remove(id,allHeaders)
           await hook.app.service('/portal/v1/users').remove(id,allHeaders)
