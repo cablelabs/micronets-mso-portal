@@ -5,4 +5,4 @@
 rm -rf ./html/MSO_PORTAL.html
 
 #! Regenerate HTML docs
-docker run -i yousan/swagger-yaml-to-html < ./swagger/MSO_PORTAL_Open_api_3.0.yaml > ./html/MSO_PORTAL.html
+docker run -i yousan/swagger-yaml-to-html < ./swagger/MSO_PORTAL.yaml > ./html/MSO_PORTAL.html

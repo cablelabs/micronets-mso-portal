@@ -6,7 +6,7 @@
     "version": "0.1.1"
   },
   "paths": {
-    "/portal/registration/token": {
+    "/portal/v1/registration/token": {
       "post": {
         "tags": [
           "token"
@@ -31,7 +31,7 @@
         }
       }
     },
-    "/ca/csrt": {
+    "/portal/v1/ca/csrt": {
       "post": {
         "tags": [
           "csrt"
@@ -64,7 +64,7 @@
         }
       }
     },
-    "/ca/cert": {
+    "/portal/v1/ca/cert": {
       "post": {
         "tags": [
           "cert"
@@ -87,6 +87,30 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Cert"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/portal/v1/subscriber": {
+      "post": {
+        "tags": [
+          "subscriber"
+        ],
+        "summary": "Create subscriber",
+        "operationId": "createSubscribers",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SubscriberPostBody"
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscriber"
                 }
               }
             }
@@ -236,6 +260,31 @@
         "xml": {
           "name": ""
         }
+      },
+      "Subscriber": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "7B2A-BE88-08817Z"
+          },
+          "name": {
+            "type": "string",
+            "example": "Grandma’s LINKSYS 1900"
+          },
+          "ssid": {
+            "type": "string",
+            "example": "Grandma's WiFi"
+          },
+          "registry": {
+            "type": "string",
+            "example": "http://10.200.30.101:3030"
+          },
+          "gatewayId": {
+            "type": "string",
+            "example": "micronets-gw-0001"
+          }
+        }
       }
     },
     "requestBodies": {
@@ -335,6 +384,17 @@
                   "default": "wired"
                 }
               }
+            }
+          }
+        }
+      },
+      "SubscriberPostBody": {
+        "description": "A JSON object to create subscriber",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Subscriber"
             }
           }
         }
