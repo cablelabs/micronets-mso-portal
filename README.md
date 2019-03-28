@@ -30,7 +30,7 @@ This project uses MongoDB, a NoSQL document store, for persisting data. In order
 
 The mso-portal needs to manage the device registration process from the time the device has been selected for onboarding until the required certs have been returned to the registration server (and passed thru to the device).It is used to manage a registration context (session information). The registration context is needed to associate the token with the selected device, the client (registration server), the subscriber, and the certificate request.
 
-#### url: POST `/portal/registration/token`
+#### url: POST `/portal/v1/registration/token`
 
 Header Fields:
 
@@ -59,7 +59,7 @@ Header Fields:
 
 The CSR "template" is just metadata that the client (device) needs when generating a CSR. For now, it is just the encryption type. In addition to the registration token (used to identify the registration context) we also provide the subscriberID, as at this point the subscriber has been authenticated and we know the subscriberID.
 
-#### url: POST `/ca/csrt`
+#### url: POST `/portal/v1/ca/csrt`
 
 Header Fields:
 
@@ -101,7 +101,7 @@ The `subscriberID` identifies a subscriber account. The Registration Server obta
 
 The CSR is submitted to the CA. A wifi certificate is created and signed. The wifi certificate, CA certificate are base64 encoded and returned as JSON along with subscriber metadata.
 
-#### url: POST `/ca/cert`
+#### url: POST `/portal/v1/ca/cert`
 
 Header Fields:
 
@@ -153,7 +153,7 @@ Header Fields:
 
 The required subscriber information is returned. For now, all we really need is the SSID but we return Subscriber Name for display purposes.
 
-#### url: GET `/internal/subscriber/<id>`
+#### url: GET `/portal/v1/subscriber/<id>`
 - id:  Unique identifier for subscriber (obtained by the registration server when subscriber is authenticated)
 
 Header Fields:

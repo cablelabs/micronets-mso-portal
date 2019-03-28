@@ -15,9 +15,9 @@ module.exports = function () {
   };
 
   // Initialize our service with any options it requires
-  app.use('/ca/csrt', createService(options));
+  app.use('portal/v1/ca/csrt', createService(options));
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('ca/csrt');
+  const service = app.service('portal/v1/ca/csrt');
 
   service.hooks(hooks);
 };

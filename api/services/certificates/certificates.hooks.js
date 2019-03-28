@@ -20,7 +20,7 @@ module.exports = {
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const registryUrl = hook.app.get ( 'registryServer' )
         // hook.app.service('ca/csrt').find({ query : { debug :{ context : { token: params.headers.authorization.split(' ')[1] } } }})
-        const certList = await hook.app.service ( 'ca/csrt' ).find ()
+        const certList = await hook.app.service ( 'portal/v1/ca/csrt' ).find ()
         let result = certList.data.map ( ( cert, index ) => {
           const tokenIndex = findIndex ( propEq ( 'token' , jwtToken ) ) ( cert )
           const getToken = path(['debug', 'context', 'token'])
@@ -60,7 +60,7 @@ module.exports = {
       hook => {
         hook.result = omitMeta ( hook.data )
         console.log('\n\n Certificates  : ' + JSON.stringify(hook.result))
-        hook.app.service ( '/ca/cert' ).emit ( 'certGenerated' , {
+        hook.app.service ( 'portal/v1/ca/cert' ).emit ( 'certGenerated' , {
           type : 'certGenerated' ,
           data : { subscriber : hook.data.subscriber , macAddress : hook.data.macAddress }
         } );

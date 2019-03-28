@@ -14,7 +14,7 @@
     "strategies": [
       "jwt"
     ],
-    "path": "/portal/registration/token",
+    "path": "/portal/v1/registration/token",
     "header": "Authorization",
     "service": "token",
     "session": false,

@@ -15,10 +15,10 @@ module.exports = function () {
   };
 
   // Initialize our service with any options it requires
-  app.use('/internal/subscriber', createService(options));
+  app.use('portal/v1/subscriber', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('internal/subscriber');
+  const service = app.service('portal/v1/subscriber');
 
   service.hooks(hooks);
 };

@@ -4,7 +4,7 @@ info:
   description: MSO Portal API's.
   version: 0.1.1
 paths:
-  /portal/registration/token:
+  /portal/v1/registration/token:
     post:
       tags:
         - token
@@ -20,7 +20,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Token'
-  /ca/csrt:
+  /portal/v1/ca/csrt:
     post:
       tags:
         - csrt
@@ -40,7 +40,7 @@ paths:
                 $ref: '#/components/schemas/Csrt'
         '400':
           description: Invalid Cert Request
-  /ca/cert:
+  /portal/v1/ca/cert:
     post:
       tags:
         - cert
@@ -58,7 +58,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Cert'
-            
+  /portal/v1/subscriber:
+    post:
+      tags:
+        - subscriber
+      summary: Create subscriber
+      operationId: createSubscribers
+      requestBody:
+        $ref: '#/components/requestBodies/SubscriberPostBody'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscriber'          
 components:
   securitySchemes:
     bearerAuth:
@@ -159,6 +173,24 @@ components:
             example: Grandma's WiFi  
     xml:
       name: ''
+   Subscriber:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 7B2A-BE88-08817Z
+        name:
+          type: string
+          example: Grandma’s LINKSYS 1900
+        ssid:
+          type: string
+          example: Grandma's WiFi
+        registry:
+          type: string
+          example: http://10.200.30.101:3030
+        gatewayId:
+          type: string
+          example: micronets-gw-0001
   requestBodies:
    CertBody:
     description: 'A JSON object containing CSR to generate certificates.'
@@ -233,7 +265,13 @@ components:
               description: 'Device connection identifes if device is to added to wired or wifi network.'
               example: wifi
               default: wired
-           
+   SubscriberPostBody:
+      description: A JSON object to create subscriber
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Subscriber'        
     
    
 

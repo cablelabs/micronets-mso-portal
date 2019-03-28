@@ -9,16 +9,17 @@ module.exports = function () {
   const paginate = app.get('paginate');
 
   const options = {
+    id:'subscriber.id',
     name: 'certificates',
     Model,
     paginate
   };
 
   // Initialize our service with any options it requires
-  app.use('/ca/cert', createService(options));
+  app.use('portal/v1/ca/cert', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('ca/cert');
+  const service = app.service('portal/v1/ca/cert');
 
   service.on('created', (service, context) => {});
 

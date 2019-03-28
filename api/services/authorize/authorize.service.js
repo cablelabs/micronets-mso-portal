@@ -13,10 +13,10 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/authorize/subscribers', createService(options));
+  app.use('portal/v1/authorize/subscribers', createService(options));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('authorize/subscribers');
+  const service = app.service('portal/v1/authorize/subscribers');
 
   service.hooks(hooks);
 };
