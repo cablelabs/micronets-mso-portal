@@ -11,7 +11,6 @@ const errors = require('@feathersjs/errors');
 
 const updateSwitchConfig = async(hook,oldSubscriber) => {
   const { data, params, method } = hook
-  logger.debug('\n PARAMS : ' + JSON.stringify(params) + '\t\t CONTEXT : ' + JSON.stringify(method))
   logger.debug('\n GatewayID updated . Update switch config for ' + JSON.stringify(`${oldSubscriber.registry}/mm/v1/micronets/odl/${oldSubscriber.gatewayId}`))
   const oldSwitchConfig = await axios({
     ...allHeaders,
@@ -72,8 +71,24 @@ const updateRegistry = async(hook,oldSubscriber,socket) => {
     url: `${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`,
     data: {...updateBody}
   })
-
   return registry
+}
+
+const updateMicronet = async(hook,oldSubscriber,result) => {
+  const { data, params, method } = hook
+  let mmBaseUrl = hook.result.registry
+  const updateBody = Object.assign({},{
+    ssid: hook.result.ssid,
+    name: hook.result.name,
+    gatewayId: hook.result.gatewayId
+  })
+  const micronet = await axios({
+    ...allHeaders,
+    method: 'PATCH',
+    url: `${hook.result.registry}/mm/v1/subscriber/${oldSubscriber.id}`,
+    data: {...updateBody}
+  })
+
 }
 
 module.exports = {
@@ -165,7 +180,7 @@ module.exports = {
         const { oldSubscriber } = params
 
         // Cascading updates on changed Gateway ID
-        if(hook.result.gatewayId != oldSubscriber.gatewayId) {
+        if((hook.result.gatewayId != oldSubscriber.gatewayId) || (hook.result.ssid != oldSubscriber.ssid)) {
         // Update Gateway ID for switch config
         const switchConfig = await updateSwitchConfig(hook,oldSubscriber)
 
@@ -174,6 +189,9 @@ module.exports = {
 
         // Updated associated Registry
         const registry = await updateRegistry(hook,oldSubscriber,socket)
+
+        // Updated associated Micronet
+          const micronet = await updateMicronet(hook,oldSubscriber,hook.result)
         }
       }
     ],
@@ -192,6 +210,9 @@ module.exports = {
 
           // Updated associated Registry
           const registry = await updateRegistry(hook,oldSubscriber,socket)
+
+          // Updated associated Micronet
+          const micronet = await updateMicronet(hook,oldSubscriber,hook.result)
         }
 
       }
