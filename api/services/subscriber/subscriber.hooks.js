@@ -224,15 +224,20 @@ module.exports = {
         if(id) {
           await hook.app.service('/portal/v1/socket').remove(id,allHeaders)
           await hook.app.service('/portal/v1/users').remove(id,allHeaders)
-          await axios({
-            ...allHeaders,
-            method: 'DELETE',
-            url: `${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`
-          })
+          // await axios({
+          //   ...allHeaders,
+          //   method: 'DELETE',
+          //   url: `${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`
+          // })
         }
         else {
           await hook.app.service('/portal/v1/socket').remove(null,allHeaders)
           await hook.app.service('/portal/v1/users').remove(null,allHeaders)
+          // await axios({
+          //   ...allHeaders,
+          //   method: 'DELETE',
+          //   url: `${hook.result.registry}/mm/v1/micronets/registry`
+          // })
         }
       }
     ]
