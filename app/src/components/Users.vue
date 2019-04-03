@@ -36,7 +36,7 @@
         let mmUrlHost = this.user.registry.split('://')[1].split(':')[0]
         let mmUrl = `http://${mmUrlHost}:8080`
         console.log('\n mmUrl : ' + JSON.stringify(mmUrl))
-        window.location.href = `${mmUrl}/${this.user.id}`
+        window.location.href = `${mmUrl}/users/${this.user.id}/`
       }
     },
     props: {

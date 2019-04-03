@@ -148,8 +148,8 @@
                                     </div>
                                     <div class="md-layout-item md-size-300 md-small-size-100">
                                     <md-field :class="getValidationClass('registry')">
-                                        <label for="registry">Registry</label>
-                                        <md-input type="registry" name="registry" id="registry" autocomplete="registry" v-model="form.registry" :disabled="sending" />
+                                        <label for="registry">Registry (Read Only)</label>
+                                        <md-input type="registry" name="registry" id="registry" autocomplete="registry" v-model="form.registry" :disabled="sending" readOnly />
                                         <span class="md-error" v-if="!$v.form.registry.required">The registry is required</span>
                                         <span class="md-error" v-else-if="!$v.form.registry.email">Invalid registry</span>
                                     </md-field>
