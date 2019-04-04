@@ -3,7 +3,8 @@ services:
   mongo:
     image: mongo
     volumes:
-      - /tmp/mongodb:/data/db
+      - tmp/msoMongo:/data/db
+    command: mongod --port 27017
     ports:
       - "27017:27017"
   api:

@@ -6,7 +6,6 @@ const subscriber = require('./subscriber/subscriber.service.js');
 const session = require('./session/session.service.js');
 const token = require('./token/token.service.js');
 const authorize = require('./authorize/authorize.service.js');
-
 const socket = require('./socket/socket.service.js');
 
 module.exports = function () {
