@@ -1,13 +1,13 @@
 version: '3'
 services:
-  mongo:
+  mso-mongo:
     image: mongo
     volumes:
       - tmp/msoMongo:/data/db
     command: mongod --port 27017
     ports:
       - "27017:27017"
-  api:
+  mso-api:
     build:
       context: ./../..
       dockerfile: docker/dev/Dockerfile.api
@@ -16,15 +16,15 @@ services:
       - NODE_ENV=development
       - NETWORK_MODE=false
       - PORT=3210
-      - MONGO_URL=mongodb://mongo:27017/mso-portal
+      - MONGO_URL=mongodb://mmso-apiongo:27017/mso-portal
     depends_on:
-      - mongo
+      - mso-mongo
     volumes:
           - ./../..:/usr/src/api
     ports:
       - '3210:3210'
 
-  app:
+  mso-app:
     build:
       context: ./../..
       dockerfile: docker/dev/Dockerfile.app
@@ -35,8 +35,8 @@ services:
       - PORT=8081
       - MONGO_URL=mongodb://mongo:27017/mso-portal
     depends_on:
-      - mongo
-      - api
+      - mso-mongo
+      - mso-api
     volumes:
           - ./../../app:/usr/src/app
     ports:
