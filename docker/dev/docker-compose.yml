@@ -3,10 +3,10 @@ services:
   mso-mongo:
     image: mongo
     volumes:
-      - tmp/msoMongo:/data/db
-    command: mongod --port 27017
+      - /tmp/mso-mongo:/data/db
+    command: mongod --port 27019
     ports:
-      - "27017:27017"
+      - "27019:27019"
   mso-api:
     build:
       context: ./../..
@@ -16,7 +16,7 @@ services:
       - NODE_ENV=development
       - NETWORK_MODE=false
       - PORT=3210
-      - MONGO_URL=mongodb://mmso-apiongo:27017/mso-portal
+      - MONGO_URL=mongodb://mso-mongo:27019/mso-portal
     depends_on:
       - mso-mongo
     ports:
@@ -31,7 +31,7 @@ services:
       - NODE_ENV=development
       - NETWORK_MODE=false
       - PORT=8081
-      - MONGO_URL=mongodb://mongo:27017/mso-portal
+      - MONGO_URL=mongodb://mso-mongo:27019/mso-portal
     depends_on:
       - mso-mongo
       - mso-api
