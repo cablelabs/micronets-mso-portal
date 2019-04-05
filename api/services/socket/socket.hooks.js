@@ -1,5 +1,6 @@
 const omit = require ( 'ramda/src/omit' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
+const logger = require ( './../../logger' );
 
 module.exports = {
   before: {

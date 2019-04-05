@@ -17,7 +17,7 @@ module.exports = function (app) {
   app.use('/portal/v1/socket', createService(options));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('portal/v1/socket');
+  const service = app.service('/portal/v1/socket');
 
   service.hooks(hooks);
 };

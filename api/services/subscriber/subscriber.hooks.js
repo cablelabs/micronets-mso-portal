@@ -52,7 +52,7 @@ const updateSocket = async(hook,oldSubscriber) => {
   return socket
 }
 
-const updateRegistry = async(hook,oldSubscriber,socket) => {
+const updateRegistry = async(hook,oldSubscriber,socket, gatewayReconnection) => {
   const { data, params, method } = hook
   let mmBaseUrl = hook.result.registry.split(':')[1].replace('//','')
   const updateBody = Object.assign({},{
@@ -61,7 +61,8 @@ const updateRegistry = async(hook,oldSubscriber,socket) => {
     mmClientUrl: `http://${mmBaseUrl}:8080`,
     msoPortalUrl: `http://${ip.address()}:3210`,
     webSocketUrl: socket.socketUrl,
-    gatewayId: hook.result.gatewayId
+    gatewayId: hook.result.gatewayId,
+    gatewayReconnection: gatewayReconnection
   })
   const axiosReqType = method == 'update' ? 'put' : 'patch'
 
@@ -179,8 +180,11 @@ module.exports = {
         const { params  , payload, id } = hook;
         const { oldSubscriber } = params
 
+        const gatewayIdUpdate = hook.result.gatewayId != oldSubscriber.gatewayId ? true : false
+        const ssidUpdate = hook.result.ssid != oldSubscriber.ssid ? true : false
+        logger.debug('\n gatewayIdUpdate : ' + JSON.stringify(gatewayIdUpdate) + '\t\t SSID Update : ' + JSON.stringify(ssidUpdate))
         // Cascading updates on changed Gateway ID
-        if((hook.result.gatewayId != oldSubscriber.gatewayId) || (hook.result.ssid != oldSubscriber.ssid)) {
+        if(gatewayIdUpdate || ssidUpdate) {
         // Update Gateway ID for switch config
         const switchConfig = await updateSwitchConfig(hook,oldSubscriber)
 
@@ -188,10 +192,10 @@ module.exports = {
         const socket = await updateSocket(hook,oldSubscriber)
 
         // Updated associated Registry
-        const registry = await updateRegistry(hook,oldSubscriber,socket)
+        const registry = await updateRegistry(hook,oldSubscriber,socket, gatewayIdUpdate)
 
         // Updated associated Micronet
-          const micronet = await updateMicronet(hook,oldSubscriber,hook.result)
+        const micronet = await updateMicronet(hook,oldSubscriber,hook.result)
         }
       }
     ],
@@ -200,8 +204,11 @@ module.exports = {
         const { params  , payload, id } = hook;
         const { oldSubscriber } = params
 
+        const gatewayIdUpdate = hook.result.gatewayId != oldSubscriber.gatewayId ? true : false
+        const ssidUpdate = hook.result.ssid != oldSubscriber.ssid ? true : false
+        logger.debug('\n gatewayIdUpdate : ' + JSON.stringify(gatewayIdUpdate) + '\t\t SSID Update : ' + JSON.stringify(ssidUpdate))
         // Cascading updates on changed Gateway ID
-        if(hook.result.gatewayId != oldSubscriber.gatewayId) {
+        if(gatewayIdUpdate || ssidUpdate) {
           // Update Gateway ID for switch config
           const switchConfig = await updateSwitchConfig(hook,oldSubscriber)
 
@@ -209,7 +216,7 @@ module.exports = {
           const socket = await updateSocket(hook,oldSubscriber)
 
           // Updated associated Registry
-          const registry = await updateRegistry(hook,oldSubscriber,socket)
+          const registry = await updateRegistry(hook,oldSubscriber,socket, gatewayIdUpdate)
 
           // Updated associated Micronet
           const micronet = await updateMicronet(hook,oldSubscriber,hook.result)
