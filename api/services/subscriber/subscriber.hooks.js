@@ -43,35 +43,37 @@ const updateSocket = async(hook,oldSubscriber) => {
   logger.debug('\n Retrieved oldSocket  : ' + JSON.stringify(oldSocket))
 
   const updateBody = Object.assign({},{
-    socketUrl: `${webSocketBaseUrl}/${hook.result.id}-${hook.result.gatewayId}`,
+    socketUrl: `${webSocketBaseUrl}/${hook.result.id}`, //`${webSocketBaseUrl}/${hook.result.id}-${hook.result.gatewayId}`
     subscriberId: hook.result.id,
     gatewayId:hook.result.gatewayId
   })
 
-  const socket = method == 'update' ? await hook.app.service('/portal/v1/socket').update(oldSubscriber.id,{...updateBody},allHeaders) :await hook.app.service('/portal/v1/socket').patch(oldSubscriber.id,{...updateBody},allHeaders)
+  const socket = method == 'update' ? await hook.app.service('/portal/v1/socket').update(oldSubscriber.id,{...updateBody},allHeaders) : await hook.app.service('/portal/v1/socket').patch(oldSubscriber.id,{...updateBody},allHeaders)
   return socket
 }
 
-const updateRegistry = async(hook,oldSubscriber,socket, gatewayReconnection) => {
+const updateRegistry = async(hook,oldSubscriber,socket, gatewayReconnection, oldRegistry) => {
   const { data, params, method } = hook
   let mmBaseUrl = hook.result.registry.split(':')[1].replace('//','')
   const updateBody = Object.assign({},{
     subscriberId: hook.result.id,
     mmUrl: hook.result.registry,
+    identityUrl: oldRegistry.identityUrl,
     mmClientUrl: `http://${mmBaseUrl}:8080`,
-    msoPortalUrl: `http://${ip.address()}:3210`,
+    msoPortalUrl: `http://${hook.app.get('host')}:${hook.app.get('port')}`,
     webSocketUrl: socket.socketUrl,
     gatewayId: hook.result.gatewayId,
     gatewayReconnection: gatewayReconnection
   })
   const axiosReqType = method == 'update' ? 'put' : 'patch'
-
+  logger.debug('\n Update registry body : ' + JSON.stringify(updateBody))
   const registry =  await axios({
     ...allHeaders,
     method: axiosReqType,
     url: `${hook.result.registry}/mm/v1/micronets/registry/${hook.result.id}`,
     data: {...updateBody}
   })
+
   return registry
 }
 
@@ -107,10 +109,18 @@ module.exports = {
     create: [
       async(hook) => {
         const { data, params}  = hook
-        const subscriber = await hook.app.service('/portal/v1/subscriber').get(hook.data.id)
-        logger.debug('Obtained subscriber : ' + JSON.stringify(subscriber))
-        if(subscriber.hasOwnProperty('id') && subscriber.id == hook.data.id) {
-          return Promise.reject(new errors.Conflict(new Error(' Subscriber already exists!! ')))
+        const msoRegistry = await hook.app.service('/portal/v1/register').find({})
+        const msoRegistryIndex = msoRegistry.data.findIndex((msoRegistry)=> msoRegistry.subscriberId == data.id)
+        logger.debug('\n Accessing all registries : ' + JSON.stringify(msoRegistry.data) + '\t\t Index : ' + JSON.stringify(msoRegistryIndex))
+        if(msoRegistryIndex == -1) {
+          return Promise.reject(new errors.GeneralError(new Error(' Subscriber cannot be created. Associated registry for subscriber not found !')))
+        }
+        if(msoRegistryIndex!= -1 && data.hasOwnProperty('registry') && msoRegistry.data[msoRegistryIndex].registry != data.registry){
+          return Promise.reject(new errors.GeneralError(new Error(' Subscriber cannot be created. Multiple values for registry found !')))
+        }
+        if(msoRegistryIndex!= -1 && !data.hasOwnProperty('registry')) {
+          hook.data.registry = msoRegistry.data[msoRegistryIndex].registry
+          return Promise.resolve(hook)
         }
       }
     ],
@@ -118,14 +128,20 @@ module.exports = {
       async(hook) => {
         const { data, params, id}  = hook
         const oldSubscriber = await hook.app.service('/portal/v1/subscriber').get(hook.id)
+        const msoRegistry = await hook.app.service('/portal/v1/register').get(hook.id)
+        const mmRegistry = await axios.get(`${msoRegistry.registry}/mm/v1/micronets/registry/${hook.id}`)
         hook.params.oldSubscriber = Object.assign({},oldSubscriber)
+        hook.params.oldRegistry = Object.assign({},mmRegistry.data)
     }
     ],
     patch: [
       async(hook) => {
         const { data, params, id}  = hook
         const oldSubscriber = await hook.app.service('/portal/v1/subscriber').get(hook.id)
+        const msoRegistry = await hook.app.service('/portal/v1/register').get(hook.id)
+        const mmRegistry = await axios.get(`${msoRegistry.registry}/mm/v1/micronets/registry/${hook.id}`)
         hook.params.oldSubscriber = Object.assign({},oldSubscriber)
+        hook.params.oldRegistry = Object.assign({},mmRegistry.data)
       }
     ],
     remove: []
@@ -143,7 +159,7 @@ module.exports = {
         let webSocketBaseUrl = hook.app.get('webSocketBaseUrl')
         logger.debug('\n Web socket base url from config : ' + JSON.stringify(webSocketBaseUrl))
         const postSocket = Object.assign({},{
-          socketUrl: `${webSocketBaseUrl}/${hook.result.id}-${hook.result.gatewayId}`,
+          socketUrl: `${webSocketBaseUrl}/${hook.result.id}`,
           subscriberId: hook.result.id,
           gatewayId:hook.result.gatewayId
         })
@@ -151,19 +167,9 @@ module.exports = {
         const socket  = await hook.app.service('/portal/v1/socket').get(hook.result.id)
         logger.debug('\n Retrieved  socket  : ' + JSON.stringify(socket))
 
-        // Create Registry for subscriber
-        let mmBaseUrl = hook.result.registry.split(':')[1].replace('//','')
-        const postRegistry = Object.assign({},{
-          subscriberId: hook.result.id,
-          mmUrl: hook.result.registry,
-          mmClientUrl: `http://${mmBaseUrl}:8080`,
-          msoPortalUrl: `http://${ip.address()}:3210`,
-          webSocketUrl: socket.socketUrl,
-          gatewayId: hook.result.gatewayId
-        })
-        const registryRes = await axios.post ( `${hook.result.registry}/mm/v1/micronets/registry` , {...postRegistry} , allHeaders );
-
         // Create User for associated subscriber
+        const mmBaseUrl = hook.result.registry.split('://')[1].split(':')[0]
+        logger.debug('\n Derived base url : ' + JSON.stringify(mmBaseUrl))
           const user = Object.assign({},{
             id: hook.result.id,
             ssid: hook.result.ssid,
@@ -178,7 +184,7 @@ module.exports = {
     update: [
       async(hook) => {
         const { params  , payload, id } = hook;
-        const { oldSubscriber } = params
+        const { oldSubscriber, oldRegistry } = params
 
         const gatewayIdUpdate = hook.result.gatewayId != oldSubscriber.gatewayId ? true : false
         const ssidUpdate = hook.result.ssid != oldSubscriber.ssid ? true : false
@@ -192,7 +198,7 @@ module.exports = {
         const socket = await updateSocket(hook,oldSubscriber)
 
         // Updated associated Registry
-        const registry = await updateRegistry(hook,oldSubscriber,socket, gatewayIdUpdate)
+        const registry = await updateRegistry(hook,oldSubscriber,socket, gatewayIdUpdate,oldRegistry)
 
         // Updated associated Micronet
         const micronet = await updateMicronet(hook,oldSubscriber,hook.result)
@@ -202,7 +208,7 @@ module.exports = {
     patch: [
       async(hook) => {
         const { params  , payload, id } = hook;
-        const { oldSubscriber } = params
+        const { oldSubscriber, oldRegistry } = params
 
         const gatewayIdUpdate = hook.result.gatewayId != oldSubscriber.gatewayId ? true : false
         const ssidUpdate = hook.result.ssid != oldSubscriber.ssid ? true : false
@@ -216,7 +222,7 @@ module.exports = {
           const socket = await updateSocket(hook,oldSubscriber)
 
           // Updated associated Registry
-          const registry = await updateRegistry(hook,oldSubscriber,socket, gatewayIdUpdate)
+          const registry = await updateRegistry(hook,oldSubscriber,socket, gatewayIdUpdate,oldRegistry)
 
           // Updated associated Micronet
           const micronet = await updateMicronet(hook,oldSubscriber,hook.result)
@@ -231,6 +237,7 @@ module.exports = {
         if(id) {
           await hook.app.service('/portal/v1/socket').remove(id,allHeaders)
           await hook.app.service('/portal/v1/users').remove(id,allHeaders)
+          await hook.app.service('/portal/v1/register').remove(id,allHeaders)
           await axios({
             ...allHeaders,
             method: 'DELETE',
@@ -240,6 +247,7 @@ module.exports = {
         else {
           await hook.app.service('/portal/v1/socket').remove(null,allHeaders)
           await hook.app.service('/portal/v1/users').remove(null,allHeaders)
+          await hook.app.service('/portal/v1/register').remove(null,allHeaders)
           await axios({
             ...allHeaders,
             method: 'DELETE',
