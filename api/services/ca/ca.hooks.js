@@ -4,7 +4,8 @@ var axios = require ( 'axios' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const errors = require('@feathersjs/errors');
 const logger = require ( './../../logger' );
-
+const paths = require('./../../hooks/servicePaths')
+const { MM_CSRT_PATH, MM_REGISTRY_PATH } = paths
 module.exports = {
   before : {
     all : [ authenticate ( 'jwt' ) ] ,
@@ -24,10 +25,10 @@ module.exports = {
           let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
           const registryUrl = hook.app.get ( 'registryServer' )
           logger.debug( '\n registryUrl :' + JSON.stringify ( registryUrl ) )
-          let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${subscriberId}`, axiosConfig )
+          let registry = await axios.get ( `${registryUrl}/${MM_REGISTRY_PATH}/${subscriberId}`, axiosConfig )
           let mmApiurl = registry.data.mmUrl
           logger.debug( '\n Registry from MM :' + JSON.stringify ( registry.data ) )
-          const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/csrt` , { "subscriberId":subscriberId, registryUrl } , axiosConfig );
+          const mmApiResponse = await axios.post ( `${mmApiurl}/${MM_CSRT_PATH}` , { "subscriberId":subscriberId, registryUrl } , axiosConfig );
           logger.debug( '\n MMApiResponse CSRT :' + JSON.stringify ( mmApiResponse.data ) )
           hook.data = Object.assign ( {} ,
             {
