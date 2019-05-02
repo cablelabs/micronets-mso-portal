@@ -7,7 +7,8 @@ var axios = require ( 'axios' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const errors = require('@feathersjs/errors');
 const logger = require ( './../../logger' );
-
+const paths = require('./../../hooks/servicePaths')
+const { MM_CERTIFICATES_PATH, MM_REGISTRY_PATH, CSRT_PATH,CERTIFICATES_PATH } = paths
 module.exports = {
   before : {
     all : [ authenticate ( 'jwt' ) ] ,
@@ -20,7 +21,7 @@ module.exports = {
         let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
         const registryUrl = hook.app.get ( 'registryServer' )
         // hook.app.service('ca/csrt').find({ query : { debug :{ context : { token: params.headers.authorization.split(' ')[1] } } }})
-        const certList = await hook.app.service ( 'portal/v1/ca/csrt' ).find ()
+        const certList = await hook.app.service ( `${CSRT_PATH}` ).find ()
         let result = certList.data.map ( ( cert, index ) => {
           const tokenIndex = findIndex ( propEq ( 'token' , jwtToken ) ) ( cert )
           const getToken = path(['debug', 'context', 'token'])
@@ -32,10 +33,10 @@ module.exports = {
           }
         } )
         result = result.filter ( ( e ) => { return e } )
-        let registry = await axios.get ( `${registryUrl}/mm/v1/micronets/registry/${result[0].subscriberId}` , axiosConfig )
+        let registry = await axios.get ( `${registryUrl}/${MM_REGISTRY_PATH}/${result[0].subscriberId}` , axiosConfig )
         let mmApiurl = registry.data.mmUrl
         logger.debug( '\n Registry from MM :' + JSON.stringify ( registry.data ) )
-        const mmApiResponse = await axios.post ( `${mmApiurl}/mm/v1/micronets/certificates` , {...data, subscriberId:result[0].subscriberId} , axiosConfig );
+        const mmApiResponse = await axios.post ( `${mmApiurl}/${MM_CERTIFICATES_PATH}` , {...data, subscriberId:result[0].subscriberId} , axiosConfig );
         logger.debug( '\n MM API Response Certs  :' + JSON.stringify ( mmApiResponse.data ) )
         hook.data = Object.assign ( {} ,
           {
@@ -60,7 +61,7 @@ module.exports = {
       hook => {
         hook.result = omitMeta ( hook.data )
         console.log('\n\n Certificates  : ' + JSON.stringify(hook.result))
-        hook.app.service ( 'portal/v1/ca/cert' ).emit ( 'certGenerated' , {
+        hook.app.service ( `${CERTIFICATES_PATH}` ).emit ( 'certGenerated' , {
           type : 'certGenerated' ,
           data : { subscriber : hook.data.subscriber , macAddress : hook.data.macAddress }
         } );

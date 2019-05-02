@@ -2,7 +2,8 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/subscriber.model');
 const hooks = require('./subscriber.hooks');
-
+const paths = require('./../../hooks/servicePaths')
+const servicePath = paths.SUBSCRIBER_PATH
 module.exports = function () {
   const app = this;
   const Model = createModel(app);
@@ -15,10 +16,10 @@ module.exports = function () {
   };
 
   // Initialize our service with any options it requires
-  app.use('portal/v1/subscriber', createService(options));
+  app.use(`${servicePath}`, createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('portal/v1/subscriber');
+  const service = app.service(`${servicePath}`);
 
   service.hooks(hooks);
 };
