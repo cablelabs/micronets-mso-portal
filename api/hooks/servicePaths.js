@@ -13,7 +13,7 @@ const MM_CERTIFICATES_PATH = `${MM_API_PREFIX2}/certificates`
 const MM_REGISTRY_PATH = `${MM_API_PREFIX2}/registry`
 const MM_ODL_PATH = `${MM_API_PREFIX2}/odl`
 const MM_SUBSCRIBER_PATH = `${MM_API_PREFIX}/subscriber`
-
+const DPP_PATH = `${MSO_API_PREFIX}/dpp`
 const paths = () => {
   return {
     MSO_API_PREFIX ,
@@ -29,7 +29,8 @@ const paths = () => {
     MM_CERTIFICATES_PATH,
     MM_REGISTRY_PATH,
     MM_ODL_PATH,
-    MM_SUBSCRIBER_PATH
+    MM_SUBSCRIBER_PATH,
+    DPP_PATH
   }
 }
 

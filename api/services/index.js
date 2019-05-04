@@ -9,6 +9,8 @@ const authorize = require('./authorize/authorize.service.js');
 const socket = require('./socket/socket.service.js');
 const register = require('./register/register.service.js');
 
+const dpp = require('./dpp/dpp.service.js');
+
 module.exports = function () {
   const app = this; // eslint-disable-line no-unused-vars
   app.configure(token);
@@ -21,4 +23,5 @@ module.exports = function () {
   app.configure(authorize);
   app.configure(socket);
   app.configure(register);
+  app.configure(dpp);
 };

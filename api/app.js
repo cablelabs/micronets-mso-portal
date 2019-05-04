@@ -28,14 +28,22 @@ app.configure(configuration());
 app.use(cors());
 app.use(helmet());
 app.use(compress());
+app.configure(rest());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(function(req, res, next) {
+  const { headers, originalUrl } = req
+  req.feathers.requestHeaders = headers;
+  req.feathers.requestUrl = originalUrl
+  next();
+});
+
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
 app.use('/', express.static(app.get('public')));
 
 app.configure(mongoose);
-app.configure(rest());
+
 app.configure(socketio());
 app.configure(authentication);
 // Configure other middleware (see `middleware/index.js`)
