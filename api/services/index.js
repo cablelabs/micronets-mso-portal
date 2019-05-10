@@ -1,4 +1,4 @@
-const users = require('./devices/devices.service.js');
+const devices = require('./devices/devices.service.js');
 const ca = require('./ca/ca.service.js');
 const certificates = require('./certificates/certificates.service.js');
 const key = require('./key/key.service.js');
@@ -10,10 +10,12 @@ const register = require('./register/register.service.js');
 
 const dpp = require('./dpp/dpp.service.js');
 
+const users = require('./users/users.service.js');
+
 module.exports = function () {
   const app = this; // eslint-disable-line no-unused-vars
   app.configure(token);
-  app.configure(users);
+  app.configure(devices);
   app.configure(ca);
   app.configure(certificates);
   app.configure(key);
@@ -22,4 +24,5 @@ module.exports = function () {
   app.configure(socket);
   app.configure(register);
   app.configure(dpp);
+  app.configure(users);
 };
