@@ -171,13 +171,13 @@ module.exports = {
         // Create User for associated subscriber
         const mmBaseUrl = hook.result.registry.split('://')[1].split(':')[0]
         logger.debug('\n Derived base url : ' + JSON.stringify(mmBaseUrl))
-          const user = Object.assign({},{
-            id: hook.result.id,
-            ssid: hook.result.ssid,
-            name: hook.result.name,
-            mmUrl: `http://${mmBaseUrl}:8080`
-          })
-        await hook.app.service (`${USERS_PATH}`).create(user, allHeaders)
+        // const user = Object.assign({},{
+        //     id: hook.result.id,
+        //     ssid: hook.result.ssid,
+        //     name: hook.result.name,
+        //     mmUrl: `http://${mmBaseUrl}:8080`
+        //   })
+        // await hook.app.service (`${DEVICES_PATH}`).create(user, allHeaders)
         hook.result = omitMeta(hook.result)
         return hook;
       }
@@ -237,7 +237,7 @@ module.exports = {
         logger.debug('\n REMOVE HOOK result : ' + JSON.stringify(hook.result))
         if(id) {
           await hook.app.service(`${SOCKET_PATH}`).remove(id,allHeaders)
-          await hook.app.service(`${USERS_PATH}`).remove(id,allHeaders)
+          await hook.app.service(`${DEVICES_PATH}`).remove(id,allHeaders)
           await hook.app.service(`${REGISTER_PATH}`).remove(id,allHeaders)
           await axios({
             ...allHeaders,
@@ -247,7 +247,7 @@ module.exports = {
         }
         else {
           await hook.app.service(`${SOCKET_PATH}`).remove(null,allHeaders)
-          await hook.app.service(`${USERS_PATH}`).remove(null,allHeaders)
+          await hook.app.service(`${DEVICES_PATH}`).remove(null,allHeaders)
           await hook.app.service(`${REGISTER_PATH}`).remove(null,allHeaders)
           await axios({
             ...allHeaders,

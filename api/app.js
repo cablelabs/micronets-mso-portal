@@ -4,16 +4,13 @@ const compress = require('compression');
 const cors = require('cors');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const configuration = require('@feathersjs/configuration');
 const rest = require('@feathersjs/express/rest');
 const socketio = require('@feathersjs/socketio');
-
 const handler = require('@feathersjs/express/errors');
 const notFound = require('feathers-errors/not-found');
-
 const middleware = require('./middleware/index');
 const services = require('./services/index');
 const appHooks = require('./app.hooks');
