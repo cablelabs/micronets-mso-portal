@@ -9,7 +9,7 @@ const logger = require ( './../../logger' );
 let allHeaders = { crossDomain: true, headers : {  'Content-type': 'application/json' } };
 const errors = require('@feathersjs/errors');
 const paths = require('./../../hooks/servicePaths')
-const { MM_ODL_PATH, SOCKET_PATH, REGISTER_PATH, MM_REGISTRY_PATH, SUBSCRIBER_PATH, MM_SUBSCRIBER_PATH, USERS_PATH } = paths
+const { MM_ODL_PATH, SOCKET_PATH, REGISTER_PATH, MM_REGISTRY_PATH, SUBSCRIBER_PATH, MM_SUBSCRIBER_PATH, DEVICES_PATH } = paths
 const updateSwitchConfig = async(hook,oldSubscriber) => {
   const { data, params, method } = hook
   logger.debug('\n GatewayID updated . Update switch config for ' + JSON.stringify(`${oldSubscriber.registry}/mm/v1/micronets/odl/${oldSubscriber.gatewayId}`))

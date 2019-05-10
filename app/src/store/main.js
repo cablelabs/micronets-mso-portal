@@ -113,7 +113,7 @@ export const actions = {
         url: id ? `${usersUrl}/${id}` : usersUrl
       })
         .then(({data}) => {
-          console.log('\n Delete users response : ' + JSON.stringify(data))
+          console.log('\n Delete devices response : ' + JSON.stringify(data))
           return dispatch('fetchUsers')
         })
     })

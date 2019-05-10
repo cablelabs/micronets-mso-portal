@@ -1,11 +1,11 @@
-// users-model.js - A mongoose model
+// devices-model.js - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema }  = mongooseClient;
-  const users = new Schema({
+  const devices = new Schema({
     lastUpdatedAt: { type: Date, default: Date.now },
     lastUpdatedBy: { type: String },
     id: { type: String , required: true, unique: true, primaryKey: true },
@@ -16,5 +16,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('users', users);
+  return mongooseClient.model('devices', devices);
 };

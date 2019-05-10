@@ -1,7 +1,7 @@
-// Initializes the `users` service on path `/users`
+// Initializes the `devices` service on path `/devices`
 const createService = require('feathers-mongoose');
-const createModel = require('../../models/users.model');
-const hooks = require('./users.hooks');
+const createModel = require('../../models/devices.model');
+const hooks = require('./devices.hooks');
 const paths = require('./../../hooks/servicePaths')
 const servicePath = paths.USERS_PATH
 module.exports = function () {
@@ -11,7 +11,7 @@ module.exports = function () {
 
   const options = {
     id:'id',
-    name: 'users',
+    name: 'devices',
     Model,
     paginate
   };

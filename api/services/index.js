@@ -1,9 +1,8 @@
-const users = require('./users/users.service.js');
+const users = require('./devices/devices.service.js');
 const ca = require('./ca/ca.service.js');
 const certificates = require('./certificates/certificates.service.js');
 const key = require('./key/key.service.js');
 const subscriber = require('./subscriber/subscriber.service.js');
-const session = require('./session/session.service.js');
 const token = require('./token/token.service.js');
 const authorize = require('./authorize/authorize.service.js');
 const socket = require('./socket/socket.service.js');
@@ -19,7 +18,6 @@ module.exports = function () {
   app.configure(certificates);
   app.configure(key);
   app.configure(subscriber);
-  app.configure(session);
   app.configure(authorize);
   app.configure(socket);
   app.configure(register);

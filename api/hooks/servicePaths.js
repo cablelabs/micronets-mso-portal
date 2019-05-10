@@ -4,7 +4,7 @@ const MM_API_PREFIX = `mm/${API_VERSION}`
 const MM_API_PREFIX2 = `mm/${API_VERSION}/micronets`
 const CSRT_PATH = `${MSO_API_PREFIX}/ca/csrt`
 const CERTIFICATES_PATH = `${MSO_API_PREFIX}/ca/cert`
-const USERS_PATH = `${MSO_API_PREFIX}/users`
+const DEVICES_PATH = `${MSO_API_PREFIX}/devices`
 const SUBSCRIBER_PATH = `${MSO_API_PREFIX}/subscriber`
 const REGISTER_PATH = `${MSO_API_PREFIX}/register`
 const SOCKET_PATH = `${MSO_API_PREFIX}/socket`
@@ -23,7 +23,7 @@ const paths = () => {
     CSRT_PATH ,
     CERTIFICATES_PATH ,
     SUBSCRIBER_PATH,
-    USERS_PATH ,
+    DEVICES_PATH ,
     SOCKET_PATH,
     MM_CSRT_PATH,
     MM_CERTIFICATES_PATH,
