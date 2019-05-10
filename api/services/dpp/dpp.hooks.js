@@ -2,7 +2,7 @@ const { authenticate } = require ( '@feathersjs/authentication' ).hooks;
 const local = require('@feathersjs/authentication-local');
 const logger = require ( './../../logger' );
 const paths = require('./../../hooks/servicePaths')
-const { DPP_PATH, USERS_PATH, SUBSCRIBER_PATH, MM_DDP_ONBOARD_PATH } = paths
+const { DPP_PATH, USERS_PATH, SUBSCRIBER_PATH, MM_DPP_ONBOARD_PATH } = paths
 const DPP_LOGIN = `/${DPP_PATH}/login`
 const DPP_LOGOUT = `/${DPP_PATH}/logout`
 const DPP_ONBOARD = `/${DPP_PATH}/onboard`
@@ -85,9 +85,11 @@ module.exports = {
           if(requestUrl == DPP_ONBOARD) {
             logger.debug('\n\n DPP ONBOARD PATH ... ' + JSON.stringify(requestUrl))
             const subscriber = await hook.app.service(`${SUBSCRIBER_PATH}`).get(portalUser.subscriberId)
-            logger.debug('\n Subscriber from session ' + JSON.stringify(subscriber))
-            const dppOnboardResponse = await axios.post ( `${subscriber.registry}/${MM_DDP_ONBOARD_PATH}` , { ...data } , axiosConfig );
-
+            logger.debug('\n Subscriber from session ' + JSON.stringify(subscriber) + '\t\t RegistryUrl : ' + JSON.stringify(subscriber.registry))
+            if(subscriber && subscriber.hasOwnProperty('registry')) {
+              const mmDppUri = `${subscriber.registry}/${MM_DPP_ONBOARD_PATH}`
+              const dppOnboardResponse = await axios.post ( mmDppUri , { ...data } , axiosConfig );
+            }
           }
         }
       }

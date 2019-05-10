@@ -12,6 +12,7 @@ const MM_CSRT_PATH = `${MM_API_PREFIX2}/csrt`
 const MM_CERTIFICATES_PATH = `${MM_API_PREFIX2}/certificates`
 const MM_REGISTRY_PATH = `${MM_API_PREFIX2}/registry`
 const MM_ODL_PATH = `${MM_API_PREFIX2}/odl`
+const MM_DPP_ONBOARD_PATH = `${MM_API_PREFIX}/dpp/onboard`
 const MM_SUBSCRIBER_PATH = `${MM_API_PREFIX}/subscriber`
 const DPP_PATH = `${MSO_API_PREFIX}/dpp`
 const USERS_PATH = `${MSO_API_PREFIX}/users`
@@ -33,7 +34,8 @@ const paths = () => {
     MM_ODL_PATH,
     MM_SUBSCRIBER_PATH,
     USERS_PATH,
-    DPP_PATH
+    DPP_PATH,
+    MM_DPP_ONBOARD_PATH
   }
 }
 
