@@ -88,7 +88,7 @@ module.exports = {
             logger.debug('\n Subscriber from session ' + JSON.stringify(subscriber) + '\t\t RegistryUrl : ' + JSON.stringify(subscriber.registry))
             if(subscriber && subscriber.hasOwnProperty('registry')) {
               const mmDppUri = `${subscriber.registry}/${MM_DPP_ONBOARD_PATH}`
-              const dppOnboardResponse = await axios.post ( mmDppUri , { ...data } , axiosConfig );
+              const dppOnboardResponse = await axios.post ( mmDppUri , { ...data , subscriberId: subscriber.id, deviceConnection: 'wifi' } , axiosConfig );
             }
           }
         }
