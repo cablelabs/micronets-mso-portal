@@ -22,4 +22,5 @@ module.exports = function (app) {
   app.use ( `${servicePath}/login`, service  );
   app.use ( `${servicePath}/logout`, service  );
   app.use ( `${servicePath}/session`, service  );
+
 };
