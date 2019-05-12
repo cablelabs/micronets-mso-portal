@@ -47,7 +47,7 @@ module.exports = {
         hook.data = Object.assign({},{
           username:data.username,
           password:hashPwd,
-          subscriberId: data.subscriberId || getRandomSubscriberId()
+          subscriberId: data.hasOwnProperty('subscriberId') ? data.subscriberId : getRandomSubscriberId()
         })
       }
     ],
