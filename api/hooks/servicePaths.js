@@ -16,7 +16,7 @@ const MM_DPP_ONBOARD_PATH = `${MM_API_PREFIX}/dpp/onboard`
 const MM_SUBSCRIBER_PATH = `${MM_API_PREFIX}/subscriber`
 const DPP_PATH = `${MSO_API_PREFIX}/dpp`
 const USERS_PATH = `${MSO_API_PREFIX}/users`
-
+const REGISTRATION_TOKEN_PATH = `${MSO_API_PREFIX}/registration/token`
 const paths = () => {
   return {
     MSO_API_PREFIX ,
@@ -35,7 +35,8 @@ const paths = () => {
     MM_SUBSCRIBER_PATH,
     USERS_PATH,
     DPP_PATH,
-    MM_DPP_ONBOARD_PATH
+    MM_DPP_ONBOARD_PATH,
+    REGISTRATION_TOKEN_PATH
   }
 }
 

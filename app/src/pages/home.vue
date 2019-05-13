@@ -5,7 +5,7 @@
     </template>
     <template v-if="users.length == 0">
       <v-card>
-        <v-card-title class="no-subnets">No Users found</v-card-title>
+        <v-card-title class="no-subnets">No Subscribers found</v-card-title>
         <v-card-actions>
         </v-card-actions>
       </v-card>

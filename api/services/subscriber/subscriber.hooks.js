@@ -113,14 +113,14 @@ module.exports = {
         const msoRegistry = await hook.app.service(`${REGISTER_PATH}`).find({})
         const msoRegistryIndex = msoRegistry.data.findIndex((msoRegistry)=> msoRegistry.subscriberId == data.id)
         logger.debug('\n Accessing all registries : ' + JSON.stringify(msoRegistry.data) + '\t\t Index : ' + JSON.stringify(msoRegistryIndex))
-        if(msoRegistryIndex == -1) {
-          return Promise.reject(new errors.GeneralError(new Error(' Subscriber cannot be created. Associated registry for subscriber not found !')))
-        }
-        if(msoRegistryIndex!= -1 && data.hasOwnProperty('registry') && msoRegistry.data[msoRegistryIndex].registry != data.registry){
-          return Promise.reject(new errors.GeneralError(new Error(' Subscriber cannot be created. Multiple values for registry found !')))
-        }
-        if(msoRegistryIndex!= -1 && !data.hasOwnProperty('registry')) {
-          hook.data.registry = msoRegistry.data[msoRegistryIndex].registry
+        // if(msoRegistryIndex == -1) {
+        //   return Promise.reject(new errors.GeneralError(new Error(' Subscriber cannot be created. Associated registry for subscriber not found !')))
+        // }
+        // if(msoRegistryIndex!= -1 && data.hasOwnProperty('registry') && msoRegistry.data[msoRegistryIndex].registry != data.registry){
+        //   return Promise.reject(new errors.GeneralError(new Error(' Subscriber cannot be created. Multiple values for registry found !')))
+        // }
+        if(data.registry || (msoRegistryIndex!= -1 && !data.hasOwnProperty('registry'))) {
+          hook.data.registry = data.registry ? data.registry : msoRegistry.data[msoRegistryIndex].registry
           return Promise.resolve(hook)
         }
       }
@@ -169,8 +169,8 @@ module.exports = {
         logger.debug('\n Retrieved  socket  : ' + JSON.stringify(socket))
 
         // Create User for associated subscriber
-        const mmBaseUrl = hook.result.registry.split('://')[1].split(':')[0]
-        logger.debug('\n Derived base url : ' + JSON.stringify(mmBaseUrl))
+        // const mmBaseUrl = hook.result.registry.split('://')[1].split(':')[0]
+        // logger.debug('\n Derived base url : ' + JSON.stringify(mmBaseUrl))
         // const user = Object.assign({},{
         //     id: hook.result.id,
         //     ssid: hook.result.ssid,
@@ -237,8 +237,8 @@ module.exports = {
         logger.debug('\n REMOVE HOOK result : ' + JSON.stringify(hook.result))
         if(id) {
           await hook.app.service(`${SOCKET_PATH}`).remove(id,allHeaders)
-          await hook.app.service(`${DEVICES_PATH}`).remove(id,allHeaders)
-          await hook.app.service(`${REGISTER_PATH}`).remove(id,allHeaders)
+          // await hook.app.service(`${DEVICES_PATH}`).remove(id,allHeaders)
+          // await hook.app.service(`${REGISTER_PATH}`).remove(id,allHeaders)
           await axios({
             ...allHeaders,
             method: 'DELETE',
