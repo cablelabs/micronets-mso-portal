@@ -2,9 +2,9 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/dpp.model');
 const hooks = require('./dpp.hooks');
-const paths = require('./../../hooks/servicePaths')
-const servicePath = paths.DPP_PATH
-// const logger = require ( './../../logger' );
+const paths = require('./../../hooks/servicePaths');
+const servicePath = paths.DPP_PATH;
+const logger = require ( './../../logger' );
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -20,10 +20,8 @@ module.exports = function (app) {
   // Get our initialized service so that we can register hooks
   const service = app.service(`${servicePath}`);
   service.hooks(hooks);
-  app.use ( `${servicePath}/login`, service  );
-  app.use ( `${servicePath}/logout`, service  );
-  app.use ( `${servicePath}/onboard`, service  );
-  app.use ( `${servicePath}/session`, service  );
-
-
+  app.use (`${servicePath}/logout`, service );
+  app.use (`${servicePath}/onboard`, service );
+  app.use (`${servicePath}/session`, service );
+  app.use (`${servicePath}/login`, service );
 };

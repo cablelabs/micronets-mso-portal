@@ -20,11 +20,53 @@ const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const uuid = require('uuid/v4')
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const jwt = require('jsonwebtoken');
+
+
+const generateJWT = async(hook) => {
+  const { data, params } = hook
+  const { secret } = hook.app.get('authentication')
+  logger.debug('\n Generated JWT Data Passed : ' + JSON.stringify(hook.data) + '\t\t secret : ' + JSON.stringify(secret));
+  const token = jwt.sign(hook.data, secret );
+  logger.debug('\n Generated JWT Token : ' + JSON.stringify(token));
+  return token;
+}
 
 const restrictToOwner = async(hook) => {
+  logger.debug('\n  Checking for valid user with payload ')
+  const { data, params, id, headers} = hook
+  if(data.hasOwnProperty('username') && data.hasOwnProperty('password')) {
+    logger.debug('\n Payload : ' + JSON.stringify(data))
+    let dbUsers = await hook.app.service ( `${USERS_PATH}` ).find ( {} )
+    dbUsers = dbUsers.data
+    logger.debug('\n Portal Users  : ' + JSON.stringify(dbUsers) )
+    let userIndex = dbUsers.findIndex ( ( dbuser , index ) => dbuser.username == data.username )
+    logger.debug('\n User Index  : ' + JSON.stringify(userIndex))
+
+    if(userIndex == -1 ){
+      return Promise.reject(new errors.NotFound(new Error('User not found')))
+    }
+    else {
+      const match = await bcrypt.compare(data.password, dbUsers[userIndex].password);
+      logger.debug('\n Match  : ' + JSON.stringify(match))
+      if(match) {
+        logger.debug('\n User found : ' + JSON.stringify(dbUsers[userIndex]))
+        return dbUsers[userIndex]
+      }
+      else {
+        return Promise.reject(new errors.NotAuthenticated(new Error('Invalid username or password')))
+      }
+    }
+  }
+  else {
+    return Promise.reject(new errors.Forbidden(new Error('Missing authorization headers')))
+  }
+}
+
+const restrictToOwnerWithAuth = async(hook) => {
   logger.debug('\n  Checking for valid user with auth header ')
   const { data, params, id, headers} = hook
-  const { requestHeaders, requestUrl } = params
+  const { requestHeaders, requestUrl, requestBody } = params
   const { headers: { authorization }} = params
   if(authorization) {
     logger.debug('\n Authorization Header : ' + JSON.stringify(authorization))
@@ -90,18 +132,49 @@ const restrictToOwnerWithJWT = async(hook) => {
   }
 }
 
+const restrictToOwnerWithCookie = async(hook) => {
+  logger.debug('\n  Checking for valid user with JWT ')
+  const { data, params, id, headers} = hook
+  const { requestHeaders, requestUrl, payload } = params
 
+  if(payload) {
+    let dbUsers = await hook.app.service ( `${USERS_PATH}` ).find ( {} )
+    dbUsers = dbUsers.data
+    logger.debug('\n Portal Users  : ' + JSON.stringify(dbUsers) )
+    let userIndex = dbUsers.findIndex ( ( dbuser , index ) => dbuser.username == payload.username )
+    logger.debug('\n User Index  : ' + JSON.stringify(userIndex))
+
+    if(userIndex == -1 ){
+      return Promise.reject(notFound)
+    }
+    else {
+      const match = await bcrypt.compare(payload.password, dbUsers[userIndex].password);
+      logger.debug('\n Match  : ' + JSON.stringify(match))
+      if(match) {
+        logger.debug('\n User found : ' + JSON.stringify(dbUsers[userIndex]))
+        // hook.result = Object.assign({}, dbUsers[userIndex])
+        return dbUsers[userIndex]
+      }
+      else {
+        return Promise.reject(new errors.NotAuthenticated(new Error('401')))
+      }
+    }
+  }
+  else {
+    return Promise.reject(new errors.Forbidden(new Error('Missing authorization headers')))
+  }
+}
 module.exports = {
   before: {
     // all : [],
-    all: [authenticate('jwt')],
+    all: [],
     find: [],
     get: [
       async(hook) => {
         const {data, params, id, headers} = hook
-        const { requestHeaders, requestUrl } = params
+        const { requestHeaders, requestUrl, requestBody } = params
         if(requestUrl == DPP_LOGIN) {
-          return Promise.resolve()
+            return Promise.resolve ( hook )
         }
         if(requestUrl == DPP_CONFIG) {
           const  classCategories  = hook.app.get('classCategories')
@@ -113,18 +186,27 @@ module.exports = {
     create: [
       async(hook) => {
         const { data , params } = hook
-        const { requestHeaders, requestUrl } = params
+        logger.debug('\n\n DPP-LOGIN data : ' + JSON.stringify(data))
+        const { requestHeaders, requestUrl, requestBody, jar } = params
+        logger.debug('\n\n  requestBody : ' + JSON.stringify(requestBody))
+        if(requestUrl == DPP_LOGIN) {
+          logger.debug('\n\n DPP-LOGIN PATH ... : ' + JSON.stringify(requestUrl) +'\t\t Data : ' + JSON.stringify(data))
+            const portalUser = await restrictToOwner(hook)
+            logger.debug('\n Database user found : ' + JSON.stringify(portalUser))
+            if(portalUser && portalUser.hasOwnProperty('username')) {
+              const token = await generateJWT ( hook )
+              if(token){
+                hook.result = Object.assign({description:'Session created'})
+                jar.set('id', token)
+                return Promise.resolve(hook)
+              }
+            }
+        }
+
         logger.debug('\n DPP Create hook params : ' + JSON.stringify(params) )
-         // let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
-         // const portalUser = await restrictToOwner(hook)
-
-        const portalUser = await restrictToOwnerWithJWT(hook)
-
-        // if(requestUrl == DPP_LOGIN) {
-        //   logger.debug('\n\n DPP LOGIN PATH ... ' + JSON.stringify(requestUrl))
-        // }
-
-
+        // let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
+        const portalUser = await restrictToOwner(hook)
+       // const portalUser = await restrictToOwnerWithJWT(hook)
          if(portalUser && portalUser.hasOwnProperty('username')) {
           const {data, params, id, headers, payload} = hook
           const { requestHeaders, requestUrl } = params
@@ -155,8 +237,9 @@ module.exports = {
     find: [],
     get: [],
     create: [
+      local.hooks.protect('password'),
       async(hook) => {
-        local.hooks.protect('password'),
+      logger.debug('\n After create hook dpp login')
         hook.result = omitMeta(hook.result)
         return Promise.resolve(hook)
       }

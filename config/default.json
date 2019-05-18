@@ -52,5 +52,6 @@
    "registryServer" : "http://127.0.0.1:3030",
    "classCategories" : [
      "Medical", "Security", "Personal", "Generic", "Shared"
-   ]
+   ],
+  "cookieSecret": ["keyboard cat"]
 }

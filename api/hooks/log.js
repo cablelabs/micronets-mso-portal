@@ -16,9 +16,9 @@ module.exports = function () {
     logger.info(message);
 
     if(typeof context.toJSON === 'function' && logger.level === 'debug') {
-      logger.debug('Hook Context : ' + util.inspect(JSON.stringify(context), {colors: true}));
+      // logger.debug('Hook Context : ' + util.inspect(JSON.stringify(context), {colors: true}));
       logger.debug('Hook.data : ' + JSON.stringify(context.data));
-      logger.debug('Hook.params: ' + JSON.stringify(context.params));
+      // logger.debug('Hook.params: ' + JSON.stringify(context.params));
     }
     if (context.result) {
       logger.info('Hook.result.data : ' + JSON.stringify(context.result.data));
