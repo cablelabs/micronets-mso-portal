@@ -81,7 +81,8 @@ module.exports = {
               } );
               logger.debug ( '\n dppOnboardResponse :  ' + JSON.stringify ( dppOnboardResponse.data ) )
               if ( dppOnboardResponse.data ) {
-                return Promise.resolve ( (hook) )
+                hook.result = Object.assign({},{message:'On-boarding in progress'})
+                return Promise.resolve(hook)
               }
             }
           }
@@ -97,7 +98,13 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [
+      async(hook) => {
+        logger.debug('\n After create hook hook.result ' + JSON.stringify(hook.result))
+        hook.result =  omitMeta(hook.result)
+        return Promise.resolve(hook)
+      }
+    ],
     update: [],
     patch: [],
     remove: []
