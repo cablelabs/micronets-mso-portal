@@ -80,8 +80,12 @@ module.exports = {
                 deviceConnection : 'wifi'
               } );
               logger.debug ( '\n dppOnboardResponse :  ' + JSON.stringify ( dppOnboardResponse.data ) )
-              if ( dppOnboardResponse.data ) {
-                hook.result = Object.assign({},{message:'On-boarding in progress'})
+              if(dppOnboardResponse.data && dppOnboardResponse.data.hasOwnProperty('message')){
+                const { message } = dppOnboardResponse.data
+                hook.result = Object.assign({},{ status: message })
+                return Promise.resolve(hook)
+              } else {
+                hook.result = Object.assign({},{ status:'On-boarding in progress'})
                 return Promise.resolve(hook)
               }
             }

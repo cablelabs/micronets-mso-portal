@@ -265,16 +265,17 @@ module.exports = {
         }
 
         if ( requestUrl == DPP_LOGOUT ) {
-          logger.debug ( '\n\n DPP-LOGOUT PATH ... : ' + JSON.stringify ( requestUrl ) + '\t\t Data : ' + JSON.stringify ( data ) )
+          logger.debug ( '\n\n RequestUrl ... : ' + JSON.stringify ( requestUrl ) + '\t\t Data : ' + JSON.stringify ( data ) )
           const user = await getJWTFromCookie(hook)
-          logger.debug('\n DPP-SESSION USERNAME : ' + JSON.stringify(user))
+          logger.debug('\n Dpp session username : ' + JSON.stringify(user))
           if (user && user.hasOwnProperty('username')) {
             const dpp = await hook.app.service(`${DPP_PATH}`).find({})
             const dppIndex = dpp.data.findIndex((dpp)=> dpp.username == user.username)
-            logger.debug('\n DPP INDEX : ' + JSON.stringify(dppIndex))
-            logger.debug('\n DPP USERNAME : ' + JSON.stringify(dpp.username))
+            logger.debug('\n DPP Index : ' + JSON.stringify(dppIndex))
+            logger.debug('\n DPP Username : ' + JSON.stringify(dpp.data[dppIndex].username))
             if(dppIndex > -1) {
-            const deleteUser = await hook.app.service(`${DPP_PATH}`).remove(dpp.username)
+            const deleteUser = await hook.app.service(`${DPP_PATH}`).remove(dpp.data[dppIndex].username)
+            logger.debug('\n Delete User : ' + JSON.stringify(deleteUser.data))
             }
           }
         }

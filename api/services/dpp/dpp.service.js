@@ -1,6 +1,6 @@
 // Initializes the `dpp` service on path `/portal/v1/dpp`
 const createService = require('feathers-mongoose');
-const createModel = require('../../models/session.model');
+const createModel = require('../../models/dpp.model');
 const hooks = require('./dpp.hooks');
 const paths = require('./../../hooks/servicePaths');
 const servicePath = paths.DPP_PATH;
@@ -12,6 +12,7 @@ module.exports = function (app) {
   const paginate = app.get('paginate');
 
   const options = {
+    id:'username',
     Model,
     paginate
   };
