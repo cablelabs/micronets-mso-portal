@@ -9,7 +9,7 @@ const logger = require ( './../../logger' );
 let allHeaders = { crossDomain: true, headers : {  'Content-type': 'application/json' } };
 const errors = require('@feathersjs/errors');
 const paths = require('./../../hooks/servicePaths')
-const { MM_ODL_PATH, SOCKET_PATH, REGISTER_PATH, MM_REGISTRY_PATH, SUBSCRIBER_PATH, MM_SUBSCRIBER_PATH, DEVICES_PATH } = paths
+const { MM_ODL_PATH, SOCKET_PATH, REGISTER_PATH, MM_REGISTRY_PATH, SUBSCRIBER_PATH, MM_SUBSCRIBER_PATH, DEVICES_PATH, USERS_PATH } = paths
 const updateSwitchConfig = async(hook,oldSubscriber) => {
   const { data, params, method } = hook
   logger.debug('\n GatewayID updated . Update switch config for ' + JSON.stringify(`${oldSubscriber.registry}/mm/v1/micronets/odl/${oldSubscriber.gatewayId}`))
@@ -238,7 +238,8 @@ module.exports = {
         if(id) {
           await hook.app.service(`${SOCKET_PATH}`).remove(id,allHeaders)
           // await hook.app.service(`${DEVICES_PATH}`).remove(id,allHeaders)
-          // await hook.app.service(`${REGISTER_PATH}`).remove(id,allHeaders)
+          await hook.app.service(`${REGISTER_PATH}`).remove(id,allHeaders)
+          await hook.app.service(`${USERS_PATH}`).remove(id,allHeaders)
           await axios({
             ...allHeaders,
             method: 'DELETE',
@@ -247,8 +248,9 @@ module.exports = {
         }
         else {
           await hook.app.service(`${SOCKET_PATH}`).remove(null,allHeaders)
-          await hook.app.service(`${DEVICES_PATH}`).remove(null,allHeaders)
+          // await hook.app.service(`${DEVICES_PATH}`).remove(null,allHeaders)
           await hook.app.service(`${REGISTER_PATH}`).remove(null,allHeaders)
+          await hook.app.service(`${USERS_PATH}`).remove(null,allHeaders)
           await axios({
             ...allHeaders,
             method: 'DELETE',

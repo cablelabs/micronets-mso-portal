@@ -5,8 +5,9 @@ const port = app.get('port');
 const server = app.listen(port);
 const io = require('socket.io')(server);
 const openSocket = require('socket.io-client')
-const registrySocket = openSocket('http://localhost:3030');
-
+const registrySocket = openSocket(app.get('registryServer'));
+const paths = require('./hooks/servicePaths')
+const {  REGISTER_PATH } = paths
 process.on('unhandledRejection', (reason, p) =>
   logger.error('Unhandled Rejection at: Promise ', p, reason)
 );
@@ -35,36 +36,31 @@ registrySocket.on('DPPOnboardingFailedEvent', async(message)=> {
   registrySocket.emit('DPPOnboardingFailedEvent', message)
 })
 
-
+// app.service(`${REGISTER_PATH}`).on('registryCreate' ,(data) => {
+//   console.log('\n FeatherJS event registryCreate fired with data : ' + JSON.stringify(data));
+//   const registrySocket = openSocket(data.registry);
+//   registrySocket.on('DPPOnboardingStartedEvent', async(message)=> {
+//     console.log ( 'DPPOnboardingStartedEvent ' + JSON.stringify ( message ) );
+//     registrySocket.emit('DPPOnboardingStartedEvent', message)
+//   })
 //
-// app.service('/portal/v1/session').on('sessionCreate' ,(data) => {
-//   console.log('\n FeatherJS event sessionCreate fired with data : ' + JSON.stringify(data));
-//   io.on('connection' , (socket) => {
-//     console.log('Socket IO connection ' + JSON.stringify(socket.id));
-//     socket.emit('socketSessionCreate', data);
-//     socket.on('disconnect', () => {
-//       console.log('\n Socket IO disconnect' + JSON.stringify(socket.id))
-//       socket.removeAllListeners('send message');
-//       socket.removeAllListeners('disconnect');
-//       socket.removeAllListeners('connection');
-//       socket.disconnect( true );
-//     });
-//   });
+//   registrySocket.on('DPPOnboardingProgressEvent', async(message)=> {
+//     console.log ( 'DPPOnboardingProgressEvent ' + JSON.stringify ( message ) );
+//     registrySocket.emit('DPPOnboardingProgressEvent', message)
+//   })
+//
+//   registrySocket.on('DPPOnboardingCompleteEvent', async(message)=> {
+//     console.log ( 'DPPOnboardingCompleteEvent ' + JSON.stringify ( message ) );
+//     registrySocket.emit('DPPOnboardingCompleteEvent', message)
+//   })
+//
+//   registrySocket.on('DPPOnboardingFailedEvent', async(message)=> {
+//     console.log ( 'DPPOnboardingFailedEvent ' + JSON.stringify ( message ) );
+//     registrySocket.emit('DPPOnboardingFailedEvent', message)
+//   })
+//
 // });
-//
-// app.service('/portal/v1/session').on('sessionUpdate' ,(data) => {
-//   console.log ( '\n FeatherJS event sessionUpdate fired with data : ' + JSON.stringify ( data ) );
-//   io.on ( 'connection' , ( socket ) => {
-//     console.log ( 'Socket IO connection ' + JSON.stringify ( socket.id ) );
-//     socket.emit ( 'socketSessionUpdate' , data );
-//     socket.on('disconnect', () => {
-//       console.log('\n Socket IO disconnect' + JSON.stringify(socket.id))
-//       socket.removeAllListeners('send message');
-//       socket.removeAllListeners('disconnect');
-//       socket.removeAllListeners('connection');
-//       socket.disconnect( true );
-//     });
-//   });
-// })
+
+
 
 
