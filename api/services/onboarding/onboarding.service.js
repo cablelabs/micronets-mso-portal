@@ -2,7 +2,7 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/onboarding.model');
 const hooks = require('./onboarding.hooks');
-const servicePath = require('./../../hooks/servicePaths').DPP_ONBOARD
+const servicePath = require('./../../hooks/servicePaths').DPP_API_ONBOARD
 
 module.exports = function (app) {
   const Model = createModel(app);

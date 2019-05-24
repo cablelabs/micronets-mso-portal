@@ -17,7 +17,8 @@ const MM_SUBSCRIBER_PATH = `${MM_API_PREFIX}/subscriber`
 const DPP_PATH = `${MSO_API_PREFIX}/dpp`
 const DPP_LOGIN = `/${DPP_PATH}/login`
 const DPP_LOGOUT = `/${DPP_PATH}/logout`
-const DPP_ONBOARD = `/${MSO_API_PREFIX}/onboarding/dpp`
+const DPP_ONBOARD = `/${MSO_API_PREFIX}/dpp/onboard`
+const DPP_API_ONBOARD = `/${MSO_API_PREFIX}/onboarding/dpp`
 const DPP_CONFIG = `/${DPP_PATH}/config`
 const DPP_SESSION = `/${DPP_PATH}/session`
 const USERS_PATH = `${MSO_API_PREFIX}/users`
@@ -46,7 +47,8 @@ const paths = () => {
     DPP_LOGOUT,
     DPP_ONBOARD,
     DPP_CONFIG,
-    DPP_SESSION
+    DPP_SESSION,
+    DPP_API_ONBOARD
   }
 }
 

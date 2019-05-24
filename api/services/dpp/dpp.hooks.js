@@ -4,7 +4,7 @@ const MongoStore = require('connect-mongo')(session);
 const local = require('@feathersjs/authentication-local');
 const logger = require ( './../../logger' );
 const paths = require('./../../hooks/servicePaths')
-const { DPP_PATH, USERS_PATH, SUBSCRIBER_PATH, MM_DPP_ONBOARD_PATH, DPP_LOGIN, DPP_LOGOUT, DPP_ONBOARD, DPP_CONFIG, DPP_SESSION } = paths
+const { DPP_PATH, USERS_PATH, SUBSCRIBER_PATH, MM_DPP_ONBOARD_PATH, DPP_LOGIN, DPP_LOGOUT, DPP_ONBOARD, DPP_API_ONBOARD, DPP_CONFIG, DPP_SESSION } = paths
 var auth = require('basic-auth')
 const saltRounds = 10;
 const bcrypt = require('bcrypt');
@@ -32,7 +32,8 @@ const getJWTFromCookie = async(hook) => {
 
   if(jar) {
     // verify a token symmetric - synchronous
-    const jwtToken = jar.get('id')
+    const cookieName = hook.app.get('cookieName')
+    const jwtToken = jar.get(cookieName)
     logger.debug('\n JWT Token from cookie : ' + JSON.stringify(jwtToken))
     const { secret } = hook.app.get('authentication')
     var decodedToken = jwt.verify(jwtToken, secret);
@@ -276,6 +277,22 @@ module.exports = {
             if(dppIndex > -1) {
             const deleteUser = await hook.app.service(`${DPP_PATH}`).remove(dpp.data[dppIndex].username)
             logger.debug('\n Delete User : ' + JSON.stringify(deleteUser.data))
+            }
+          }
+        }
+
+        if ( requestUrl == DPP_API_ONBOARD ) {
+          logger.debug ( '\n\n RequestUrl ... : ' + JSON.stringify ( requestUrl ) + '\t\t Data : ' + JSON.stringify ( data ) )
+          const user = await getJWTFromCookie(hook)
+          logger.debug('\n Dpp session username : ' + JSON.stringify(user))
+          if (user && user.hasOwnProperty('username')) {
+            const dpp = await hook.app.service(`${DPP_PATH}`).find({})
+            const dppIndex = dpp.data.findIndex((dpp)=> dpp.username == user.username)
+            logger.debug('\n DPP Index : ' + JSON.stringify(dppIndex))
+            logger.debug('\n DPP Username : ' + JSON.stringify(dpp.data[dppIndex].username))
+            if(dppIndex > -1) {
+              const deleteUser = await hook.app.service(`${DPP_PATH}`).remove(dpp.data[dppIndex].username)
+              logger.debug('\n Delete User : ' + JSON.stringify(deleteUser.data))
             }
           }
         }

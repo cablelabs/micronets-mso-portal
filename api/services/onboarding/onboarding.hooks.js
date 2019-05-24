@@ -1,6 +1,6 @@
 const logger = require ( './../../logger' );
 const paths = require('./../../hooks/servicePaths')
-const { USERS_PATH, SUBSCRIBER_PATH, MM_DPP_ONBOARD_PATH, DPP_LOGIN, DPP_LOGOUT, DPP_ONBOARD, DPP_CONFIG, DPP_SESSION } = paths
+const { USERS_PATH, SUBSCRIBER_PATH, MM_DPP_ONBOARD_PATH, DPP_LOGIN, DPP_LOGOUT, DPP_API_ONBOARD, DPP_CONFIG, DPP_SESSION } = paths
 var auth = require('basic-auth')
 const saltRounds = 10;
 const bcrypt = require('bcrypt');
@@ -62,7 +62,7 @@ module.exports = {
         const { data , params } = hook
         const { requestHeaders , requestUrl , requestBody , jar } = params
         logger.debug ( '\n\n  Onboarding requestBody : ' + JSON.stringify ( requestBody ) + '\t\t Request url ' + JSON.stringify(requestUrl))
-        if ( requestUrl == DPP_ONBOARD ) {
+        if ( requestUrl == DPP_API_ONBOARD ) {
           // logger.debug ( '\n DPP Create hook params DPP_ONBOARD : ' + JSON.stringify ( params ) )
           const portalUser = await restrictToOwnerWithCookie( hook )
           if ( portalUser && portalUser.hasOwnProperty ( 'username' ) ) {
