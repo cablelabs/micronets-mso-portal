@@ -25,6 +25,8 @@ const generateJWT = async(hook) => {
   return token;
 }
 
+
+
 const getJWTFromCookie = async(hook) => {
   logger.debug('\n\n getJWTFromCookie ... ')
   const { data, params, id, headers} = hook
@@ -54,7 +56,7 @@ const getJWTFromCookie = async(hook) => {
       logger.debug('\n Match  : ' + JSON.stringify(match))
       if(match) {
         logger.debug('\n User found : ' + JSON.stringify(dbUsers[userIndex]))
-        return dbUsers[userIndex]
+        return Object.assign({},{ user: dbUsers[userIndex], jwtToken : jwtToken })
       }
       else {
         return Promise.reject(new errors.NotAuthenticated(new Error('401')))
@@ -223,15 +225,14 @@ module.exports = {
           hook.result = classCategories
         }
         if ( requestUrl == DPP_SESSION ) {
-          logger.debug ( '\n\n DPP-SESSION : ' )
-          const user = await getJWTFromCookie(hook)
-          logger.debug('\n DPP-SESSION USERNAME : ' + JSON.stringify(user))
+          const { user, jwtToken } = await getJWTFromCookie(hook)
+          logger.debug('\n Dpp session username : ' + JSON.stringify(user) + '\t\t Associated token : ' + JSON.stringify(jwtToken))
           if (user && user.hasOwnProperty('username')) {
             const dpp = await hook.app.service(`${DPP_PATH}`).find({})
             const dppIndex = dpp.data.findIndex((dpp)=> dpp.username == user.username)
             logger.debug('\n DPP INDEX : ' + JSON.stringify(dppIndex))
-            logger.debug('\n DPP USERNAME : ' + JSON.stringify(dpp.username))
             if(dppIndex > -1) {
+              logger.debug('\n DPP USERNAME : ' + JSON.stringify(dpp.data[dppIndex].username))
               hook.result = Object.assign({session:true})
             }
             else {
@@ -253,6 +254,7 @@ module.exports = {
           const portalUser = await restrictToOwner ( hook )
           logger.debug ( '\n Database user found : ' + JSON.stringify ( portalUser ) )
           if ( portalUser && portalUser.hasOwnProperty ( 'username' ) ) {
+            // User found. Create JWT Token
             const token = await generateJWT ( hook )
             if ( token ) {
               hook.data = Object.assign({
@@ -260,41 +262,33 @@ module.exports = {
                 token: token
               })
               // hook.result = Object.assign({ description: 'Session created' })
-              jar.set ( 'id' , token )
+              // Add JWT Token in a cookie
+              jar.set ( `${hook.app.get('cookieName')}` , token )
             }
           }
         }
 
         if ( requestUrl == DPP_LOGOUT ) {
           logger.debug ( '\n\n RequestUrl ... : ' + JSON.stringify ( requestUrl ) + '\t\t Data : ' + JSON.stringify ( data ) )
-          const user = await getJWTFromCookie(hook)
-          logger.debug('\n Dpp session username : ' + JSON.stringify(user))
+          const { user, jwtToken } = await getJWTFromCookie(hook)
+          logger.debug('\n Dpp session username : ' + JSON.stringify(user) + '\t\t Associated token : ' + JSON.stringify(jwtToken))
           if (user && user.hasOwnProperty('username')) {
             const dpp = await hook.app.service(`${DPP_PATH}`).find({})
             const dppIndex = dpp.data.findIndex((dpp)=> dpp.username == user.username)
             logger.debug('\n DPP Index : ' + JSON.stringify(dppIndex))
-            logger.debug('\n DPP Username : ' + JSON.stringify(dpp.data[dppIndex].username))
+
             if(dppIndex > -1) {
+            logger.debug('\n DPP Username : ' + JSON.stringify(dpp.data[dppIndex].username))
             const deleteUser = await hook.app.service(`${DPP_PATH}`).remove(dpp.data[dppIndex].username)
             logger.debug('\n Delete User : ' + JSON.stringify(deleteUser.data))
             }
           }
         }
 
-        if ( requestUrl == DPP_API_ONBOARD ) {
+        if ( requestUrl == DPP_ONBOARD ) {
           logger.debug ( '\n\n RequestUrl ... : ' + JSON.stringify ( requestUrl ) + '\t\t Data : ' + JSON.stringify ( data ) )
-          const user = await getJWTFromCookie(hook)
-          logger.debug('\n Dpp session username : ' + JSON.stringify(user))
-          if (user && user.hasOwnProperty('username')) {
-            const dpp = await hook.app.service(`${DPP_PATH}`).find({})
-            const dppIndex = dpp.data.findIndex((dpp)=> dpp.username == user.username)
-            logger.debug('\n DPP Index : ' + JSON.stringify(dppIndex))
-            logger.debug('\n DPP Username : ' + JSON.stringify(dpp.data[dppIndex].username))
-            if(dppIndex > -1) {
-              const deleteUser = await hook.app.service(`${DPP_PATH}`).remove(dpp.data[dppIndex].username)
-              logger.debug('\n Delete User : ' + JSON.stringify(deleteUser.data))
-            }
-          }
+          const { user, jwtToken } = await getJWTFromCookie(hook)
+          logger.debug('\n Dpp session username : ' + JSON.stringify(user) + '\t\t Associated token : ' + JSON.stringify(jwtToken))
         }
       }
     ],
@@ -308,7 +302,10 @@ module.exports = {
     find: [],
     get: [],
     create: [
-      local.hooks.protect('password')
+      local.hooks.protect('password'),
+      async(hook) => {
+      hook.result = omitMeta(hook.result)
+      }
     ],
     update: [],
     patch: [],
