@@ -1,4 +1,4 @@
-// onboarding-model.js - A mongoose model
+// status-model.js - A mongoose model
 // 
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
@@ -20,12 +20,12 @@ module.exports = function (app) {
   })
 
 
-  const onboarding = new Schema({
+  const status = new Schema({
     subscriberId: { type: String, required: false, unique: true, primaryKey: true, sparse: true },
     devices:[{ type: device, required: false }]
   }, {
     timestamps: true
   });
 
-  return mongooseClient.model('onboarding', onboarding);
+  return mongooseClient.model('status', status);
 };

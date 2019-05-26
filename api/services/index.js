@@ -11,6 +11,8 @@ const dpp = require('./dpp/dpp.service.js');
 const users = require('./users/users.service.js');
 const onboarding = require('./onboarding/onboarding.service.js');
 
+const status = require('./status/status.service.js');
+
 module.exports = function () {
   const app = this; // eslint-disable-line no-unused-vars
   app.configure(token);
@@ -25,4 +27,5 @@ module.exports = function () {
   app.configure(dpp);
   app.configure(users);
   app.configure(onboarding);
+  app.configure(status);
 };
