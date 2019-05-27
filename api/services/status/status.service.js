@@ -2,7 +2,7 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/status.model');
 const hooks = require('./status.hooks');
-
+const servicePath = require('./../../hooks/servicePaths').MSO_STATUS_PATH
 module.exports = function (app) {
   const Model = createModel(app);
   const paginate = app.get('paginate');
@@ -14,9 +14,9 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/portal/v1/status', createService(options));
+  app.use(`${servicePath}`, createService(options));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('/portal/v1/status');
+  const service = app.service(`${servicePath}`);
   service.hooks(hooks);
 };
