@@ -22,8 +22,8 @@ module.exports = function (app) {
   // Get our initialized service so that we can register hooks
   const service = app.service(`${servicePath}`);
   service.hooks(hooks);
-  app.use (`${DPP_LOGOUT}`, service );
   app.use (`${DPP_ONBOARD}`, service );
+  app.use (`${DPP_LOGOUT}`, service );
   app.use (`${DPP_SESSION}`, service );
   app.use (`${DPP_LOGIN}`, service );
 };
