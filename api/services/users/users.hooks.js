@@ -45,6 +45,7 @@ module.exports = {
     create: [
       async(hook) => {
         const { data , params } = hook;
+        logger.debug('\n User create hook data : ' + JSON.stringify(data))
         let hashPwd = bcrypt.hashSync(data.password, saltRounds);
         hook.data = Object.assign({},{
           username:data.username,
@@ -83,7 +84,7 @@ module.exports = {
             const registryUrl  =  msoRegistry[registryIndex]
             const subscriberPostBody = Object.assign({},{
               id: hook.result.subscriberId,
-              ssid: 'NA',
+              ssid: 'John Snow',
               name: hook.result.username,
               gatewayId : `default-gw-${hook.result.subscriberId}`,
               registry: registryIndex != -1 ? registryUrl : ''

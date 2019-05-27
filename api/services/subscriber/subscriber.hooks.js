@@ -111,6 +111,12 @@ module.exports = {
     create: [
       async(hook) => {
         const { data, params}  = hook
+        logger.debug('\n Create subscriber hook data : ' + JSON.stringify(data))
+        if(data.hasOwnProperty('username') && data.hasOwnProperty('password')) {
+          logger.debug('\n\n Might have to create a user ...')
+          hook.params.username = data.username
+          hook.params.password = data.password
+        }
         const msoRegistry = await hook.app.service(`${REGISTER_PATH}`).find({})
         const msoRegistryIndex = msoRegistry.data.findIndex((msoRegistry)=> msoRegistry.subscriberId == data.id)
         logger.debug('\n Accessing all registries : ' + JSON.stringify(msoRegistry.data) + '\t\t Index : ' + JSON.stringify(msoRegistryIndex))
@@ -120,6 +126,8 @@ module.exports = {
         // if(msoRegistryIndex!= -1 && data.hasOwnProperty('registry') && msoRegistry.data[msoRegistryIndex].registry != data.registry){
         //   return Promise.reject(new errors.GeneralError(new Error(' Subscriber cannot be created. Multiple values for registry found !')))
         // }
+
+        // Populate using passed value or look up register endpoint to retrieve value
         if(data.registry || (msoRegistryIndex!= -1 && !data.hasOwnProperty('registry'))) {
           hook.data.registry = data.registry ? data.registry : msoRegistry.data[msoRegistryIndex].registry
           return Promise.resolve(hook)
@@ -179,6 +187,24 @@ module.exports = {
         //     mmUrl: `http://${mmBaseUrl}:8080`
         //   })
         // await hook.app.service (`${DEVICES_PATH}`).create(user, allHeaders)
+
+
+        // Create user if it does not exist and username and password are supplied
+        if(hook.params.hasOwnProperty('username') && hook.params.hasOwnProperty('password')) {
+          const allUsers = await hook.app.service(`${USERS_PATH}`).find({})
+          const userIndex = allUsers.data.length > 0 ? allUsers.data.findIndex((user) => user.subscriberId == hook.result.subscriberId) : -1
+          logger.debug('\n User Index : ' + JSON.stringify(userIndex))
+          if(userIndex == -1) {
+            const postUserBody = Object.assign({},{
+              username: hook.params.username,
+              password: hook.params.password,
+              subscriberId: hook.result.id
+            })
+            logger.debug('\n POST User body : ' + JSON.stringify(postUserBody))
+            const userRes = await hook.app.service(`${USERS_PATH}`).create(postUserBody)
+            logger.debug('\n userRes : ' + JSON.stringify(userRes.data))
+          }
+        }
         hook.result = omitMeta(hook.result)
         return hook;
       }
