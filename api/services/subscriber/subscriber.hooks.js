@@ -14,26 +14,37 @@ const { MM_ODL_PATH, SOCKET_PATH, REGISTER_PATH, MM_REGISTRY_PATH, SUBSCRIBER_PA
 const updateSwitchConfig = async(hook,oldSubscriber) => {
   const { data, params, method } = hook
   logger.debug('\n GatewayID updated . Update switch config for ' + JSON.stringify(`${oldSubscriber.registry}/mm/v1/micronets/odl/${oldSubscriber.gatewayId}`))
-  const oldSwitchConfig = await axios({
+  let postBodySwitchConfig = {}
+  const allSwitchConfigs = await axios({
     ...allHeaders,
     method: 'get',
-    url: `${oldSubscriber.registry}/${MM_ODL_PATH}/${oldSubscriber.gatewayId}`
+    url: `${oldSubscriber.registry}/${MM_ODL_PATH}`
   })
-  const postBodySwitchConfig = Object.assign({}, oldSwitchConfig.data, {"gatewayId": hook.result.gatewayId })
-  logger.debug('\n\n Post switch config : ' + JSON.stringify(postBodySwitchConfig))
-  await axios({
-    ...allHeaders,
-    method: 'delete',
-    url: `${oldSubscriber.registry}/${MM_ODL_PATH}/${oldSubscriber.gatewayId}`
-  })
-  const updatedSwitchConfig = await axios({
-    ...allHeaders,
-    method: 'post',
-    url: `${oldSubscriber.registry}/${MM_ODL_PATH}`,
-    data: postBodySwitchConfig
-  })
-  logger.debug('\n\n New switch config : ' + JSON.stringify(updatedSwitchConfig.data))
-  return updatedSwitchConfig
+  logger.debug('\n All switch configs : ' + JSON.stringify(allSwitchConfigs.data))
+  const switchConfigIndex = allSwitchConfigs.data.length > 0 ? allSwitchConfigs.data.findIndex((swConfig) => swConfig.gatewayId == oldSubscriber.gatewayId) : -1
+  logger.debug('\n SwitchConfigIndex : ' + JSON.stringify(switchConfigIndex))
+  if(switchConfigIndex > -1) {
+    const oldSwitchConfig = await axios({
+      ...allHeaders,
+      method: 'get',
+      url: `${oldSubscriber.registry}/${MM_ODL_PATH}/${oldSubscriber.gatewayId}`
+    })
+    postBodySwitchConfig = Object.assign({}, oldSwitchConfig.data, {"gatewayId": hook.result.gatewayId })
+    logger.debug('\n\n Post switch config : ' + JSON.stringify(postBodySwitchConfig))
+    await axios({
+      ...allHeaders,
+      method: 'delete',
+      url: `${oldSubscriber.registry}/${MM_ODL_PATH}/${oldSubscriber.gatewayId}`
+    })
+    const updatedSwitchConfig = await axios({
+      ...allHeaders,
+      method: 'post',
+      url: `${oldSubscriber.registry}/${MM_ODL_PATH}`,
+      data: postBodySwitchConfig
+    })
+    logger.debug('\n\n New switch config : ' + JSON.stringify(updatedSwitchConfig.data))
+    return updatedSwitchConfig
+  }
 }
 
 const updateSocket = async(hook,oldSubscriber) => {
@@ -80,20 +91,32 @@ const updateRegistry = async(hook,oldSubscriber,socket, gatewayReconnection, old
 }
 
 const updateMicronet = async(hook,oldSubscriber,result) => {
+  logger.debug('\n\n Updating micronet')
   const { data, params, method } = hook
   let mmBaseUrl = hook.result.registry
-  const updateBody = Object.assign({},{
-    ssid: hook.result.ssid,
-    name: hook.result.name,
-    gatewayId: hook.result.gatewayId
-  })
-  const micronet = await axios({
+  const allMicronets = await axios({
     ...allHeaders,
-    method: 'PATCH',
-    url: `${hook.result.registry}/${MM_SUBSCRIBER_PATH}/${oldSubscriber.id}`,
-    data: {...updateBody}
+    method: 'GET',
+    url: `${hook.result.registry}/${MM_SUBSCRIBER_PATH}`
   })
+  logger.debug('\n All micronets : ' + JSON.stringify(allMicronets.data))
+  const micronetIndex = allMicronets.data.length > 0 ? allMicronets.data.findIndex((micronet) => micronet.subscriberId == oldSubscriber.id) : -1
+  logger.debug('\n Micronet Index : ' + JSON.stringify(micronetIndex))
 
+  // Update the found micronet
+  if(micronetIndex > -1){
+    const updateBody = Object.assign({},{
+      ssid: hook.result.ssid,
+      name: hook.result.name,
+      gatewayId: hook.result.gatewayId
+    })
+    const micronet = await axios({
+      ...allHeaders,
+      method: 'PATCH',
+      url: `${hook.result.registry}/${MM_SUBSCRIBER_PATH}/${oldSubscriber.id}`,
+      data: {...updateBody}
+    })
+  }
 }
 
 module.exports = {
