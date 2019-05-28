@@ -3,7 +3,7 @@ services:
   mso-mongo:
     image: mongo
     volumes:
-      - /private/tmp/mso-mongo:/data/db
+      - /tmp/mso-mongo:/data/db
     command: mongod --port 27019
     ports:
       - "27019:27019"
