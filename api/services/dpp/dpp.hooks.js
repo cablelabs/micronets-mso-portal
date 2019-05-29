@@ -15,6 +15,17 @@ const omit = require ( 'ramda/src/omit' );
 const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const jwt = require('jsonwebtoken');
 
+const checkForCookie = async(hook) => {
+  const { data, params, id, headers} = hook
+  const { requestHeaders, requestUrl, payload, jar } = params
+  logger.debug('\n params.jar : ' + JSON.stringify(params.jar.get('id')))
+  if(params.hasOwnProperty('jar') && params.jar.get('id')!= undefined){
+    logger.debug('\n params.jar : ' + JSON.stringify(params.jar.get('id')) + '\t return true')
+    return true
+  }
+  return false
+}
+
 
 const generateJWT = async(hook) => {
   const { data, params } = hook
@@ -67,6 +78,22 @@ const getJWTFromCookie = async(hook) => {
     return Promise.reject(new errors.Forbidden(new Error('Missing user cookie')))
   }
 
+}
+
+const checkIfTokenExistsForUser = async(hook, user) => {
+logger.debug('\n checkIfTokenExistsForUser user : ' + JSON.stringify(user))
+  if(user && user.hasOwnProperty('username')) {
+    const loggedInUsers = await hook.app.service(`${DPP_PATH}`).find({})
+    const loggedInUserIndex = loggedInUsers.data.length > 0 ? loggedInUsers.data.findIndex((loggedUser) => loggedUser.username == user.username) : -1
+    logger.debug('\n loggedInUserIndex : ' + JSON.stringify(loggedInUserIndex))
+    if(loggedInUserIndex > -1){
+      logger.debug('\n loggedInUserIndex : ' + JSON.stringify(loggedInUserIndex) + '\t\t LoggedInUser : ' + JSON.stringify(loggedInUsers.data[loggedInUserIndex]))
+      return Object.assign({loggedInUser: loggedInUsers.data[loggedInUserIndex], loggedInUserIndex: loggedInUserIndex })
+    }
+    else {
+      return Object.assign({loggedInUser: undefined, loggedInUserIndex: loggedInUserIndex })
+    }
+  }
 }
 
 const restrictToOwner = async(hook) => {
@@ -225,6 +252,12 @@ module.exports = {
           hook.result = classCategories
         }
         if ( requestUrl == DPP_SESSION ) {
+          const isCookiePresent = await checkForCookie(hook)
+          if(!isCookiePresent){
+            logger.debug('\n Is cookie present : ' + JSON.stringify(isCookiePresent))
+            return Promise.reject(new errors.NotAuthenticated(new Error('401')))
+          }
+
           const { user, jwtToken } = await getJWTFromCookie(hook)
           logger.debug('\n Dpp session username : ' + JSON.stringify(user) + '\t\t Associated token : ' + JSON.stringify(jwtToken))
           if (user && user.hasOwnProperty('username')) {
@@ -255,15 +288,28 @@ module.exports = {
           logger.debug ( '\n Database user found : ' + JSON.stringify ( portalUser ) )
           if ( portalUser && portalUser.hasOwnProperty ( 'username' ) ) {
             // User found. Create JWT Token
-            const token = await generateJWT ( hook )
-            if ( token ) {
-              hook.data = Object.assign({
-                username: portalUser.username,
-                token: token
-              })
-              // hook.result = Object.assign({ description: 'Session created' })
+            const { loggedInUser , loggedInUserIndex } = await checkIfTokenExistsForUser ( hook , portalUser )
+            if ( loggedInUserIndex > -1 && loggedInUser && loggedInUser.hasOwnProperty ( 'username' ) ) {
+              logger.debug ( '\n User is already logged in and has a token ' )
+              hook.result = Object.assign ( {} , {
+                status: 'User logged in'
+              } )
               // Add JWT Token in a cookie
-              jar.set ( `${hook.app.get('cookieName')}` , token )
+              jar.set ( `${hook.app.get ( 'cookieName' )}` , loggedInUser.token )
+              return Promise.resolve ( hook )
+            }
+            else {
+              logger.debug ( '\n User is logging in for first time.Generate token ' )
+              const token = await generateJWT ( hook )
+              if ( token ) {
+                hook.data = Object.assign ( {
+                  username : portalUser.username ,
+                  token : token
+                } )
+                // hook.result = Object.assign({ description: 'Session created' })
+                // Add JWT Token in a cookie
+                jar.set ( `${hook.app.get ( 'cookieName' )}` , token )
+              }
             }
           }
         }
