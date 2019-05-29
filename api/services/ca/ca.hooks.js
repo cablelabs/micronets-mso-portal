@@ -5,7 +5,7 @@ const omitMeta = omit ( [ 'updatedAt' , 'createdAt' , '_id' , '__v' ] );
 const errors = require('@feathersjs/errors');
 const logger = require ( './../../logger' );
 const paths = require('./../../hooks/servicePaths')
-const { MM_CSRT_PATH, MM_REGISTRY_PATH } = paths
+const { MM_CSRT_PATH, MM_REGISTRY_PATH, SUBSCRIBER_PATH } = paths
 module.exports = {
   before : {
     all : [ authenticate ( 'jwt' ) ] ,
@@ -23,8 +23,12 @@ module.exports = {
         }
         else {
           let axiosConfig = { headers : { 'Authorization' : params.headers.authorization } };
-          const registryUrl = hook.app.get ( 'registryServer' )
-          logger.debug( '\n registryUrl :' + JSON.stringify ( registryUrl ) )
+          const subscriberInfo = await hook.app.service(`${SUBSCRIBER_PATH}`).get(subscriberId)
+          const registryUrl =  subscriberInfo && subscriberInfo.hasOwnProperty('registry') ? subscriberInfo.registry : undefined
+          logger.debug('\n Subscriber info : ' + JSON.stringify(subscriberInfo) + '\t\t registryUrl : ' + JSON.stringify(registryUrl))
+          if(registryUrl == undefined){
+            return Promise.reject(new errors.GeneralError(new Error('No associated registry present')))
+          }
           let registry = await axios.get ( `${registryUrl}/${MM_REGISTRY_PATH}/${subscriberId}`, axiosConfig )
           let mmApiurl = registry.data.mmUrl
           logger.debug( '\n Registry from MM :' + JSON.stringify ( registry.data ) )
