@@ -23,7 +23,7 @@ const DPP_CONFIG = `/${DPP_PATH}/config`
 const DPP_SESSION = `/${DPP_PATH}/session`
 const USERS_PATH = `${MSO_API_PREFIX}/users`
 const REGISTRATION_TOKEN_PATH = `${MSO_API_PREFIX}/registration/token`
-const MSO_STATUS_PATH = `/${MSO_API_PREFIX}/status`
+const MSO_STATUS_PATH = `${MSO_API_PREFIX}/status`
 const paths = () => {
   return {
     MSO_API_PREFIX ,
