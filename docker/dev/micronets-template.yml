@@ -1,0 +1,62 @@
+version: '3'
+services:
+  mso-mongo:
+    image: mongo
+    env_file:
+              - ./../../.env
+    environment:
+      - NODE_ENV=development
+      - PORT=3030
+      - NETWORK_MODE=false
+    container_name: mso-mongo
+    hostname: mso-mongo
+    volumes:
+      - /private/tmp/mso-mongo:/data/db
+    command: mongod --port 27019
+    ports:
+      - "27019:27019"
+  mso-api:
+    build:
+      context: ./../..
+      dockerfile: docker/dev/Dockerfile.api
+    image: mso-portal-api-dev
+    env_file:
+              - ./../../.env
+    container_name: mso-api
+    hostname: mso-api
+    environment:
+      - NODE_ENV=development
+      - NETWORK_MODE=false
+      - PORT=3210
+      - MONGO_URL=mongodb://mso-mongo:27019/mso-portal
+    depends_on:
+      - mso-mongo
+    ports:
+      - '3210:3210'
+
+  mso-app:
+    build:
+      context: ./../..
+      dockerfile: docker/dev/Dockerfile.app
+    image: mso-portal-client-dev
+    env_file:
+       - ./../../.env
+    container_name: mso-app
+    hostname: mso-app
+    environment:
+      - NODE_ENV=development
+      - NETWORK_MODE=false
+      - PORT=8081
+      - MONGO_URL=mongodb://mso-mongo:27019/mso-portal
+    depends_on:
+      - mso-mongo
+      - mso-api
+    ports:
+      - '8081:8081'
+
+networks:
+  default:
+   external:
+         name: micronets-dev
+
+
