@@ -22,7 +22,7 @@ module.exports = function (app) {
 
 
   const status = new Schema({
-    subscriberId: { type: String, required: false, unique: true, primaryKey: true, sparse: true },
+    subscriberId: { type: String, required: true, unique: true, primaryKey: true, sparse: true },
     devices:[{ type: device, required: false }]
   }, {
     timestamps: true
