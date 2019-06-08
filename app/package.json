@@ -11,7 +11,7 @@
     "client": "npm install && npm run dev"
   },
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": ">=0.18.1",
     "babel-polyfill": "^6.26.0",
     "chalk": "^2.4.1",
     "cors": "^2.8.4",
