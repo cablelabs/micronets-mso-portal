@@ -1,5 +1,5 @@
 {
-  "host": "127.0.0.1",
+  "host": "45.79.13.192",
   "port": 3210,
   "public": "../public/",
   "src": "../src/",
@@ -48,7 +48,7 @@
       }
     ]
   },
-   "webSocketBaseUrl":"wss://127.0.0.1:5050/micronets/v1/ws-proxy/gw",
+   "webSocketBaseUrl":"wss://ws-proxy-api.micronets.in:5050/micronets/v1/ws-proxy/gw",
    "classCategories" : [
      "Medical", "Security", "Personal", "Generic", "Shared"
    ],

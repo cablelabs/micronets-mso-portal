@@ -8,7 +8,7 @@ const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const configuration = require('@feathersjs/configuration');
 const rest = require('@feathersjs/express/rest');
-const socketio = require('@feathersjs/socketio');
+// const socketio = require('@feathersjs/socketio');
 const handler = require('@feathersjs/express/errors');
 const notFound = require('feathers-errors/not-found');
 const middleware = require('./middleware/index');
@@ -41,7 +41,7 @@ app.use('/', express.static(app.get('public')));
 
 app.configure(mongoose);
 
-app.configure(socketio());
+// app.configure(socketio());
 app.configure(authentication);
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
