@@ -10,7 +10,8 @@ const configuration = require('@feathersjs/configuration');
 const rest = require('@feathersjs/express/rest');
 // const socketio = require('@feathersjs/socketio');
 const handler = require('@feathersjs/express/errors');
-const notFound = require('feathers-errors/not-found');
+const errors = require('@feathersjs/errors');
+const notFound = new errors.NotFound('404. Page not found')
 const middleware = require('./middleware/index');
 const services = require('./services/index');
 const appHooks = require('./app.hooks');
@@ -48,9 +49,8 @@ app.configure(middleware);
 // Set up our services (see `services/index.js`)
 app.configure(services);
 // Configure a middleware for 404s and the error handler
-app.use(notFound());
+// app.use(new errors.NotFound());
 app.use(handler());
-
 app.hooks(appHooks);
 
 module.exports = app;
