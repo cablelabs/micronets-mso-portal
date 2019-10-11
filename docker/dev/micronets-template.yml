@@ -28,25 +28,25 @@ services:
     ports:
       - '3210:3210'
 
-  mso-app:
-    build:
-      context: ./../..
-      dockerfile: docker/dev/Dockerfile.app
-    image: mso-portal-client-dev
-    container_name: mso-app
-    hostname: mso-app
-    env_file:
-              - ./../mso-config.env
-    environment:
-      - NODE_ENV=development
-      - MSO_APP_LISTEN_HOST=0.0.0.0
-      - MSO_APP_LISTEN_PORT=8081
-      - MONGO_DB_URL=mongodb://mongodb/mso-portal
-    depends_on:
-      - mongodb
-      - mso-api
-    ports:
-      - '8081:8081'
+#  mso-app:
+#    build:
+#      context: ./../..
+#      dockerfile: docker/dev/Dockerfile.app
+#    image: mso-portal-client-dev
+#    container_name: mso-app
+#    hostname: mso-app
+#    env_file:
+#              - ./../mso-config.env
+#    environment:
+#      - NODE_ENV=development
+#      - MSO_APP_LISTEN_HOST=0.0.0.0
+#      - MSO_APP_LISTEN_PORT=8081
+#      - MONGO_DB_URL=mongodb://mongodb/mso-portal
+#    depends_on:
+#      - mongodb
+#      - mso-api
+#    ports:
+#      - '8081:8081'
 
 networks:
   default:
