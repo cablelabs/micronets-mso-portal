@@ -14,8 +14,6 @@ services:
     image: mso-portal-api-dev
     container_name: mso-api
     hostname: mso-api
-    env_file:
-               - ./../mso-config.env
     environment:
       - NODE_ENV=development
       - MSO_API_LISTEN_HOST=127.0.0.1
