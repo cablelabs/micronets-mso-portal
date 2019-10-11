@@ -336,7 +336,7 @@ module.exports = {
           const { user, jwtToken } = await getJWTFromCookie(hook)
           logger.debug('\n Dpp session username : ' + JSON.stringify(user) + '\t\t Associated token : ' + JSON.stringify(jwtToken))
           let axiosConfig = { headers : { 'Authorization' : `Bearer ${jwtToken}` } };
-          const postOnboardingMsoUrl = `http://${hook.app.get('host')}:${hook.app.get('port')}${DPP_API_ONBOARD}`
+          const postOnboardingMsoUrl = `${hook.app.get('publicApiBaseUrl')}${DPP_API_ONBOARD}`
           logger.debug('\n MSO Onboarding api url : ' + JSON.stringify(postOnboardingMsoUrl))
           const postOnboardResponse = await axios.post (`${postOnboardingMsoUrl}` ,  data , axiosConfig)
           logger.debug('\n DPP Hook postOnboardResponse : ' + JSON.stringify(postOnboardResponse.data))

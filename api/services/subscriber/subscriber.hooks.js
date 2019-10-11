@@ -67,13 +67,12 @@ const updateSocket = async(hook,oldSubscriber) => {
 
 const updateRegistry = async(hook,oldSubscriber,socket, gatewayReconnection, oldRegistry) => {
   const { data, params, method } = hook
-  let mmBaseUrl = hook.result.registry.split(':')[1].replace('//','')
   const updateBody = Object.assign({},{
     subscriberId: hook.result.id,
     mmUrl: hook.result.registry,
     identityUrl: oldRegistry.identityUrl,
-    mmClientUrl: `http://${mmBaseUrl}:8080`,
-    msoPortalUrl: `http://${hook.app.get('host')}:${hook.app.get('port')}`,
+    mmClientUrl: hook.result.mmClientUrl,
+    msoPortalUrl: `${hook.app.get('publicApiBaseUrl')}`,
     webSocketUrl: socket.socketUrl,
     gatewayId: hook.result.gatewayId,
     gatewayReconnection: gatewayReconnection

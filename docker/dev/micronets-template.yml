@@ -1,58 +1,49 @@
 version: '3'
 services:
-  mso-mongo:
+  mongodb:
     image: mongo
-    env_file:
-              - ./../../.env
-    environment:
-      - NODE_ENV=development
-      - PORT=3030
-      - NETWORK_MODE=false
-    container_name: mso-mongo
-    hostname: mso-mongo
+    container_name: mongodb
+    hostname: mongodb
     volumes:
-      - /private/tmp/mso-mongo:/data/db
-    command: mongod --port 27019
-    ports:
-      - "27019:27019"
+      - /private/tmp/mongodb:/data/db
+
   mso-api:
     build:
       context: ./../..
       dockerfile: docker/dev/Dockerfile.api
     image: mso-portal-api-dev
-    env_file:
-              - ./../../.env
     container_name: mso-api
     hostname: mso-api
+    env_file:
+               - ./../mso-config.env
     environment:
       - NODE_ENV=development
-      - NETWORK_MODE=false
-      - PORT=3210
-      - MONGO_URL=mongodb://mso-mongo:27019/mso-portal
+      - MSO_API_LISTEN_HOST=0.0.0.0
+      - MSO_API_LISTEN_PORT=3210
+      - MONGO_DB_URL=mongodb://mongodb/mso-portal
+      - WEB_SOCKET_BASE_URL=${WEB_SOCKET_BASE_URL}
     depends_on:
-      - mso-mongo
-    ports:
-      - '3210:3210'
+      - mongodb
+
 
   mso-app:
     build:
       context: ./../..
       dockerfile: docker/dev/Dockerfile.app
     image: mso-portal-client-dev
-    env_file:
-       - ./../../.env
     container_name: mso-app
     hostname: mso-app
+    env_file:
+              - ./../mso-config.env
     environment:
       - NODE_ENV=development
-      - NETWORK_MODE=false
-      - PORT=8081
-      - MONGO_URL=mongodb://mso-mongo:27019/mso-portal
+      - MSO_APP_LISTEN_HOST=0.0.0.0
+      - MSO_APP_LISTEN_PORT=8081
+      - MONGO_DB_URL=mongodb://mongodb/mso-portal
     depends_on:
-      - mso-mongo
+      - mongodb
       - mso-api
-    ports:
-      - '8081:8081'
+
 
 networks:
   default:
