@@ -8,7 +8,7 @@ module.exports = function (app) {
   const paginate = app.get('paginate');
 
   const options = {
-    id:'subscriberId',
+    id:'deviceId',
     Model,
     paginate
   };
@@ -19,4 +19,5 @@ module.exports = function (app) {
   // Get our initialized service so that we can register hooks
   const service = app.service(`${servicePath}`);
   service.hooks(hooks);
+  app.use ( `${servicePath}/:id`, service  );
 };

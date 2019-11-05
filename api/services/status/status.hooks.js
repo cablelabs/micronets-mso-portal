@@ -8,7 +8,22 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [
+      async(hook) => {
+      const {data, params, id } = hook
+      logger.debug('\n\n Status patch data : ' + JSON.stringify(data)  + '\t\t ID : ' + JSON.stringify(id))
+        const statusData = await hook.app.service(`${MSO_STATUS_PATH}`).get(id)
+        logger.debug('\n\n Status Data : ' + JSON.stringify(statusData))
+        const statusPatchBody = Object.assign({},{
+          deviceId: data.deviceId,
+          events: statusData.events.concat(data.events)
+        })
+        logger.debug('\n Status Patch Body : ' + JSON.stringify(statusPatchBody))
+        hook.data = Object.assign({},statusPatchBody)
+        return Promise.resolve(hook)
+
+      }
+    ],
     remove: []
   },
 
