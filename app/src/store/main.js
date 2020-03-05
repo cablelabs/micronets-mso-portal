@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getField, updateField } from 'vuex-map-fields'
 
 const setState = prop => (state, value) => { state[prop] = value }
-const usersUrl = `http://127.0.0.1:3210/portal/v1/subscriber`
+const usersUrl = `${process.env.MSO_PORTAL_BASE_URL}/portal/v1/subscriber`
 const apiInit = {crossDomain: true, headers: {'Content-type': 'application/json'}}
 const msoPortalAuthPostConfig = {
   'clientID': 'https://coloradohealthcare.org/',
@@ -13,7 +13,7 @@ const msoPortalAuthPostConfig = {
   'serial': 'GG-555555',
   'macAddress': '03:30:93:39:03:3B'
 }
-const authTokenUri = `http://127.0.0.1:3210/portal/v1/registration/token`
+const authTokenUri = `${process.env.MSO_PORTAL_BASE_URL}/portal/v1/registration/token`
 
 export const initialState = {
   updatedUser: [],
@@ -113,7 +113,7 @@ export const actions = {
         url: id ? `${usersUrl}/${id}` : usersUrl
       })
         .then(({data}) => {
-          console.log('\n Delete users response : ' + JSON.stringify(data))
+          console.log('\n Delete devices response : ' + JSON.stringify(data))
           return dispatch('fetchUsers')
         })
     })

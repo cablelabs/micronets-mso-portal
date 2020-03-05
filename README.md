@@ -147,7 +147,6 @@ Header Fields:
        "gatewayId": "micronets-gw-0001"
     }    
 
-## Private REST Interface
 
 ### 4. Subscriber
 

@@ -43,13 +43,21 @@
               <v-text-field name="name" id="name" v-model="form.name" label="Name" required :disabled="sending" />
               <span class="hasError" v-if="!$v.form.name.required">The name is required</span>
             </div>
+            <div :class="getValidationClass('username')">
+              <v-text-field name="username" id="username" v-model="form.username" label="User Name" required :disabled="sending" />
+              <!--<span class="hasError" v-if="!$v.form.username.required">The username is required</span>-->
+            </div>
+            <div :class="getValidationClass('password')">
+              <v-text-field name="password" id="password" v-model="form.password" label="Password" required :disabled="sending" />
+              <!--<span class="hasError" v-if="!$v.form.password.required">The password is required</span>-->
+            </div>
             <div :class="getValidationClass('gatewayId')">
               <v-text-field id="gatewayId" name="gatewayId" v-model="form.gatewayId" label="Gateway ID" required :disabled="sending" />
               <span class="hasError" v-if="!$v.form.gatewayId.required">The gatewayId is required</span>
             </div>
             <div :class="getValidationClass('registry')">
               <v-text-field name="registry" id="registry" v-model="form.registry" label="Registry" required :disabled="sending" />
-              <span class="hasError" v-if="!$v.form.registry.required">The registry is required</span>
+              <!--<span class="hasError" v-if="!$v.form.registry.required">The registry is required</span>-->
             </div>
           </form>
         </v-card-text>
@@ -90,7 +98,9 @@
         ssid: '',
         name: '',
         gatewayId: '',
-        registry: ''
+        registry: '',
+        username: '',
+        password: ''
       }
     }),
     validations: {
@@ -105,9 +115,6 @@
           required
         },
         gatewayId: {
-          required
-        },
-        registry: {
           required
         }
       }
@@ -131,6 +138,8 @@
         this.form.gatewayId = null
         this.form.name = null
         this.form.registry = null
+        this.form.username = null
+        this.form.password = null
       },
       submit () {
         this.$v.$touch()

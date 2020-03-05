@@ -4,7 +4,7 @@
         <v-container grid-list-xs>
           <v-layout v-bind="binding">
             <v-flex>
-                <md-card class="md-primary" md-theme="orange-card">
+                <md-card class="md-secondary" md-theme="orange-card">
                     <md-toolbar class="md-accent" md-elevation="1">
                         <h3 class="md-title" style="flex: 1">Subscriber</h3>
                         <md-button class="md-fab md-plain" @click="updateUser">
@@ -150,8 +150,8 @@
                                     <md-field :class="getValidationClass('registry')">
                                         <label for="registry">Registry (Read Only)</label>
                                         <md-input type="registry" name="registry" id="registry" autocomplete="registry" v-model="form.registry" :disabled="sending" readOnly />
-                                        <span class="md-error" v-if="!$v.form.registry.required">The registry is required</span>
-                                        <span class="md-error" v-else-if="!$v.form.registry.email">Invalid registry</span>
+                                        <!--<span class="md-error" v-if="!$v.form.registry.required">The registry is required</span>-->
+                                        <!--<span class="md-error" v-else-if="!$v.form.registry.email">Invalid registry</span>-->
                                     </md-field>
                                     </div>
                                 </md-card-content>
@@ -270,9 +270,6 @@
           maxLength: minLength(3)
         },
         gatewayId: {
-          required
-        },
-        registry: {
           required
         }
       }
@@ -395,7 +392,8 @@
     @import "../../node_modules/vue-material/src/theme/engine";
     @import "../../node_modules/vue-material/dist/theme/all";
     @include md-register-theme("orange-card", (
-            primary: md-get-palette-color(white, 100)
+            primary: md-get-palette-color(grey, 600),
+            secondary:md-get-palette-color(white, 100)
     ));
     @import "../../node_modules/vue-material/src/base/theme";
     @import "../../node_modules/vue-material/src/components/MdCard/theme";

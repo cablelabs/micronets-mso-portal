@@ -1,48 +1,23 @@
 /* eslint-disable no-console */
 const logger = require('./logger');
 const app = require('./app');
-const port = app.get('port');
-const server = app.listen(port);
-const io = require('socket.io')(server);
-
+const port = app.get('listenPort');
+const host = app.get('listenHost');
+const webSocketBaseUrl = app.get('webSocketBaseUrl')
+const publicApiBaseUrl = app.get('publicApiBaseUrl')
+const server = app.listen(port,host);
 
 process.on('unhandledRejection', (reason, p) =>
   logger.error('Unhandled Rejection at: Promise ', p, reason)
 );
 
-server.on('listening', () =>
-  logger.info ('Feathers application started on ' + JSON.stringify(`http://${app.get('host')}:${app.get('port')}`))
-);
-
-
-app.service('/portal/v1/session').on('sessionCreate' ,(data) => {
-  console.log('\n FeatherJS event sessionCreate fired with data : ' + JSON.stringify(data));
-  io.on('connection' , (socket) => {
-    console.log('Socket IO connection ' + JSON.stringify(socket.id));
-    socket.emit('socketSessionCreate', data);
-    socket.on('disconnect', () => {
-      console.log('\n Socket IO disconnect' + JSON.stringify(socket.id))
-      socket.removeAllListeners('send message');
-      socket.removeAllListeners('disconnect');
-      socket.removeAllListeners('connection');
-      socket.disconnect( true );
-    });
-  });
+server.on('listening', () => {
+  address = server.address()
+  logger.info ('Feathers application started on ' + JSON.stringify(`http://${address.address}:${address.port}`))
+  logger.info ('Feathers  webSocketBaseUrl ' + JSON.stringify(webSocketBaseUrl))
+  logger.info ('Feathers  publicApiBaseUrl ' + JSON.stringify(publicApiBaseUrl))
 });
 
-app.service('/portal/v1/session').on('sessionUpdate' ,(data) => {
-  console.log ( '\n FeatherJS event sessionUpdate fired with data : ' + JSON.stringify ( data ) );
-  io.on ( 'connection' , ( socket ) => {
-    console.log ( 'Socket IO connection ' + JSON.stringify ( socket.id ) );
-    socket.emit ( 'socketSessionUpdate' , data );
-    socket.on('disconnect', () => {
-      console.log('\n Socket IO disconnect' + JSON.stringify(socket.id))
-      socket.removeAllListeners('send message');
-      socket.removeAllListeners('disconnect');
-      socket.removeAllListeners('connection');
-      socket.disconnect( true );
-    });
-  });
-})
+
 
 

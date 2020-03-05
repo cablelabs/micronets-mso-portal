@@ -10,7 +10,7 @@ module.exports = function (app) {
     ssid: { type: String, required: true },
     name: { type: String, required: true },
     gatewayId : {type: String, required: true },
-    registry: { type: String, required: true }
+    registry: { type: String, required: false, default: '' }
   }, {
     timestamps: true
   });

@@ -1,0 +1,11 @@
+{
+  "publicApiBaseUrl": "MSO_API_PUBLIC_BASE_URL",
+  "publicAppBaseUrl": "MSO_APP_PUBLIC_BASE_URL",
+  "listenHost": "MSO_API_LISTEN_HOST",
+  "listenPort": "MSO_API_LISTEN_PORT",
+  "mongodb": "MONGO_DB_URL",
+  "authentication": {
+      "secret": "MSO_PORTAL_AUTH_SECRET"
+  },
+  "webSocketBaseUrl":"WEB_SOCKET_BASE_URL"
+}
