@@ -1,6 +1,6 @@
 DOCKER_REGISTRY := community.cablelabs.com:4567
 DOCKER_IMAGE_PATH := micronets-docker/micronets-mso-portal
-DOCKER_IMAGE_TAG := latest
+DOCKER_IMAGE_TAG := nccoe-build-3
 docker-build:
 	docker build -t $(DOCKER_REGISTRY)/$(DOCKER_IMAGE_PATH):${DOCKER_IMAGE_TAG} .
 
