@@ -1,0 +1,343 @@
+#!/bin/bash
+
+set -e
+
+# dump_vars=1
+
+
+# set -x
+
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+DEF_IMAGE_LOCATION="community.cablelabs.com:4567/micronets-docker/micronets-mso-portal"
+DEF_IMAGE_TAG=latest
+DEF_DOCKER_PROJECT_NAME=micronets-mso-portal
+DEF_BIND_PORT=3210
+DEF_BIND_ADDRESS=127.0.0.1
+DEF_DOCKER_COMPOSE_FILE="${script_dir}/docker-compose.yml"
+DEF_MSO_AUTH_SECRET_FILE="/etc/micronets/micronets-ws-proxy.d/lib/mso-auth-secret"
+
+DOCKER_CMD="docker"
+DOCKER_COMPOSE_CMD="docker-compose"
+OPENSSL_CMD="openssl"
+
+function bailout()
+{
+    local shortname="${0##*/}"
+    local message="$1"
+    echo "$shortname: error: ${message}" >&2
+    exit 1;
+}
+
+function bailout_with_usage()
+{
+    local shortname="${0##*/}"
+    local message="$1"
+    echo "$shortname: error: ${message}" >&2
+    print_usage
+    exit 1;
+}
+
+function print_usage()
+{
+    echo " "
+    echo "Usage: ${shortname} <operation>"
+    echo ""
+    echo "   operation can be one of:"
+    echo ""
+    echo "     docker-pull: Download the $shortname docker image"
+    echo "     docker-run: Create and start the $shortname docker container"
+    echo "     docker-status: Show the status of the $shortname resources"
+    echo "     docker-kill: Kill the $shortname docker container"
+    echo "     docker-rm: Remove the $shortname docker containers (retaining volumes)"
+    echo "     docker-rm-all: Remove the $shortname docker containers (including volumes)"
+    echo "     docker-restart: Restart the $shortname docker containers"
+    echo "     docker-logs: Show the logs for $shortname docker api container"
+    echo "     docker-trace: Watch the logs for the $shortname docker api container"
+    echo "     docker-api-address: Print the IP addresses for the $shortname docker api container"
+    echo "     docker-mongodb-address: Print the IP addresses for the $shortname docker mongodb container"
+    echo "     docker-api-env: List the environment variables for the $shortname docker api container"
+    echo "     docker-mongodb-env: List the environment variables for the $shortname docker mongodb container"
+    echo "     docker-api-inspect: Perform docker inspect on the $shortname docker api container"
+    echo "     docker-mongodb-inspect: Perform docker inspect on the $shortname docker mongodb container"
+    echo "     create-mso-secret: Create an MSO secret and write it to the MSO auth secret file"
+    echo "                        (default \"$DEF_MM_CERTS_DIR/mso-auth-secret\")"
+    echo ""
+    echo "   --api-public-base-url <url where the MSO portal can be reached at>"
+    echo "       The base URL where the MSO portal can be reached"
+    echo "       (e.g. \"https://dev.mso-portal-api.micronets.in:443\")"
+    echo "   --ws-proxy-base-url <url base for the websocket proxy>"
+    echo "       The base URL for the websocket proxy (used to construct the gateway WS endpoint)"
+    echo "       (e.g. \"wss://ws-proxy-api.micronets.in:5050/micronets/v1/ws-proxy/gw\")"
+    echo "   [--auth-secret <512 hex digit secret>]"
+    echo "       The auth secret to use for communication with the MSO Portal"
+    echo "   [--auth-secret-file <filename containing a 512 hex digit secret>]"
+    echo "       A file containing the auth secret to use for communication with the MSO Portal"
+    echo "       (default \"DEF_MSO_AUTH_SECRET_FILE\")"
+    echo "   [--docker-image <docker image ID>"
+    echo "       (default \"$DEF_IMAGE_LOCATION\")"
+    echo "   [--docker-image-tag <docker image tag>"
+    echo "       (default \"$DEF_IMAGE_TAG\")"
+    echo "   [--bind-address <address to bind ${shortname} to>"
+    echo "       (default \"$DEF_BIND_ADDRESS\")"
+    echo "   [--bind-port <port to bind ${shortname} to>"
+    echo "       (default \"$DEF_BIND_PORT\")"
+  }
+
+function process_arguments()
+{
+    shopt -s nullglob
+    shopt -s shift_verbose
+
+    operation=""
+    docker_compose_file="$DEF_DOCKER_COMPOSE_FILE"
+    docker_image_id="$DEF_IMAGE_LOCATION"
+    docker_image_tag="$DEF_IMAGE_TAG"
+    mso_api_public_base_url=""
+    ws_proxy_base_url=""
+    docker_project_name=$DEF_DOCKER_PROJECT_NAME
+    api_container_name=${docker_project_name}_api
+    mongo_container_name=${docker_project_name}_mongodb
+    bind_address=$DEF_BIND_ADDRESS
+    bind_port=$DEF_BIND_PORT
+    mso_secret=""
+    mso_secret_file="$DEF_MSO_AUTH_SECRET_FILE"
+
+    while [[ $1 == --* ]]; do
+        opt_name=$1
+        if [ "$opt_name" == "--docker-image" ]; then
+            shift
+            docker_image_id="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        elif [ "$opt_name" == "--docker-compose-file" ]; then
+            shift
+            docker_compose_file="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        elif [ "$opt_name" == "--api-public-base-url" ]; then
+            shift
+            mso_api_public_base_url="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        elif [ "$opt_name" == "--ws-proxy-base-url" ]; then
+            shift
+            ws_proxy_base_url="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        elif [ "$opt_name" == "--bind-address" ]; then
+            shift
+            bind_address="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        elif [ "$opt_name" == "--bind-port" ]; then
+            shift
+            bind_port="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        elif [ "$opt_name" == "--auth-secret" ]; then
+            shift
+            mso_secret="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        elif [ "$opt_name" == "--auth-secret-file" ]; then
+            shift
+            mso_secret_file="$1"
+            shift || bailout_with_usage "missing parameter to $opt_name"
+        else
+            bailout_with_usage "Unrecognized option: $opt_name"
+        fi
+    done
+
+    if [ $# -lt 1 ]; then
+        bailout_with_usage "Missing operation"
+    fi
+    
+    operation=$1
+    shift
+}
+
+function docker-pull()
+{
+    echo "Pulling docker image from $docker_image_id:$docker_image_tag"
+	  $DOCKER_CMD pull $docker_image_id:$docker_image_tag
+}
+
+function run-docker-compose()
+{
+    compose_operation="$1"
+    shift
+    compose_options="$@"
+    echo "Performing docker-compose $compose_operation operation..."
+    (MSO_API_SOURCE_IMAGE="$docker_image_id:$docker_image_tag" \
+       MSO_PORTAL_API_DOCKER_NAME="$api_container_name" \
+       MSO_PORTAL_MONGO_DOCKER_NAME="$mongo_container_name" \
+       MSO_PORTAL_BIND_ADDRESS="$bind_address" \
+       MSO_PORTAL_BIND_PORT="$bind_port" \
+       MSO_SECRET="$mso_secret" \
+       MSO_API_PUBLIC_BASE_URL="$mso_api_public_base_url" \
+       WS_PROXY_BASE_URL="$ws_proxy_base_url" \
+       $DOCKER_COMPOSE_CMD -f "$docker_compose_file" \
+                           --project-name "$docker_project_name" $compose_operation $compose_options) \
+         || bailout "Failed docker compose"
+}
+
+function docker-run()
+{
+    echo "Starting container \"$api_container_name\" from $docker_image_id:$docker_image_tag (on $bind_address:$bind_port)"
+    if [ -z $mso_api_public_base_url ]; then
+        bailout_with_usage "Missing required parameter --api-public-base-url"
+    fi
+
+    if [ -z $ws_proxy_base_url ]; then
+        bailout_with_usage "Missing required parameter --ws-proxy-base-url"
+    fi
+
+    if [[ -z "$mso_secret" ]]; then
+      if [[ -r "$mso_secret_file" ]]; then
+        mso_secret=$(cat $mso_secret_file)
+      else
+        bailout "Could not open file $mso_secret_file"
+      fi
+    fi
+
+    run-docker-compose up -d
+}
+
+function docker-run-shell()
+{
+    echo "Starting shell for container \"$api_container_name\" from $docker_image_id:$docker_image_tag (on $bind_address:$bind_port)"
+    # Add tbis to the run command:
+    #    -it $docker_image_id:$docker_image_tag /bin/bash
+}
+
+function docker-rm-containers()
+{
+    echo "Attempting to remove docker containers (excluding volumes)"
+    run-docker-compose down
+}
+
+function docker-rm-all()
+{
+    echo "Attempting to remove docker containers and volumes"
+    run-docker-compose down -v
+}
+
+function docker-kill()
+{
+    echo "Attempting to kill docker containers \"$api_container_name\" and \"$mongo_container_name\""
+    run-docker-compose kill
+}
+
+function docker-pause()
+{
+    echo "Attempting to pause docker containers \"$api_container_name\" and \"$mongo_container_name\""
+    run-docker-compose pause
+}
+
+function docker-resume()
+{
+    echo "Attempting to resume docker containers \"$api_container_name\" and \"$mongo_container_name\""
+    run-docker-compose resume
+}
+
+function docker-logs()
+{
+    echo "Showing logs for container \"$api_container_name\""
+    $DOCKER_CMD container logs --timestamps $api_container_name
+}
+
+function docker-trace()
+{
+    echo "Tracing logs for container \"$api_container_name\""
+    $DOCKER_CMD container logs --timestamps --follow --tail 50 $api_container_name
+}
+
+function address-for-container()
+{
+    container_id="$1"
+    ip_address=$($DOCKER_CMD inspect \
+                 -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' \
+                 ${container_id})
+    if [ -z $ip_address ]; then
+        bailout "Could not get the IP address for container $container_id"
+    fi
+    echo "${ip_address}"
+}
+
+function docker-api-address()
+{
+    echo -n "IP address for container \"$api_container_name\": "
+    address-for-container $api_container_name
+}
+
+function docker-mongodb-address()
+{
+    echo -n "IP address for container \"$mongo_container_name\": "
+    address-for-container $mongo_container_name
+}
+
+function create-mso-secret()
+{
+    $OPENSSL_CMD rand -out $mso_secret_file -hex 512
+    if [[ $? == 0 ]]; then
+        echo "Saved a 512-hex-digit shared secret to $mso_secret_file"
+    else
+        echo "Error: Could not write to $mso_secret_file (use --auth-secret-file to specify a different filename)"
+    fi
+}
+
+function docker-status()
+{
+    echo ""
+    echo "MSO PORTAL CONTAINERS"
+    echo "---------------------"
+    $DOCKER_CMD container ps --filter label=com.cablelabs.micronets.component=mso-portal
+    echo ""
+    echo "MSO PORTAL VOLUMES"
+    echo "------------------"
+    $DOCKER_CMD volume ls --filter label=com.cablelabs.micronets.component=mso-portal
+    echo ""
+    echo "MSO PORTAL NETWORKS"
+    echo "-------------------"
+    $DOCKER_CMD network ls --filter label=com.cablelabs.micronets.component=mso-portal
+}
+
+function docker-api-env()
+{
+    echo "Environment variables for MSO Portal API container ($api_container_name)"
+    echo "-------------------------------------------------------------------------------------------"
+    $DOCKER_CMD inspect -f '{{range .Config.Env}}{{.}}{{"\n"}}{{end}}' "$api_container_name"
+}
+
+function docker-mongodb-env()
+{
+    echo "Environment variables for MSO Portal mongodb container ($mongo_container_name)"
+    echo "-------------------------------------------------------------------------------------------"
+    $DOCKER_CMD inspect -f '{{range .Config.Env}}{{.}}{{"\n"}}{{end}}' "$mongo_container_name"
+}
+
+function docker-api-inspect()
+{
+    $DOCKER_CMD inspect "$api_container_name" | less
+}
+
+function docker-mongodb-inspect()
+{
+    $DOCKER_CMD inspect -f "$mongo_container_name" | less
+}
+
+#
+# main logic
+#
+
+process_arguments "$@"
+
+if [[ $dump_vars ]]; then
+  echo "Script directory: ${script_dir}"
+  echo "Docker compose file: ${docker_compose_file}"
+  echo "Operation: ${operation}"
+  echo "Docker image: ${docker_image_id}"
+  echo "Docker image tag: ${docker_image_tag}"
+  echo "MSO API public base URL: ${mso_api_public_base_url}"
+  echo "WS proxy base URL: ${ws_proxy_base_url}"
+  echo "Docker container name for API: ${api_container_name}"
+  echo "Docker container name for mongo: ${mongo_container_name}"
+  echo "MSO secret: ${mso_secret}"
+  echo "MSO secret file: ${mso_secret_file}"
+fi
+
+$operation

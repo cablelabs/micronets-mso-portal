@@ -1,7 +1,4 @@
-FROM node:latest
-
-# Development packages
-RUN apt-get update;
+FROM node:10-slim
 
 # Create api directory
 WORKDIR /usr/src/mso-portal
@@ -17,5 +14,4 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-EXPOSE 3210
 CMD [ "npm", "run", "start"]

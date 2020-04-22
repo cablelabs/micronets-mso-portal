@@ -1,0 +1,46 @@
+version: '2.4'
+
+networks:
+  priv-network:
+    labels:
+      com.cablelabs.micronets.component: mso-portal
+      com.cablelabs.micronets.resource-type: mso-priv-network
+
+volumes:
+  mongodb:
+    labels:
+      com.cablelabs.micronets.component: mso-portal
+      com.cablelabs.micronets.resource-type: mso-mongo-vol
+
+services:
+  mongodb:
+    image: mongo
+    container_name: "$MSO_PORTAL_MONGO_DOCKER_NAME"
+    volumes:
+      - mongodb:/data/db
+    networks:
+      - priv-network
+    labels:
+      com.cablelabs.micronets.component: mso-portal
+      com.cablelabs.micronets.resource-type: mso-mongo
+  api:
+    image: "${MSO_API_SOURCE_IMAGE}"
+    container_name: "$MSO_PORTAL_API_DOCKER_NAME"
+    hostname: mso-portal-api
+    networks:
+      - priv-network
+    environment:
+      - NODE_ENV=development
+      - MSO_API_LISTEN_HOST=0.0.0.0
+      - MSO_API_LISTEN_PORT=3210
+      - MONGO_DB_URL=mongodb://mongodb/mso-portal
+      - MSO_API_PUBLIC_BASE_URL=$MSO_API_PUBLIC_BASE_URL
+      - WEB_SOCKET_BASE_URL=$WS_PROXY_BASE_URL
+      - MSO_PORTAL_AUTH_SECRET=$MSO_SECRET
+    depends_on:
+      - mongodb
+    ports:
+      - "$MSO_PORTAL_BIND_ADDRESS:$MSO_PORTAL_BIND_PORT:3210"
+    labels:
+      com.cablelabs.micronets.component: mso-portal
+      com.cablelabs.micronets.resource-type: mso-api
