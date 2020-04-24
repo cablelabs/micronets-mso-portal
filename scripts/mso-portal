@@ -10,8 +10,8 @@ set -e
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 DEF_IMAGE_LOCATION="community.cablelabs.com:4567/micronets-docker/micronets-mso-portal"
-DEF_IMAGE_TAG=latest
-DEF_DOCKER_PROJECT_NAME=micronets-mso-portal
+DEF_IMAGE_TAG="latest"
+DEF_DOCKER_PROJECT_NAME="micronets-mso-portal"
 DEF_MSO_API_BASE_URL=
 DEF_WS_PROXY_BASE_URL=
 DEF_BIND_PORT=3210
