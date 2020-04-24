@@ -10,14 +10,14 @@ set -e
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 DEF_IMAGE_LOCATION="community.cablelabs.com:4567/micronets-docker/micronets-mso-portal"
-DEF_IMAGE_TAG=nccoe-build-3
-DEF_DOCKER_PROJECT_NAME=micronets-mso-portal
+DEF_IMAGE_TAG="nccoe-build-3"
+DEF_DOCKER_PROJECT_NAME="micronets-mso-portal"
 DEF_MSO_API_BASE_URL=
 DEF_WS_PROXY_BASE_URL=
 DEF_BIND_PORT=3210
 DEF_BIND_ADDRESS=127.0.0.1
 DEF_DOCKER_COMPOSE_FILE="${script_dir}/docker-compose.yml"
-DEF_MSO_AUTH_SECRET_FILE="/etc/micronets/micronets-ws-proxy.d/lib/mso-auth-secret"
+DEF_MSO_AUTH_SECRET_FILE="/etc/micronets/mso-portal.d/lib/mso-auth-secret"
 
 DOCKER_CMD="docker"
 DOCKER_COMPOSE_CMD="docker-compose"
@@ -274,6 +274,7 @@ function docker-mongodb-address()
 
 function create-mso-secret()
 {
+    mkdir -vp $(dirname $mso_secret_file)
     $OPENSSL_CMD rand -out $mso_secret_file -hex 512
     if [[ $? == 0 ]]; then
         echo "Saved a 512-hex-digit shared secret to $mso_secret_file"

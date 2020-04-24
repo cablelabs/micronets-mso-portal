@@ -16,6 +16,7 @@ services:
   mongodb:
     image: mongo
     container_name: "$MSO_PORTAL_MONGO_DOCKER_NAME"
+    restart: unless-stopped
     volumes:
       - mongodb:/data/db
     networks:
@@ -27,6 +28,7 @@ services:
     image: "${MSO_API_SOURCE_IMAGE}"
     container_name: "$MSO_PORTAL_API_DOCKER_NAME"
     hostname: mso-portal-api
+    restart: unless-stopped
     networks:
       - priv-network
     environment:
