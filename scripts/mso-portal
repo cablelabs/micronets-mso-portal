@@ -12,6 +12,8 @@ script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DEF_IMAGE_LOCATION="community.cablelabs.com:4567/micronets-docker/micronets-mso-portal"
 DEF_IMAGE_TAG=latest
 DEF_DOCKER_PROJECT_NAME=micronets-mso-portal
+DEF_MSO_API_BASE_URL=
+DEF_WS_PROXY_BASE_URL=
 DEF_BIND_PORT=3210
 DEF_BIND_ADDRESS=127.0.0.1
 DEF_DOCKER_COMPOSE_FILE="${script_dir}/docker-compose.yml"
@@ -63,7 +65,7 @@ function print_usage()
     echo "     create-mso-secret: Create an MSO secret and write it to the MSO auth secret file"
     echo "                        (default \"$DEF_MM_CERTS_DIR/mso-auth-secret\")"
     echo ""
-    echo "   --api-public-base-url <url where the MSO portal can be reached at>"
+    echo "   --api-base-url <url where the MSO portal can be reached at>"
     echo "       The base URL where the MSO portal can be reached"
     echo "       (e.g. \"https://dev.mso-portal-api.micronets.in:443\")"
     echo "   --ws-proxy-base-url <url base for the websocket proxy>"
@@ -93,8 +95,8 @@ function process_arguments()
     docker_compose_file="$DEF_DOCKER_COMPOSE_FILE"
     docker_image_id="$DEF_IMAGE_LOCATION"
     docker_image_tag="$DEF_IMAGE_TAG"
-    mso_api_public_base_url=""
-    ws_proxy_base_url=""
+    mso_api_base_url="$DEF_MSO_API_BASE_URL"
+    ws_proxy_base_url="$DEF_WS_PROXY_BASE_URL"
     docker_project_name=$DEF_DOCKER_PROJECT_NAME
     api_container_name=${docker_project_name}_api
     mongo_container_name=${docker_project_name}_mongodb
@@ -113,9 +115,9 @@ function process_arguments()
             shift
             docker_compose_file="$1"
             shift || bailout_with_usage "missing parameter to $opt_name"
-        elif [ "$opt_name" == "--api-public-base-url" ]; then
+        elif [ "$opt_name" == "--api-base-url" ]; then
             shift
-            mso_api_public_base_url="$1"
+            mso_api_base_url="$1"
             shift || bailout_with_usage "missing parameter to $opt_name"
         elif [ "$opt_name" == "--ws-proxy-base-url" ]; then
             shift
@@ -168,7 +170,7 @@ function run-docker-compose()
        MSO_PORTAL_BIND_ADDRESS="$bind_address" \
        MSO_PORTAL_BIND_PORT="$bind_port" \
        MSO_SECRET="$mso_secret" \
-       MSO_API_PUBLIC_BASE_URL="$mso_api_public_base_url" \
+       MSO_API_PUBLIC_BASE_URL="$mso_api_base_url" \
        WS_PROXY_BASE_URL="$ws_proxy_base_url" \
        $DOCKER_COMPOSE_CMD -f "$docker_compose_file" \
                            --project-name "$docker_project_name" $compose_operation $compose_options) \
@@ -178,8 +180,8 @@ function run-docker-compose()
 function docker-run()
 {
     echo "Starting container \"$api_container_name\" from $docker_image_id:$docker_image_tag (on $bind_address:$bind_port)"
-    if [ -z $mso_api_public_base_url ]; then
-        bailout_with_usage "Missing required parameter --api-public-base-url"
+    if [ -z $mso_api_base_url ]; then
+        bailout_with_usage "Missing required parameter --api-base-url"
     fi
 
     if [ -z $ws_proxy_base_url ]; then
@@ -332,7 +334,7 @@ if [[ $dump_vars ]]; then
   echo "Operation: ${operation}"
   echo "Docker image: ${docker_image_id}"
   echo "Docker image tag: ${docker_image_tag}"
-  echo "MSO API public base URL: ${mso_api_public_base_url}"
+  echo "MSO API public base URL: ${mso_api_base_url}"
   echo "WS proxy base URL: ${ws_proxy_base_url}"
   echo "Docker container name for API: ${api_container_name}"
   echo "Docker container name for mongo: ${mongo_container_name}"
