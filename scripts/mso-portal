@@ -50,10 +50,11 @@ function print_usage()
     echo "     docker-pull: Download the $shortname docker image"
     echo "     docker-run: Create and start the $shortname docker container"
     echo "     docker-status: Show the status of the $shortname resources"
-    echo "     docker-kill: Kill the $shortname docker container"
-    echo "     docker-rm: Remove the $shortname docker containers (retaining volumes)"
-    echo "     docker-rm-all: Remove the $shortname docker containers (including volumes)"
     echo "     docker-restart: Restart the $shortname docker containers"
+    echo "     docker-kill: Kill the $shortname docker container"
+    echo "     docker-rm-containers: Remove the $shortname docker containers (retaining volumes)"
+    echo "     docker-rm-all: Remove the $shortname docker containers (including volumes)"
+    echo "     docker-recreate-containers Recreate docker containers (retaining volumes)"
     echo "     docker-logs: Show the logs for $shortname docker api container"
     echo "     docker-trace: Watch the logs for the $shortname docker api container"
     echo "     docker-api-address: Print the IP addresses for the $shortname docker api container"
@@ -224,6 +225,19 @@ function docker-kill()
     run-docker-compose kill
 }
 
+function docker-restart()
+{
+    echo "Attempting to restart docker containers \"$api_container_name\" and \"$mongo_container_name\""
+    run-docker-compose restart
+}
+
+function docker-recreate-containers()
+{
+    echo "Attempting to recreate docker containers \"$api_container_name\" and \"$mongo_container_name\""
+    run-docker-compose down
+    docker-run
+}
+
 function docker-pause()
 {
     echo "Attempting to pause docker containers \"$api_container_name\" and \"$mongo_container_name\""
@@ -275,7 +289,9 @@ function docker-mongodb-address()
 function create-mso-secret()
 {
     mkdir -vp $(dirname $mso_secret_file)
-    $OPENSSL_CMD rand -out $mso_secret_file -hex 512
+    $OPENSSL_CMD rand -out /tmp/mso_secret_file -hex 512
+    sudo install -v -o root -g docker -m 660 -D -t /etc/micronets/mso-portal.d/lib/mso-auth-secret /tmp/mso-secret-file 
+    rm -f /tmp/mso_secret_file
     if [[ $? == 0 ]]; then
         echo "Saved a 512-hex-digit shared secret to $mso_secret_file"
     else
@@ -288,7 +304,7 @@ function docker-status()
     echo ""
     echo "MSO PORTAL CONTAINERS"
     echo "---------------------"
-    $DOCKER_CMD container ps --filter label=com.cablelabs.micronets.component=mso-portal
+    $DOCKER_CMD container ps -a --filter label=com.cablelabs.micronets.component=mso-portal
     echo ""
     echo "MSO PORTAL VOLUMES"
     echo "------------------"
