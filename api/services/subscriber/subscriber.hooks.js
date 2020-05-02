@@ -289,22 +289,22 @@ module.exports = {
           // await hook.app.service(`${DEVICES_PATH}`).remove(id,allHeaders)
           await hook.app.service(`${REGISTER_PATH}`).remove(id,allHeaders)
           await hook.app.service(`${USERS_PATH}`).remove(id,allHeaders)
-          await axios({
-            ...allHeaders,
-            method: 'DELETE',
-            url: `${hook.result.registry}/${MM_REGISTRY_PATH}/${hook.result.id}`
-          })
+          // await axios({
+          //   ...allHeaders,
+          //   method: 'DELETE',
+          //   url: `${hook.result.registry}/${MM_REGISTRY_PATH}/${hook.result.id}`
+          // })
         }
         else {
           await hook.app.service(`${SOCKET_PATH}`).remove(null,allHeaders)
           // await hook.app.service(`${DEVICES_PATH}`).remove(null,allHeaders)
           await hook.app.service(`${REGISTER_PATH}`).remove(null,allHeaders)
           await hook.app.service(`${USERS_PATH}`).remove(null,allHeaders)
-          await axios({
-            ...allHeaders,
-            method: 'DELETE',
-            url: `${hook.result.registry}/${MM_REGISTRY_PATH}`
-          })
+          // await axios({
+          //   ...allHeaders,
+          //   method: 'DELETE',
+          //   url: `${hook.result.registry}/${MM_REGISTRY_PATH}`
+          // })
         }
       }
     ]
