@@ -288,10 +288,10 @@ function docker-mongodb-address()
 
 function create-mso-secret()
 {
-    mkdir -vp $(dirname $mso_secret_file)
-    $OPENSSL_CMD rand -out /tmp/mso_secret_file -hex 512
-    sudo install -v -o root -g docker -m 660 -D -t /etc/micronets/mso-portal.d/lib/mso-auth-secret /tmp/mso-secret-file 
-    rm -f /tmp/mso_secret_file
+    tmp_secret_file=$(mktemp)
+    $OPENSSL_CMD rand -out "$tmp_secret_file" -hex 512
+    sudo install -v -o root -g docker -m 660 -D -T "$tmp_secret_file" "$mso_secret_file"
+    rm -f "$tmp_secret_file"
     if [[ $? == 0 ]]; then
         echo "Saved a 512-hex-digit shared secret to $mso_secret_file"
     else
